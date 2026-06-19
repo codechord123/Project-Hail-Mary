@@ -4,13 +4,13 @@ import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { LevelBadge } from '@/components/LevelBadge'
 
 const CHAPTERS = [
-  { id: 1, title: '깨어남', topic: '분모가 같은 분수의 덧셈', available: true },
-  { id: 2, title: '식량 점검', topic: '분모가 같은 분수의 뺄셈', available: false },
-  { id: 3, title: '미지의 신호', topic: '약분과 통분', available: false },
-  { id: 4, title: '첫 만남', topic: '분모가 다른 분수의 덧셈', available: false },
-  { id: 5, title: '위기의 동력실', topic: '분모가 다른 분수의 뺄셈', available: false },
-  { id: 6, title: '아스트로파지 배양', topic: '대분수의 덧셈과 뺄셈', available: false },
-  { id: 7, title: '귀환 미션', topic: '종합 보스전', available: false },
+  { id: 1, title: '깨어남', topic: '분모가 같은 분수의 덧셈', available: true, badge: null as string | null },
+  { id: 2, title: '식량 점검', topic: '분모가 같은 분수의 뺄셈', available: false, badge: null },
+  { id: 3, title: '미지의 신호', topic: '약분과 통분 (응용 + 미니보스)', available: true, badge: '🕹 보스전' },
+  { id: 4, title: '첫 만남', topic: '분모가 다른 분수의 덧셈', available: false, badge: null },
+  { id: 5, title: '위기의 동력실', topic: '분모가 다른 분수의 뺄셈', available: false, badge: null },
+  { id: 6, title: '아스트로파지 배양', topic: '대분수의 덧셈과 뺄셈', available: false, badge: null },
+  { id: 7, title: '귀환 미션', topic: '종합 보스전', available: false, badge: null },
 ]
 
 export function ChapterSelect() {
@@ -36,8 +36,13 @@ export function ChapterSelect() {
           const inner = (
             <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
               <div>
-                <div className="text-white font-semibold flex items-center gap-2">
+                <div className="text-white font-semibold flex items-center gap-2 flex-wrap">
                   Chapter {c.id}. {c.title}
+                  {c.badge && (
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-200 border border-yellow-300/40">
+                      {c.badge}
+                    </span>
+                  )}
                   {record && (
                     <span className="text-yellow-300">
                       {'★'.repeat(record.stars)}

@@ -60,4 +60,24 @@ export const sfx = {
       setTimeout(() => tone(f, 120, 'triangle'), i * 90),
     )
   },
+  hit: () => {
+    tone(880, 60, 'square', 0.12)
+    setTimeout(() => tone(440, 90, 'square', 0.1), 50)
+  },
+  crit: () => {
+    tone(660, 50, 'square', 0.18)
+    setTimeout(() => tone(990, 60, 'square', 0.18), 40)
+    setTimeout(() => tone(1320, 100, 'triangle', 0.16), 90)
+  },
+  bossLaugh: () => {
+    ;[140, 130, 120, 130, 140].forEach((f, i) =>
+      setTimeout(() => tone(f, 110, 'sawtooth', 0.16), i * 90),
+    )
+  },
+  bossDie: () => {
+    ;[300, 240, 180, 120, 80, 40].forEach((f, i) =>
+      setTimeout(() => tone(f, 180, 'sawtooth', 0.2), i * 110),
+    )
+    setTimeout(() => tone(1200, 280, 'triangle', 0.2), 700)
+  },
 }
