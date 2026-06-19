@@ -69,6 +69,12 @@ export function MainMenu() {
           항해 시작
         </Link>
         <Link
+          to="/daily"
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold border border-yellow-200/50"
+        >
+          🌟 오늘의 챌린지 (DAILY)
+        </Link>
+        <Link
           to="/endless"
           className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold border border-yellow-300/40"
         >

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { chapter1Problems } from '@/data/chapter1'
+import { chapter1Problems, pickApplicationProblems } from '@/data/chapter1'
 import { addFractions, valueEquals, isSimplified } from '@/lib/fractionMath'
 import { FractionInput } from '@/components/FractionInput'
 import { FractionExpression } from '@/components/FractionDisplay'
@@ -59,14 +59,20 @@ export function Chapter1() {
   const navigate = useNavigate()
   const startedAt = useRef(Date.now())
 
-  const problem = chapter1Problems[idx]
+  // mount 시 manipulation 5 + 응용 2 (풀에서 랜덤)으로 시퀀스 구성
+  const sequence = useMemo(() => {
+    const manips = chapter1Problems.filter((p) => p.kind === 'manipulation')
+    const apps = pickApplicationProblems(2)
+    return [...manips, ...apps]
+  }, [])
+  const problem = sequence[idx]
   const manipProblem = problem.kind === 'manipulation' ? problem : null
   const appProblem = problem.kind === 'application' ? problem : null
   const expected = useMemo(
     () => (manipProblem ? addFractions(manipProblem.a, manipProblem.b) : { numerator: 0, denominator: 1 }),
     [manipProblem],
   )
-  const isLast = idx === chapter1Problems.length - 1
+  const isLast = idx === sequence.length - 1
   const crisis = isLast
 
   const baseTime = store.baseTimePerProblem()
@@ -174,7 +180,7 @@ export function Chapter1() {
       const stars = computeStars({
         correctCount,
         wrongCount,
-        totalProblems: chapter1Problems.length,
+        totalProblems: sequence.length,
         maxCombo,
         timeoutCount,
       })
@@ -277,7 +283,7 @@ export function Chapter1() {
 
       <h2 className="mt-4 text-xl font-bold text-white flex items-center gap-2">
         Chapter 1. 깨어남
-        <span className="text-white/40 text-sm">({idx + 1}/{chapter1Problems.length})</span>
+        <span className="text-white/40 text-sm">({idx + 1}/{sequence.length})</span>
         {combo >= 2 && (
           <span className="px-2 py-0.5 rounded-full bg-yellow-400/20 text-yellow-300 text-xs">
             🔥 {combo} 콤보!
@@ -286,7 +292,7 @@ export function Chapter1() {
       </h2>
 
       <div className="mt-3">
-        <ShipDiagram modules={chapter1Problems.length} repaired={correctCount} />
+        <ShipDiagram modules={sequence.length} repaired={correctCount} />
       </div>
 
       <div className="mt-3">

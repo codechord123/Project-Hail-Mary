@@ -4,7 +4,7 @@ import { useGameStore } from '@/store/gameStore'
 import { computeLevelInfo } from '@/lib/leveling'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import {
-  listProfiles, switchToStudent, saveCurrentSlot, deleteProfile,
+  listProfiles, switchToStudent, deleteProfile,
 } from '@/lib/profileSwitch'
 
 const CHAPTERS = [
@@ -28,11 +28,6 @@ export function Dashboard() {
   useEffect(() => {
     setProfiles(listProfiles())
   }, [store.studentName])
-
-  // 진도 변경 시 현재 슬롯 자동 저장
-  useEffect(() => {
-    saveCurrentSlot()
-  }, [store.totalXp, store.clearedChapters, store.chapterRecords])
 
   const handleSwitch = (name: string) => {
     if (name === store.studentName) return

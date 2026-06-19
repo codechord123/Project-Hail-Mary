@@ -85,36 +85,80 @@ export const chapter1Problems: Chapter1Problem[] = [
     hint: '8/12를 4로 나눠 약분.',
     scene: 'code',
   },
-  // 응용 문제 — 직접 조작이 끝난 뒤 짧은 독해 응용 두 문제
+]
+
+/** 챕터 1 응용 문제 풀 — manipulation 5개 끝난 후 풀에서 2개 랜덤 픽 */
+export const CHAPTER1_APPLICATION_POOL: ApplicationProblem[] = [
   {
     kind: 'application',
     story: '로키가 신호를 보내왔어. 머리도 깨워두자.',
     problem: {
       id: 'c1-app-1',
-      kind: 'numeric',
-      difficulty: 2,
-      scenario:
-        '산소 탱크 7/10이 정상 상태였는데, 1/10이 새고 또 2/10이 새었어. 남은 산소는 분자가 얼마일까?',
-      prompt: '남은 산소를 X/10 형태로 적을 때 분자 X는?',
+      kind: 'numeric', difficulty: 2,
+      scenario: '산소 탱크 7/10이 정상이었는데, 1/10이 새고 또 2/10이 새었어. 남은 산소의 분자는?',
+      prompt: '남은 산소 X/10 — X는?',
       hint: '7 − 1 − 2 = ?',
-      answer: 4,
-      unit: '',
+      answer: 4, unit: '',
     },
   },
   {
     kind: 'application',
-    story: '마지막 한 문제 — 항법 비밀번호.',
+    story: '항법 비밀번호 조각.',
     problem: {
       id: 'c1-app-2',
-      kind: 'mcq',
-      difficulty: 2,
-      scenario:
-        '같은 분모 분수 두 개를 더한 값이 정확히 1이 되는 짝을 찾아. 우주선 잠금이 풀린다!',
+      kind: 'mcq', difficulty: 2,
+      scenario: '같은 분모 분수 두 개를 더한 값이 정확히 1이 되는 짝을 찾아.',
       prompt: '합이 1이 되는 짝을 모두 골라.',
       hint: '분자의 합 = 분모.',
       choices: ['3/8 + 5/8', '2/7 + 4/7', '1/6 + 5/6', '2/9 + 6/9', '4/11 + 7/11'],
-      correctIndexes: [0, 2, 4],
-      multiple: true,
+      correctIndexes: [0, 2, 4], multiple: true,
+    },
+  },
+  {
+    kind: 'application',
+    story: '식량 저장고를 점검 중이야.',
+    problem: {
+      id: 'c1-app-3',
+      kind: 'numeric', difficulty: 2,
+      scenario: '저장고에 빵 5/9, 통조림 2/9, 비스킷 1/9이 있어. 다 합치면 분자가 얼마야?',
+      prompt: '합한 분자 = ?',
+      hint: '5 + 2 + 1.',
+      answer: 8, unit: '',
+    },
+  },
+  {
+    kind: 'application',
+    story: '로키가 작은 퀴즈를 냈다.',
+    problem: {
+      id: 'c1-app-4',
+      kind: 'mcq', difficulty: 1,
+      scenario: '아래 중 같은 분모 덧셈 결과가 같은 분수끼리 짝지어진 것은?',
+      prompt: '같은 결과를 내는 식을 모두 골라.',
+      hint: '두 식의 합을 각각 계산해서 비교.',
+      choices: ['2/7 + 3/7 = 5/7', '1/5 + 3/5 = 4/5', '4/9 + 1/9 = 5/9', '2/6 + 2/6 = 4/6', '1/4 + 1/4 = 2/4'],
+      correctIndexes: [0, 1, 2, 3, 4], multiple: true,
+    },
+  },
+  {
+    kind: 'application',
+    story: '항해사 일지 — 합계 검사.',
+    problem: {
+      id: 'c1-app-5',
+      kind: 'fraction', difficulty: 2,
+      scenario: '하루 산소 사용량이 오전 3/12, 오후 4/12, 야간 2/12 였어. 총 사용량을 기약으로 적어.',
+      prompt: '총 사용량 (기약)',
+      hint: '9/12 → 3/4.',
+      answer: { numerator: 3, denominator: 4 }, requireSimplified: true,
     },
   },
 ]
+
+/** 풀에서 N개 비복원 추출 (Fisher-Yates 셔플 기반) */
+export const pickApplicationProblems = (n = 2): ApplicationProblem[] => {
+  const pool = [...CHAPTER1_APPLICATION_POOL]
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[pool[i], pool[j]] = [pool[j], pool[i]]
+  }
+  return pool.slice(0, Math.min(n, pool.length))
+}

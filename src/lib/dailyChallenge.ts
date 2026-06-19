@@ -1,0 +1,102 @@
+/**
+ * 오늘의 챌린지 — 날짜 시드로 모든 학생이 같은 문제 세트를 풀게.
+ * 일일 1회 본인 최고기록 기록, 자정에 새 문제로 갱신.
+ */
+
+import {
+  genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount,
+} from './problemGen'
+import type { Problem } from '@/types/problem'
+
+const todayKey = (): string => {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}${m}${day}`
+}
+
+/** 1차 LCG — 같은 시드면 항상 같은 시퀀스 */
+const seededRandom = (seed: number) => {
+  let s = seed
+  return () => {
+    s = (s * 9301 + 49297) % 233280
+    return s / 233280
+  }
+}
+
+/** seed 기반으로 Math.random 임시 패치 → generator 사용 후 복원 */
+const withSeededRandom = <T>(seed: number, fn: () => T): T => {
+  const original = Math.random
+  const rand = seededRandom(seed)
+  Math.random = rand
+  try {
+    return fn()
+  } finally {
+    Math.random = original
+  }
+}
+
+const GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount]
+
+export interface DailyChallenge {
+  date: string // YYYYMMDD
+  problems: Problem[]
+}
+
+export const getDailyChallenge = (date = todayKey()): DailyChallenge => {
+  // 날짜를 정수 시드로 변환
+  const seed = parseInt(date, 10) || 1
+  const problems: Problem[] = []
+  withSeededRandom(seed, () => {
+    for (let i = 0; i < 10; i++) {
+      const genIdx = Math.floor(Math.random() * GENS.length)
+      const difficulty = Math.floor(i / 3)
+      problems.push(GENS[genIdx](difficulty))
+    }
+  })
+  return { date, problems }
+}
+
+export const dailyDateLabel = (date = todayKey()): string => {
+  return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`
+}
+
+// === Best score persistence ===
+const BEST_KEY = 'hailmary-daily-best'
+
+interface DailyBest {
+  date: string
+  score: number
+  correctCount: number
+}
+
+const safeGet = (): DailyBest[] => {
+  try {
+    const raw = localStorage.getItem(BEST_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+export const getDailyBest = (date = todayKey()): DailyBest | null => {
+  return safeGet().find((b) => b.date === date) ?? null
+}
+
+export const recordDailyBest = (score: number, correctCount: number, date = todayKey()) => {
+  const all = safeGet()
+  const idx = all.findIndex((b) => b.date === date)
+  if (idx === -1) {
+    all.push({ date, score, correctCount })
+  } else if (score > all[idx].score) {
+    all[idx] = { date, score, correctCount }
+  }
+  try {
+    localStorage.setItem(BEST_KEY, JSON.stringify(all.slice(-30)))
+  } catch {
+    /* ignore */
+  }
+}
+
+export const todayDateKey = todayKey

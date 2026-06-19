@@ -9,6 +9,7 @@ import { ChapterClear } from '@/pages/ChapterClear'
 import { useGameStore } from '@/store/gameStore'
 import { setMuted } from '@/lib/sfx'
 import { setBgmMuted, setBgmVolume, stop as stopBgm } from '@/lib/bgm'
+import { saveCurrentSlot } from '@/lib/profileSwitch'
 
 const Chapter1 = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1 })))
 const Chapter1Clear = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1Clear })))
@@ -19,6 +20,7 @@ const Chapter5 = lazy(() => import('@/pages/Chapter5').then((m) => ({ default: m
 const Chapter6 = lazy(() => import('@/pages/Chapter6').then((m) => ({ default: m.Chapter6 })))
 const Chapter7 = lazy(() => import('@/pages/Chapter7').then((m) => ({ default: m.Chapter7 })))
 const Endless = lazy(() => import('@/pages/Endless').then((m) => ({ default: m.Endless })))
+const DailyChallenge = lazy(() => import('@/pages/DailyChallenge').then((m) => ({ default: m.DailyChallenge })))
 
 function Loading() {
   return (
@@ -41,6 +43,15 @@ export default function App() {
   useEffect(() => {
     setBgmVolume(bgmVolume)
   }, [bgmVolume])
+
+  // 진도 자동 저장 — 어떤 페이지에서도 변경 감지
+  const studentName = useGameStore((s) => s.studentName)
+  const totalXp = useGameStore((s) => s.totalXp)
+  const clearedChapters = useGameStore((s) => s.clearedChapters)
+  const chapterRecords = useGameStore((s) => s.chapterRecords)
+  useEffect(() => {
+    if (studentName.trim()) saveCurrentSlot()
+  }, [studentName, totalXp, clearedChapters, chapterRecords])
 
   return (
     <BrowserRouter>
@@ -66,6 +77,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/endless" element={<Endless />} />
+            <Route path="/daily" element={<DailyChallenge />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
         </Suspense>
