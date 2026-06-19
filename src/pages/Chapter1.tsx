@@ -6,6 +6,7 @@ import { addFractions, valueEquals, isSimplified } from '@/lib/fractionMath'
 import { FractionInput } from '@/components/FractionInput'
 import { FractionExpression } from '@/components/FractionDisplay'
 import { FractionVisual } from '@/components/FractionVisual'
+import { ManipulationScene } from '@/components/manipulation/ManipulationScene'
 import { ResourceBar } from '@/components/ResourceBar'
 import { DialogueBox } from '@/components/DialogueBox'
 import { RockyAvatar } from '@/components/RockyAvatar'
@@ -34,6 +35,7 @@ type Feedback =
 export function Chapter1() {
   const [idx, setIdx] = useState(0)
   const [answer, setAnswer] = useState<Fraction | null>(null)
+  const [seedAnswer, setSeedAnswer] = useState<Fraction | null>(null)
   const [feedback, setFeedback] = useState<Feedback>({ kind: 'idle' })
   const [showHint, setShowHint] = useState(false)
   const [showVisual, setShowVisual] = useState(false)
@@ -162,6 +164,7 @@ export function Chapter1() {
     }
     setIdx((i) => i + 1)
     setAnswer(null)
+    setSeedAnswer(null)
     setFeedback({ kind: 'idle' })
     setShowHint(false)
     setShowVisual(false)
@@ -275,8 +278,22 @@ export function Chapter1() {
 
       <div className="mt-5 flex flex-col items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10">
         <FractionExpression a={problem.a} b={problem.b} operation="add" />
+
+        <ManipulationScene
+          a={problem.a}
+          b={problem.b}
+          themeId={problem.scene}
+          resetKey={problem.id}
+          onComplete={(combined) => setSeedAnswer(combined)}
+          onTransfer={() => sfx.tick()}
+        />
+
         {showVisual && <FractionVisual a={problem.a} b={problem.b} operation="add" />}
-        <FractionInput onChange={setAnswer} disabled={feedback.kind === 'correct'} />
+        <FractionInput
+          onChange={setAnswer}
+          disabled={feedback.kind === 'correct'}
+          seed={seedAnswer}
+        />
         {problem.requireSimplified && !simplifyAidActive && (
           <div className="text-xs text-yellow-300/90">⚠ 기약분수로 답해야 정답이야.</div>
         )}

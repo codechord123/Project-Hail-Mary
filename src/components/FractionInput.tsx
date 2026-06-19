@@ -1,14 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Fraction } from '@/types/fraction'
 
 interface Props {
   onChange: (f: Fraction | null) => void
   disabled?: boolean
+  /** 외부에서 답을 제안 (조작 씬 완료 시 자동 채움). 객체 참조 변경 시 1회 반영 */
+  seed?: Fraction | null
 }
 
-export function FractionInput({ onChange, disabled }: Props) {
+export function FractionInput({ onChange, disabled, seed }: Props) {
   const [num, setNum] = useState('')
   const [den, setDen] = useState('')
+  const lastSeedRef = useRef<Fraction | null>(null)
+
+  useEffect(() => {
+    if (!seed) return
+    const last = lastSeedRef.current
+    if (last && last.numerator === seed.numerator && last.denominator === seed.denominator) {
+      return
+    }
+    lastSeedRef.current = seed
+    setNum(String(seed.numerator))
+    setDen(String(seed.denominator))
+  }, [seed])
 
   useEffect(() => {
     const n = parseInt(num, 10)
