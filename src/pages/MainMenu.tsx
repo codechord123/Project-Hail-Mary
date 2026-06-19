@@ -60,6 +60,12 @@ export function MainMenu() {
         >
           📊 진도판 / 학급 설정
         </Link>
+        <Link
+          to="/leaderboard"
+          className="px-6 py-2 rounded-xl bg-yellow-400/10 text-yellow-200 border border-yellow-300/30 text-sm hover:bg-yellow-400/20 transition"
+        >
+          🏆 학급 리더보드
+        </Link>
         <button
           onClick={() => {
             toggleMute()

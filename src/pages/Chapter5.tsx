@@ -14,6 +14,7 @@ import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { Fraction } from '@/types/fraction'
 
 type Step = 'commonDenom' | 'calc' | 'simplify'
@@ -41,6 +42,11 @@ export function Chapter5() {
     setFeedback('wrong')
     setTimeout(() => setFeedback('idle'), 1000)
   }, [run])
+
+  useEffect(() => {
+    playBgm('chapter5')
+    return () => stopBgm()
+  }, [])
 
   useEffect(() => {
     if (run.isDead) {

@@ -16,6 +16,7 @@ import { CrisisOverlay } from '@/components/CrisisOverlay'
 import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { useGameStore } from '@/store/gameStore'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { judge } from '@/lib/judge'
 import { computeRank } from '@/lib/judge'
 import { comboBonusXp } from '@/lib/scoring'
@@ -60,6 +61,8 @@ export function Chapter3() {
 
   useEffect(() => {
     store.resetForChapter()
+    playBgm('chapter3')
+    return () => stopBgm()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -16,6 +16,7 @@ import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { judge } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { StudentAnswer } from '@/types/problem'
 
 const TOTAL_PROBLEMS = chapter7Phases.reduce((s, p) => s + p.problems.length, 0)
@@ -39,6 +40,11 @@ export function Chapter7() {
   const crisis = phaseIdx >= 2
   const baseTime = run.store.baseTimePerProblem()
   const timer = crisis ? baseTime - 5 : baseTime + 5
+
+  useEffect(() => {
+    playBgm('chapter7')
+    return () => stopBgm()
+  }, [])
 
   useEffect(() => {
     if (run.isDead) {

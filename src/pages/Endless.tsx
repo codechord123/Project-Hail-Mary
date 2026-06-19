@@ -12,6 +12,7 @@ import { useGameStore } from '@/store/gameStore'
 import { genRandom } from '@/lib/problemGen'
 import { judge } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { comboBonusXp } from '@/lib/scoring'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
@@ -57,6 +58,11 @@ export function Endless() {
     setOxygen(100)
     setGameOver(false)
     setFeedback('idle')
+  }, [])
+
+  useEffect(() => {
+    playBgm('endless')
+    return () => stopBgm()
   }, [])
 
   useEffect(() => {

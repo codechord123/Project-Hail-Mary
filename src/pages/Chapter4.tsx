@@ -11,6 +11,7 @@ import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { Fraction } from '@/types/fraction'
 
 interface ActiveLane {
@@ -40,9 +41,11 @@ export function Chapter4() {
     return () => clearInterval(id)
   }, [])
 
-  // 초기 스폰
+  // 초기 스폰 + BGM
   useEffect(() => {
     setLanes((ls) => ls.map((_, i) => spawnLane(i, queueRef)))
+    playBgm('chapter4')
+    return () => stopBgm()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

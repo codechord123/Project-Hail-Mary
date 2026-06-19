@@ -11,6 +11,7 @@ import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { BlockMath } from 'react-katex'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import type { Fraction } from '@/types/fraction'
 
@@ -29,6 +30,11 @@ export function Chapter2() {
   const wave = chapter2Waves[waveIdx]
   const isLast = waveIdx === chapter2Waves.length - 1
   const expectedAns = chapter2Expected(wave.a, wave.b)
+
+  useEffect(() => {
+    playBgm('chapter2')
+    return () => stopBgm()
+  }, [])
 
   // 적기 강하 루프
   useEffect(() => {

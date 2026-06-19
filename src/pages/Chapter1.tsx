@@ -19,11 +19,15 @@ import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { EventCard } from '@/components/EventCard'
 import { useGameStore } from '@/store/gameStore'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { comboBonusXp, computeStars } from '@/lib/scoring'
 import { rollEvent, type ThreatEvent } from '@/data/events'
 import { CHAPTER_REWARD_POOL, ITEMS } from '@/data/items'
 import { computeLevelInfo } from '@/lib/leveling'
 import type { Fraction } from '@/types/fraction'
+import { ProblemPanel } from '@/components/problem/ProblemPanel'
+import { judge } from '@/lib/judge'
+import type { StudentAnswer } from '@/types/problem'
 
 type Feedback =
   | { kind: 'idle' }
@@ -50,12 +54,18 @@ export function Chapter1() {
   const [simplifyAidActive, setSimplifyAidActive] = useState(false)
   const [confetti, setConfetti] = useState(false)
   const [levelUpBanner, setLevelUpBanner] = useState<number | null>(null)
+  const [appAnswer, setAppAnswer] = useState<StudentAnswer>({ kind: 'fraction', value: null })
   const store = useGameStore()
   const navigate = useNavigate()
   const startedAt = useRef(Date.now())
 
   const problem = chapter1Problems[idx]
-  const expected = useMemo(() => addFractions(problem.a, problem.b), [problem])
+  const manipProblem = problem.kind === 'manipulation' ? problem : null
+  const appProblem = problem.kind === 'application' ? problem : null
+  const expected = useMemo(
+    () => (manipProblem ? addFractions(manipProblem.a, manipProblem.b) : { numerator: 0, denominator: 1 }),
+    [manipProblem],
+  )
   const isLast = idx === chapter1Problems.length - 1
   const crisis = isLast
 
@@ -79,9 +89,11 @@ export function Chapter1() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.oxygen])
 
-  // 챕터 시작 시 산소 풀
+  // 챕터 시작 시 산소 풀 + BGM
   useEffect(() => {
     store.resetForChapter()
+    playBgm('chapter1')
+    return () => stopBgm()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -95,20 +107,40 @@ export function Chapter1() {
   }, [feedback.kind, store])
 
   const submit = useCallback(() => {
-    if (!answer) return
-    if (!valueEquals(answer, expected)) {
-      store.addOxygen(-10)
-      setCombo(0)
-      setWrongCount((c) => c + 1)
-      setFeedback({ kind: 'wrong', message: '값이 달라. 분모는 그대로, 분자끼리 더해봐.' })
-      sfx.wrong()
-      return
-    }
-    if (problem.requireSimplified && !simplifyAidActive && !isSimplified(answer)) {
-      store.addOxygen(-5)
-      setFeedback({ kind: 'need-simplify' })
-      sfx.wrong()
-      return
+    // 응용 문제 모드
+    if (appProblem) {
+      const r = judge(appProblem.problem, appAnswer)
+      if (r.kind === 'wrong') {
+        store.addOxygen(-10)
+        setCombo(0)
+        setWrongCount((c) => c + 1)
+        setFeedback({ kind: 'wrong', message: r.reason })
+        sfx.wrong()
+        return
+      }
+      if (r.kind === 'need-simplify') {
+        store.addOxygen(-5)
+        setFeedback({ kind: 'need-simplify' })
+        sfx.wrong()
+        return
+      }
+      // 응용 정답 분기는 아래 공통 처리로 (combo, xp 등)
+    } else {
+      if (!answer) return
+      if (!valueEquals(answer, expected)) {
+        store.addOxygen(-10)
+        setCombo(0)
+        setWrongCount((c) => c + 1)
+        setFeedback({ kind: 'wrong', message: '값이 달라. 분모는 그대로, 분자끼리 더해봐.' })
+        sfx.wrong()
+        return
+      }
+      if (manipProblem && manipProblem.requireSimplified && !simplifyAidActive && !isSimplified(answer)) {
+        store.addOxygen(-5)
+        setFeedback({ kind: 'need-simplify' })
+        sfx.wrong()
+        return
+      }
     }
     // 정답
     const newCombo = combo + 1
@@ -134,7 +166,7 @@ export function Chapter1() {
       sfx.levelUp()
       setTimeout(() => setLevelUpBanner(null), 2400)
     }
-  }, [answer, expected, problem, combo, simplifyAidActive, crisis, xpBonus, store])
+  }, [answer, expected, manipProblem, appProblem, appAnswer, combo, simplifyAidActive, crisis, xpBonus, store])
 
   const next = useCallback(() => {
     if (isLast) {
@@ -165,6 +197,7 @@ export function Chapter1() {
     setIdx((i) => i + 1)
     setAnswer(null)
     setSeedAnswer(null)
+    setAppAnswer({ kind: 'fraction', value: null })
     setFeedback({ kind: 'idle' })
     setShowHint(false)
     setShowVisual(false)
@@ -272,30 +305,47 @@ export function Chapter1() {
         </div>
         <div className="flex-1 space-y-2">
           <DialogueBox speaker="시스템" tone="system" text={problem.story} />
-          {showHint && <DialogueBox speaker="로키" tone="rocky" text={problem.hint} />}
+          {showHint && manipProblem && <DialogueBox speaker="로키" tone="rocky" text={manipProblem.hint} />}
+          {showHint && appProblem && <DialogueBox speaker="로키" tone="rocky" text={appProblem.problem.hint} />}
+          {appProblem && (
+            <DialogueBox
+              speaker={`응용 · ★${appProblem.problem.difficulty}`}
+              tone="narrator"
+              text={appProblem.problem.scenario + ' ' + appProblem.problem.prompt}
+            />
+          )}
         </div>
       </div>
 
       <div className="mt-5 flex flex-col items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10">
-        <FractionExpression a={problem.a} b={problem.b} operation="add" />
-
-        <ManipulationScene
-          a={problem.a}
-          b={problem.b}
-          themeId={problem.scene}
-          resetKey={problem.id}
-          onComplete={(combined) => setSeedAnswer(combined)}
-          onTransfer={() => sfx.tick()}
-        />
-
-        {showVisual && <FractionVisual a={problem.a} b={problem.b} operation="add" />}
-        <FractionInput
-          onChange={setAnswer}
-          disabled={feedback.kind === 'correct'}
-          seed={seedAnswer}
-        />
-        {problem.requireSimplified && !simplifyAidActive && (
-          <div className="text-xs text-yellow-300/90">⚠ 기약분수로 답해야 정답이야.</div>
+        {manipProblem && (
+          <>
+            <FractionExpression a={manipProblem.a} b={manipProblem.b} operation="add" />
+            <ManipulationScene
+              a={manipProblem.a}
+              b={manipProblem.b}
+              themeId={manipProblem.scene}
+              resetKey={manipProblem.id}
+              onComplete={(combined) => setSeedAnswer(combined)}
+              onTransfer={() => sfx.tick()}
+            />
+            {showVisual && <FractionVisual a={manipProblem.a} b={manipProblem.b} operation="add" />}
+            <FractionInput
+              onChange={setAnswer}
+              disabled={feedback.kind === 'correct'}
+              seed={seedAnswer}
+            />
+            {manipProblem.requireSimplified && !simplifyAidActive && (
+              <div className="text-xs text-yellow-300/90">⚠ 기약분수로 답해야 정답이야.</div>
+            )}
+          </>
+        )}
+        {appProblem && (
+          <ProblemPanel
+            problem={appProblem.problem}
+            onAnswerChange={setAppAnswer}
+            disabled={feedback.kind === 'correct'}
+          />
         )}
         {simplifyAidActive && (
           <div className="text-xs text-emerald-300">🧪 약분 도우미 활성 — 기약분수 요구 해제됨</div>
@@ -370,12 +420,14 @@ export function Chapter1() {
             >
               💡 힌트
             </button>
-            <button
-              onClick={() => setShowVisual((v) => !v)}
-              className="px-3 py-3 rounded-xl bg-cyan-400/15 text-cyan-200 border border-cyan-400/30"
-            >
-              📊 시각화
-            </button>
+            {manipProblem && (
+              <button
+                onClick={() => setShowVisual((v) => !v)}
+                className="px-3 py-3 rounded-xl bg-cyan-400/15 text-cyan-200 border border-cyan-400/30"
+              >
+                📊 시각화
+              </button>
+            )}
           </>
         ) : (
           <button

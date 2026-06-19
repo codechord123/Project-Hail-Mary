@@ -4,9 +4,11 @@ import { MainMenu } from '@/pages/MainMenu'
 import { ChapterSelect } from '@/pages/ChapterSelect'
 import { Cabinet } from '@/pages/Cabinet'
 import { Dashboard } from '@/pages/Dashboard'
+import { Leaderboard } from '@/pages/Leaderboard'
 import { ChapterClear } from '@/pages/ChapterClear'
 import { useGameStore } from '@/store/gameStore'
 import { setMuted } from '@/lib/sfx'
+import { setBgmMuted, stop as stopBgm } from '@/lib/bgm'
 
 const Chapter1 = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1 })))
 const Chapter1Clear = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1Clear })))
@@ -31,6 +33,8 @@ export default function App() {
   const presentationMode = useGameStore((s) => s.presentationMode)
   useEffect(() => {
     setMuted(muted)
+    setBgmMuted(muted)
+    if (muted) stopBgm()
   }, [muted])
 
   return (
@@ -55,6 +59,7 @@ export default function App() {
             <Route path="/chapter/:chapter/clear" element={<ChapterClear />} />
             <Route path="/cabinet" element={<Cabinet />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/endless" element={<Endless />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>

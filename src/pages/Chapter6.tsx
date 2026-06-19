@@ -10,6 +10,7 @@ import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { sfx } from '@/lib/sfx'
+import { playBgm, stop as stopBgm } from '@/lib/bgm'
 
 export function Chapter6() {
   const initialDeck = useMemo(() => buildChapter6Deck(), [])
@@ -22,6 +23,11 @@ export function Chapter6() {
   const run = useChapterRun({ chapterId: 6, maxScore: deck.length * 250 })
 
   const allMatched = matched.length === deck.length
+
+  useEffect(() => {
+    playBgm('chapter6')
+    return () => stopBgm()
+  }, [])
 
   useEffect(() => {
     if (run.isDead) {
