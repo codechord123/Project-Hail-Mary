@@ -13,6 +13,7 @@ import { genRandom } from '@/lib/problemGen'
 import { judge } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
+import { recordEndlessDailyBest, getDailyCombinedScore } from '@/lib/dailyChallenge'
 import { comboBonusXp } from '@/lib/scoring'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
@@ -73,6 +74,7 @@ export function Endless() {
         setHi(score)
         setHiState(score)
       }
+      recordEndlessDailyBest(score)
     }
   }, [oxygen, gameOver, score, hi])
 
@@ -138,6 +140,11 @@ export function Endless() {
           <div>SCORE: <span className="text-yellow-300 text-2xl">{score.toLocaleString()}</span></div>
           <div>SOLVED: <span className="text-cyan-300">{solved}</span></div>
           <div>BEST: <span className="text-pink-300">{hi.toLocaleString()}</span></div>
+          <div className="mt-3 pt-2 border-t border-white/10">
+            <div className="text-[10px] text-white/40">오늘의 종합 점수</div>
+            <div className="text-amber-300 text-xl font-bold">{getDailyCombinedScore().toLocaleString()}</div>
+            <div className="text-[10px] text-white/40">챌린지 + 엔들리스 일일 최고</div>
+          </div>
           {score === hi && score > 0 && (
             <div className="text-yellow-400 mt-3 animate-pulse font-bold">🏆 NEW RECORD!</div>
           )}

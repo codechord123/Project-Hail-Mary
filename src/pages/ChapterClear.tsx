@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useGameStore } from '@/store/gameStore'
 import { computeLevelInfo } from '@/lib/leveling'
 import { ITEMS, type ItemId } from '@/data/items'
+import { getDailyBest } from '@/lib/dailyChallenge'
 
 const NEXT_CHAPTER: Record<string, string> = {
   '1': '/chapter/3', // (챕터 2가 잠금되어 있을 때 가이드)
@@ -37,6 +38,7 @@ export function ChapterClear() {
   const rank = state.rank ?? 'C'
   const reward = state.rewardItemId ? ITEMS[state.rewardItemId] : null
   const nextRoute = NEXT_CHAPTER[chapter ?? '1'] ?? '/chapters'
+  const dailyDone = getDailyBest() !== null
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
@@ -70,6 +72,25 @@ export function ChapterClear() {
         >
           <div className="text-xs text-yellow-200">획득 보상</div>
           <div className="text-2xl mt-1">{reward.icon} {reward.name}</div>
+        </motion.div>
+      )}
+
+      {!dailyDone && (
+        <motion.div
+          initial={{ scale: 0, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          transition={{ delay: 0.8, type: 'spring' }}
+          className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 to-orange-600/20 border border-yellow-300/40 max-w-sm"
+        >
+          <div className="text-xs text-yellow-200">💡 추천</div>
+          <div className="text-white font-bold mt-1">오늘의 챌린지가 아직 남았어!</div>
+          <div className="text-xs text-white/70 mt-1">매일 자정에 새로 갱신되는 10문제 종합 챌린지.</div>
+          <Link
+            to="/daily"
+            className="block mt-2 px-4 py-2 rounded-lg bg-amber-500 text-space-900 font-bold text-center hover:brightness-110"
+          >
+            🌟 오늘의 챌린지 도전 →
+          </Link>
         </motion.div>
       )}
 

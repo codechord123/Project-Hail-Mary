@@ -24,6 +24,25 @@ const POOLS: Record<number, Problem[]> = {
       prompt: 'X = ?', hint: '7 − 4',
       answer: 3, unit: '',
     },
+    {
+      id: 'c2-bonus-d', kind: 'fraction', difficulty: 2,
+      scenario: '약품 8/15에서 3/15을 사용. 남은 약품을 기약분수로!',
+      prompt: '남은 약품 (기약)', hint: '8-3=5, 5/15 → 약분',
+      answer: { numerator: 1, denominator: 3 }, requireSimplified: true,
+    },
+    {
+      id: 'c2-bonus-e', kind: 'mcq', difficulty: 1,
+      scenario: '같은 분모의 뺄셈으로 0이 되는 식을 모두 골라.',
+      prompt: '결과가 0인 식', hint: '분자가 같으면 0.',
+      choices: ['5/8 - 5/8', '4/7 - 3/7', '6/9 - 6/9', '2/5 - 2/5', '7/11 - 6/11'],
+      correctIndexes: [0, 2, 3], multiple: true,
+    },
+    {
+      id: 'c2-bonus-f', kind: 'numeric', difficulty: 2,
+      scenario: '6일 분량의 산소 통 12/12 중 매일 2/12씩 4일을 썼어. 남은 분자는?',
+      prompt: 'X/12 — X는?', hint: '12 - 2×4 = ?',
+      answer: 4, unit: '',
+    },
   ],
   3: [
     {
@@ -46,6 +65,25 @@ const POOLS: Record<number, Problem[]> = {
       left: { numerator: 3, denominator: 4 }, right: { numerator: 5, denominator: 7 },
       correctOp: '>',
     },
+    {
+      id: 'c3-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '8/12 와 같은 값을 가지는, 분모가 9인 분수의 분자는? 답을 분수로 입력.',
+      prompt: '분모 9 형태의 동치 분수', hint: '8/12 = 2/3 = 6/9.',
+      answer: { numerator: 6, denominator: 9 }, requireSimplified: false,
+    },
+    {
+      id: 'c3-bonus-e', kind: 'numeric', difficulty: 2,
+      scenario: '분모가 8인 진분수 중 기약분수는 모두 몇 개?',
+      prompt: '기약분수 개수', hint: '1, 3, 5, 7.',
+      answer: 4, unit: '개',
+    },
+    {
+      id: 'c3-bonus-f', kind: 'compare', difficulty: 2,
+      scenario: '두 잔량 비교.',
+      prompt: '7/10 vs 0.75', hint: '7/10 = 0.7.',
+      left: { numerator: 7, denominator: 10 }, right: { decimal: 0.75 },
+      correctOp: '<',
+    },
   ],
   4: [
     {
@@ -65,6 +103,25 @@ const POOLS: Record<number, Problem[]> = {
       scenario: '응원 보고: 1/3 + 1/2 = ? (기약)',
       prompt: '합 (기약)', hint: '공통분모 6.',
       answer: { numerator: 5, denominator: 6 }, requireSimplified: true,
+    },
+    {
+      id: 'c4-bonus-d', kind: 'fraction', difficulty: 2,
+      scenario: '응원 함대 — 1/4 + 1/6 = ? (기약)',
+      prompt: '합 (기약)', hint: '공통분모 12.',
+      answer: { numerator: 5, denominator: 12 }, requireSimplified: true,
+    },
+    {
+      id: 'c4-bonus-e', kind: 'fraction', difficulty: 3,
+      scenario: '두 부대 합류: 5/8 + 1/6 = ? (기약)',
+      prompt: '합 (기약)', hint: '공통분모 24, 15+4=19.',
+      answer: { numerator: 19, denominator: 24 }, requireSimplified: true,
+    },
+    {
+      id: 'c4-bonus-f', kind: 'compare', difficulty: 2,
+      scenario: '두 시작 분량 비교.',
+      prompt: '1/3 + 1/4 vs 1/2', hint: '1/3+1/4=7/12, 1/2=6/12.',
+      left: { numerator: 7, denominator: 12 }, right: { numerator: 1, denominator: 2 },
+      correctOp: '>',
     },
   ],
   5: [
@@ -86,6 +143,24 @@ const POOLS: Record<number, Problem[]> = {
       prompt: 'LCM(8,12)', hint: '24.',
       answer: 24, unit: '',
     },
+    {
+      id: 'c5-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '잔량 차이: 4/5 - 1/3 = ? (기약)',
+      prompt: '차이 (기약)', hint: '공통분모 15, 12-5=7.',
+      answer: { numerator: 7, denominator: 15 }, requireSimplified: true,
+    },
+    {
+      id: 'c5-bonus-e', kind: 'numeric', difficulty: 2,
+      scenario: '두 분모 6과 9의 최소공배수는?',
+      prompt: 'LCM(6,9)', hint: '18.',
+      answer: 18, unit: '',
+    },
+    {
+      id: 'c5-bonus-f', kind: 'fraction', difficulty: 3,
+      scenario: '전력 손실: 5/6 - 2/9 = ? (기약)',
+      prompt: '차이 (기약)', hint: '공통분모 18, 15-4=11.',
+      answer: { numerator: 11, denominator: 18 }, requireSimplified: true,
+    },
   ],
   6: [
     {
@@ -105,6 +180,25 @@ const POOLS: Record<number, Problem[]> = {
       scenario: '가분수 7/2를 대분수로… 가분수 그대로 입력 (기약).',
       prompt: '7/2를 기약 가분수로', hint: '이미 기약.',
       answer: { numerator: 7, denominator: 2 }, requireSimplified: true,
+    },
+    {
+      id: 'c6-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '2⅖ 를 가분수로 (기약).',
+      prompt: '가분수 (기약)', hint: '2×5+2=12, 분모 5. 약분 X.',
+      answer: { numerator: 12, denominator: 5 }, requireSimplified: true,
+    },
+    {
+      id: 'c6-bonus-e', kind: 'fraction', difficulty: 3,
+      scenario: '3⅔ 를 가분수로 (기약).',
+      prompt: '가분수 (기약)', hint: '3×3+2=11, 분모 3.',
+      answer: { numerator: 11, denominator: 3 }, requireSimplified: true,
+    },
+    {
+      id: 'c6-bonus-f', kind: 'mcq', difficulty: 2,
+      scenario: '가분수 9/4 와 같은 대분수는?',
+      prompt: '9/4의 대분수 표현 = ?', hint: '9 = 4×2 + 1.',
+      choices: ['1¾', '2¼', '2¾', '3¼', '1¼'],
+      correctIndexes: [1], multiple: false,
     },
   ],
   7: [
@@ -127,6 +221,25 @@ const POOLS: Record<number, Problem[]> = {
       scenario: '대분수의 합 2¼ + 1⅔ = ? (가분수 기약).',
       prompt: '가분수 기약', hint: '9/4 + 5/3 = 27/12 + 20/12 = 47/12.',
       answer: { numerator: 47, denominator: 12 }, requireSimplified: true,
+    },
+    {
+      id: 'c7-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '대분수의 차 3⅓ − 1½ = ? (가분수 기약).',
+      prompt: '차 (가분수 기약)', hint: '10/3 - 3/2 = 20/6 - 9/6 = 11/6.',
+      answer: { numerator: 11, denominator: 6 }, requireSimplified: true,
+    },
+    {
+      id: 'c7-bonus-e', kind: 'mcq', difficulty: 2,
+      scenario: '여왕의 마지막 술책 — 1/2 와 크기가 같은 분수는?',
+      prompt: '1/2와 동치인 분수를 모두 골라.', hint: '분자×2 = 분모.',
+      choices: ['2/4', '3/6', '5/10', '7/14', '4/9'],
+      correctIndexes: [0, 1, 2, 3], multiple: true,
+    },
+    {
+      id: 'c7-bonus-f', kind: 'numeric', difficulty: 3,
+      scenario: '5/6 보다 크고 1 보다 작은 분수 중에서, 분모가 12인 진분수의 개수는?',
+      prompt: '개수', hint: '5/6=10/12, 1=12/12. 11/12 만.',
+      answer: 1, unit: '개',
     },
   ],
 }

@@ -100,3 +100,43 @@ export const recordDailyBest = (score: number, correctCount: number, date = toda
 }
 
 export const todayDateKey = todayKey
+
+// === Endless 일일 누적 ===
+const ENDLESS_DAILY_KEY = 'hailmary-endless-daily'
+
+interface EndlessDaily {
+  date: string
+  best: number
+}
+
+const readEndlessDaily = (): EndlessDaily[] => {
+  try {
+    const raw = localStorage.getItem(ENDLESS_DAILY_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+export const recordEndlessDailyBest = (score: number, date = todayKey()) => {
+  const all = readEndlessDaily()
+  const idx = all.findIndex((b) => b.date === date)
+  if (idx === -1) all.push({ date, best: score })
+  else if (score > all[idx].best) all[idx] = { date, best: score }
+  try {
+    localStorage.setItem(ENDLESS_DAILY_KEY, JSON.stringify(all.slice(-30)))
+  } catch {
+    /* ignore */
+  }
+}
+
+export const getEndlessDailyBest = (date = todayKey()): number => {
+  return readEndlessDaily().find((b) => b.date === date)?.best ?? 0
+}
+
+/** 일일 종합 점수 — 챌린지 + 엔들리스 그날 최고 */
+export const getDailyCombinedScore = (date = todayKey()): number => {
+  const ch = getDailyBest(date)?.score ?? 0
+  const en = getEndlessDailyBest(date)
+  return ch + en
+}
