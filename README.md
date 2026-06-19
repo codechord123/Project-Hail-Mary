@@ -28,14 +28,14 @@ npm run e2e:install   # E2E 브라우저 설치 (최초 1회)
 npm run e2e           # E2E (Playwright, chromium)
 ```
 
-## Firebase 학급 동기화 (옵션)
+## 데이터 저장
 
-`.env.local`에 Firebase 키 설정 시 학급 단위 리더보드가 클라우드 sync.
-미설정 시 LocalStorage 로컬 모드로 동작. `.env.example` 참고.
+외부 서버/계정 없이 단말의 LocalStorage에만 진도와 학급 명부를 저장합니다.
+한 단말에서 여러 학생이 사용해도 명부에 각자 자동 등록되어 같은 기기 안에서 리더보드 비교가 가능합니다.
 
 ## 진행 상태
 
 - [x] Phase 1 MVP — 챕터 1
 - [x] Phase 2 — 챕터 2~6 (장르 다양화: 슈터/디펜스/리액터/매칭)
 - [x] Phase 3 — 챕터 7 메가보스 + 보너스 응용 문항 + BGM
-- [x] Phase 4 — 학급 명부/리더보드, 진도판, 발표 모드, Firebase 옵셔널
+- [x] Phase 4 — 학급 명부/리더보드, 진도판, 발표 모드 (단말 단위)
