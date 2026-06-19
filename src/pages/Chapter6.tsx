@@ -10,6 +10,9 @@ import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { sfx } from '@/lib/sfx'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
@@ -24,6 +27,8 @@ export function Chapter6() {
   const [resetFlag, setResetFlag] = useState(0)
   const run = useChapterRun({ chapterId: 6, maxScore: deck.length * 250 })
   const bonus = useMemo(() => pickBonusProblem(6), [])
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
 
   const allMatched = matched.length === deck.length
 
@@ -101,7 +106,10 @@ export function Chapter6() {
           <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
             ← 챕터 선택
           </Link>
-          <LevelBadge compact />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowNotebook(true)} className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs">📝 노트</button>
+            <LevelBadge compact />
+          </div>
         </header>
 
         <StageHeader
@@ -188,6 +196,8 @@ export function Chapter6() {
           onFail={() => run.store.addOxygen(-5)}
         />
       )}
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && <StoryOverlay lines={STORY[6].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
 }

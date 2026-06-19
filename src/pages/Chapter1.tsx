@@ -12,6 +12,10 @@ import { DialogueBox } from '@/components/DialogueBox'
 import { RockyAvatar } from '@/components/RockyAvatar'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { ShipDiagram } from '@/components/ShipDiagram'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { LevelBadge } from '@/components/LevelBadge'
 import { CountdownTimer } from '@/components/CountdownTimer'
 import { CrisisOverlay } from '@/components/CrisisOverlay'
@@ -37,6 +41,10 @@ type Feedback =
   | { kind: 'timeout' }
 
 export function Chapter1() {
+  const [showIntro, setShowIntro] = useState(true)
+  const [showOutro, setShowOutro] = useState(false)
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [shieldActive, setShieldActive] = useState(false)
   const [idx, setIdx] = useState(0)
   const [answer, setAnswer] = useState<Fraction | null>(null)
   const [seedAnswer, setSeedAnswer] = useState<Fraction | null>(null)
@@ -117,6 +125,11 @@ export function Chapter1() {
     if (appProblem) {
       const r = judge(appProblem.problem, appAnswer)
       if (r.kind === 'wrong') {
+        if (shieldActive) {
+          setShieldActive(false)
+          setFeedback({ kind: 'wrong', message: '🛡 보호막이 오답을 막았어!' })
+          return
+        }
         store.addOxygen(-10)
         setCombo(0)
         setWrongCount((c) => c + 1)
@@ -134,6 +147,11 @@ export function Chapter1() {
     } else {
       if (!answer) return
       if (!valueEquals(answer, expected)) {
+        if (shieldActive) {
+          setShieldActive(false)
+          setFeedback({ kind: 'wrong', message: '🛡 보호막이 오답을 막았어!' })
+          return
+        }
         store.addOxygen(-10)
         setCombo(0)
         setWrongCount((c) => c + 1)
@@ -276,8 +294,29 @@ export function Chapter1() {
         <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
           ← 챕터 선택
         </Link>
-        <LevelBadge compact />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowNotebook(true)}
+            className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs"
+          >
+            📝 노트
+          </button>
+          <LevelBadge compact />
+        </div>
       </header>
+
+      <div className="mt-2">
+        <InventoryQuickSlot
+          onUseOxygen={() => {}}
+          onUseShield={() => setShieldActive(true)}
+          onUseMagnet={() => {
+            if (manipProblem) setSeedAnswer(expected)
+          }}
+          shieldActive={shieldActive}
+          simplifyAidActive={simplifyAidActive}
+          onUseSimplifyAid={() => setSimplifyAidActive(true)}
+        />
+      </div>
 
       <ResourceBar />
 
@@ -466,6 +505,14 @@ export function Chapter1() {
       <div className="mt-2">
         <CharacterAvatar size={56} pose="idle" />
       </div>
+
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && (
+        <StoryOverlay lines={STORY[1].intro} onClose={() => setShowIntro(false)} />
+      )}
+      {showOutro && (
+        <StoryOverlay lines={STORY[1].outro} onClose={() => setShowOutro(false)} />
+      )}
     </div>
   )
 }

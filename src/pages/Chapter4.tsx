@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlockMath } from 'react-katex'
 import { chapter4Targets, chapter4Expected, LANE_ADVANCE_SEC, type DefenseTarget } from '@/data/chapter4'
-import { FractionInput } from '@/components/FractionInput'
+import { buildFractionChoices } from '@/lib/choiceGen'
 import { ResourceBar } from '@/components/ResourceBar'
 import { LevelBadge } from '@/components/LevelBadge'
 import { StageHeader } from '@/components/arcade/StageHeader'
 import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { useChapterRun } from '@/hooks/useChapterRun'
-import { valueEquals, isSimplified } from '@/lib/fractionMath'
+import { valueEquals, simplify } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
@@ -28,7 +31,8 @@ const KILLS_TO_CLEAR = 9
 export function Chapter4() {
   const [lanes, setLanes] = useState<(ActiveLane | null)[]>([null, null, null])
   const [targetIdx, setTargetIdx] = useState<number | null>(null)
-  const [answer, setAnswer] = useState<Fraction | null>(null)
+  // 레인별 카드 4개 (정답 1 + 오답 3, 셔플)
+  const [laneChoices, setLaneChoices] = useState<Record<string, Fraction[]>>({})
   const [feedback, setFeedback] = useState<'idle' | 'wrong' | 'simplify' | 'breach'>('idle')
   const [shake, setShake] = useState(0)
   const [killed, setKilled] = useState(0)
@@ -81,6 +85,8 @@ export function Chapter4() {
   }, [run.isDead])
 
   const [showBonus, setShowBonus] = useState(false)
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   // 클리어 체크
   useEffect(() => {
     if (killed >= KILLS_TO_CLEAR) {
@@ -89,34 +95,41 @@ export function Chapter4() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [killed])
 
-  const submit = useCallback(() => {
-    if (targetIdx === null) return
-    const lane = lanes[targetIdx]
-    if (!lane || !answer) return
+  // 레인별 카드 자동 생성 (적이 바뀔 때마다)
+  useEffect(() => {
+    setLaneChoices((cur) => {
+      const next = { ...cur }
+      lanes.forEach((lane) => {
+        if (lane && !next[lane.target.id]) {
+          const correct = simplify(chapter4Expected(lane.target))
+          next[lane.target.id] = buildFractionChoices(correct)
+        }
+      })
+      return next
+    })
+  }, [lanes])
+
+  const chooseCard = useCallback((laneIdx: number, choice: Fraction) => {
+    const lane = lanes[laneIdx]
+    if (!lane) return
     const expected = chapter4Expected(lane.target)
-    if (!valueEquals(answer, expected)) {
+    if (!valueEquals(choice, expected)) {
       run.onWrong(8)
       setFeedback('wrong')
       setShake((s) => s + 1)
       return
     }
-    if (lane.target.requireSimplified && !isSimplified(answer)) {
-      run.onWrong(4)
-      setFeedback('simplify')
-      return
-    }
     // 처치
     sfx.crit()
-    setKillAnim(targetIdx)
+    setKillAnim(laneIdx)
     setTimeout(() => setKillAnim(null), 600)
     const crit = run.combo >= 3
     run.onCorrect({ xpBase: 28, scoreGain: 350, crit, difficulty: 2 })
     setKilled((k) => k + 1)
-    setLanes((cur) => cur.map((c, j) => (j === targetIdx ? spawnLane(targetIdx, queueRef) : c)))
-    setAnswer(null)
+    setLanes((cur) => cur.map((c, j) => (j === laneIdx ? spawnLane(laneIdx, queueRef) : c)))
     setTargetIdx(null)
     setFeedback('idle')
-  }, [targetIdx, lanes, answer, run])
+  }, [lanes, run])
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-4 max-w-2xl mx-auto flex flex-col">
@@ -125,7 +138,10 @@ export function Chapter4() {
           <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
             ← 챕터 선택
           </Link>
-          <LevelBadge compact />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowNotebook(true)} className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs">📝 노트</button>
+            <LevelBadge compact />
+          </div>
         </header>
 
         <StageHeader
@@ -216,19 +232,32 @@ export function Chapter4() {
           </div>
         )}
 
-        {/* 입력 */}
-        <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center gap-2">
-          <div className="text-xs text-white/60">
-            {targetIdx === null ? '레인을 선택해 조준' : `LANE ${targetIdx + 1} 조준 — 합한 분수를 기약으로 입력`}
+        {/* 4지선다 카드 */}
+        <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
+          <div className="text-xs text-white/60 text-center mb-2">
+            {targetIdx === null
+              ? '레인 선택 → 정답 카드 탭'
+              : `LANE ${targetIdx + 1} — 합한 분수를 골라`}
           </div>
-          <FractionInput key={`${targetIdx}-${lanes[targetIdx ?? 0]?.target.id}`} onChange={setAnswer} />
-          <button
-            onClick={submit}
-            disabled={targetIdx === null || !answer}
-            className="px-6 py-3 rounded-xl bg-cyan-400 text-space-900 font-bold disabled:opacity-30"
-          >
-            🎯 격파!
-          </button>
+          {targetIdx !== null && lanes[targetIdx] && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {(laneChoices[lanes[targetIdx]!.target.id] ?? []).map((c, i) => (
+                <button
+                  key={i}
+                  onClick={() => chooseCard(targetIdx, c)}
+                  className="p-3 rounded-lg bg-gradient-to-br from-cyan-500/30 to-blue-700/30 border-2 border-cyan-400/40 hover:border-yellow-300 hover:scale-105 transition active:scale-95"
+                >
+                  <div className="text-2xl text-white font-mono font-bold">
+                    <span className="inline-flex flex-col items-center">
+                      <span>{c.numerator}</span>
+                      <span className="border-t-2 border-white w-6 my-0.5" />
+                      <span>{c.denominator}</span>
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </ScreenShake>
 
@@ -239,6 +268,8 @@ export function Chapter4() {
           onFail={() => run.store.addOxygen(-5)}
         />
       )}
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && <StoryOverlay lines={STORY[4].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
 }

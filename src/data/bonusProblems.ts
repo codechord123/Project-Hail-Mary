@@ -106,9 +106,9 @@ const POOLS: Record<number, Problem[]> = {
     },
     {
       id: 'c4-bonus-d', kind: 'fraction', difficulty: 2,
-      scenario: '응원 함대 — 1/4 + 1/6 = ? (기약)',
-      prompt: '합 (기약)', hint: '공통분모 12.',
-      answer: { numerator: 5, denominator: 12 }, requireSimplified: true,
+      scenario: '응원 함대 — 2/3 + 1/4 = ? (기약)',
+      prompt: '합 (기약)', hint: '공통분모 12, 8+3=11.',
+      answer: { numerator: 11, denominator: 12 }, requireSimplified: true,
     },
     {
       id: 'c4-bonus-e', kind: 'fraction', difficulty: 3,

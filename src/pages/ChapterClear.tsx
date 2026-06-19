@@ -4,6 +4,9 @@ import { useGameStore } from '@/store/gameStore'
 import { computeLevelInfo } from '@/lib/leveling'
 import { ITEMS, type ItemId } from '@/data/items'
 import { getDailyBest } from '@/lib/dailyChallenge'
+import { STORY } from '@/data/story'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { useState } from 'react'
 
 const NEXT_CHAPTER: Record<string, string> = {
   '1': '/chapter/3', // (챕터 2가 잠금되어 있을 때 가이드)
@@ -39,6 +42,9 @@ export function ChapterClear() {
   const reward = state.rewardItemId ? ITEMS[state.rewardItemId] : null
   const nextRoute = NEXT_CHAPTER[chapter ?? '1'] ?? '/chapters'
   const dailyDone = getDailyBest() !== null
+  const chapterNum = parseInt(chapter ?? '1', 10)
+  const outroLines = STORY[chapterNum]?.outro ?? []
+  const [showOutro, setShowOutro] = useState(outroLines.length > 0)
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
@@ -105,6 +111,10 @@ export function ChapterClear() {
           챕터 선택
         </Link>
       </div>
+
+      {showOutro && (
+        <StoryOverlay lines={outroLines} onClose={() => setShowOutro(false)} />
+      )}
     </div>
   )
 }

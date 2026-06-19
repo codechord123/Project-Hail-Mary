@@ -132,9 +132,9 @@ export const CHAPTER1_APPLICATION_POOL: ApplicationProblem[] = [
     problem: {
       id: 'c1-app-4',
       kind: 'mcq', difficulty: 1,
-      scenario: '아래 중 같은 분모 덧셈 결과가 같은 분수끼리 짝지어진 것은?',
-      prompt: '같은 결과를 내는 식을 모두 골라.',
-      hint: '두 식의 합을 각각 계산해서 비교.',
+      scenario: '아래 등식들이 모두 올바르게 계산됐는지 검토해.',
+      prompt: '계산이 올바른 식을 모두 골라.',
+      hint: '분자끼리 더한 결과가 우변과 같은지 확인.',
       choices: ['2/7 + 3/7 = 5/7', '1/5 + 3/5 = 4/5', '4/9 + 1/9 = 5/9', '2/6 + 2/6 = 4/6', '1/4 + 1/4 = 2/4'],
       correctIndexes: [0, 1, 2, 3, 4], multiple: true,
     },

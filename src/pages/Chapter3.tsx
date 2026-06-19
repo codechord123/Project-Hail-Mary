@@ -16,6 +16,9 @@ import { CrisisOverlay } from '@/components/CrisisOverlay'
 import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { useGameStore } from '@/store/gameStore'
 import { sfx } from '@/lib/sfx'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { judge } from '@/lib/judge'
 import { computeRank } from '@/lib/judge'
@@ -50,6 +53,8 @@ export function Chapter3() {
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [showBonus, setShowBonus] = useState(false)
   const [pendingClear, setPendingClear] = useState<null | (() => void)>(null)
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
@@ -220,7 +225,10 @@ export function Chapter3() {
           <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
             ← 챕터 선택
           </Link>
-          <LevelBadge compact />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowNotebook(true)} className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs">📝 노트</button>
+            <LevelBadge compact />
+          </div>
         </header>
 
         <StageHeader
@@ -365,6 +373,8 @@ export function Chapter3() {
           onFail={() => store.addOxygen(-5)}
         />
       )}
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && <StoryOverlay lines={STORY[3].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
 }

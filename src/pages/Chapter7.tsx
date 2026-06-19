@@ -18,6 +18,9 @@ import { judge } from '@/lib/judge'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import { sfx } from '@/lib/sfx'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { StudentAnswer } from '@/types/problem'
 
@@ -32,6 +35,8 @@ export function Chapter7() {
   const [bossHit, setBossHit] = useState(false)
   const [bossDead, setBossDead] = useState(false)
   const [showBonus, setShowBonus] = useState(false)
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const [shake, setShake] = useState(0)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
@@ -148,7 +153,10 @@ export function Chapter7() {
           <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
             ← 챕터 선택
           </Link>
-          <LevelBadge compact />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowNotebook(true)} className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs">📝 노트</button>
+            <LevelBadge compact />
+          </div>
         </header>
 
         <StageHeader
@@ -247,6 +255,8 @@ export function Chapter7() {
           onFail={() => run.store.addOxygen(-5)}
         />
       )}
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && <StoryOverlay lines={STORY[7].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
 }

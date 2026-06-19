@@ -11,6 +11,9 @@ import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { BlockMath } from 'react-katex'
 import { sfx } from '@/lib/sfx'
+import { NotebookOverlay } from '@/components/NotebookOverlay'
+import { StoryOverlay } from '@/components/StoryOverlay'
+import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
@@ -106,6 +109,8 @@ export function Chapter2() {
   }, [answer, expectedAns, exploded, wave, run])
 
   const [showBonus, setShowBonus] = useState(false)
+  const [showNotebook, setShowNotebook] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const nextOrFinish = useCallback(() => {
     if (isLast) {
       setShowBonus(true)
@@ -122,7 +127,10 @@ export function Chapter2() {
           <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
             ← 챕터 선택
           </Link>
-          <LevelBadge compact />
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowNotebook(true)} className="px-2 py-1 rounded bg-amber-400/20 text-amber-200 border border-amber-300/40 text-xs">📝 노트</button>
+            <LevelBadge compact />
+          </div>
         </header>
 
         <StageHeader
@@ -280,6 +288,8 @@ export function Chapter2() {
           onFail={() => run.store.addOxygen(-5)}
         />
       )}
+      <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      {showIntro && <StoryOverlay lines={STORY[2].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
 }
