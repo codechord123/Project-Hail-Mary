@@ -9,6 +9,10 @@ export function MainMenu() {
   const muted = useGameStore((s) => s.muted)
   const toggleMute = useGameStore((s) => s.toggleMute)
   const studentName = useGameStore((s) => s.studentName)
+  const bgmEnabled = useGameStore((s) => s.bgmEnabled)
+  const bgmVolume = useGameStore((s) => s.bgmVolume)
+  const toggleBgmEnabled = useGameStore((s) => s.toggleBgmEnabled)
+  const setBgmVolume = useGameStore((s) => s.setBgmVolume)
 
   const start = () => {
     unlockAudio()
@@ -16,7 +20,29 @@ export function MainMenu() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center relative">
+      {/* 우상단 미니 오디오 컨트롤 */}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/40 backdrop-blur rounded-full px-2 py-1 border border-white/10">
+        <button
+          onClick={() => toggleBgmEnabled()}
+          aria-label={bgmEnabled ? 'BGM 끄기' : 'BGM 켜기'}
+          className="text-base hover:scale-110 transition"
+        >
+          {bgmEnabled ? '🎵' : '🎶'}
+        </button>
+        <input
+          type="range"
+          min="0" max="100" step="5"
+          aria-label="BGM 음량"
+          disabled={!bgmEnabled || muted}
+          value={Math.round(bgmVolume * 100)}
+          onChange={(e) => setBgmVolume(parseInt(e.target.value, 10) / 100)}
+          className="w-20 accent-space-accent disabled:opacity-30"
+        />
+        <span className="text-[10px] text-white/60 font-mono w-7 text-right">
+          {Math.round(bgmVolume * 100)}
+        </span>
+      </div>
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}

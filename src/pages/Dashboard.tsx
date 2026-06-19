@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useGameStore } from '@/store/gameStore'
 import { computeLevelInfo } from '@/lib/leveling'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
+import {
+  listProfiles, switchToStudent, saveCurrentSlot, deleteProfile,
+} from '@/lib/profileSwitch'
 
 const CHAPTERS = [
   { id: 1, title: '깨어남', topic: '같은 분모 +', genre: '🤲 조작' },
@@ -19,6 +22,47 @@ export function Dashboard() {
   const info = computeLevelInfo(store.totalXp)
   const [editName, setEditName] = useState(store.studentName)
   const [editCode, setEditCode] = useState(store.classCode)
+  const [profiles, setProfiles] = useState<string[]>([])
+  const [newStudentName, setNewStudentName] = useState('')
+
+  useEffect(() => {
+    setProfiles(listProfiles())
+  }, [store.studentName])
+
+  // 진도 변경 시 현재 슬롯 자동 저장
+  useEffect(() => {
+    saveCurrentSlot()
+  }, [store.totalXp, store.clearedChapters, store.chapterRecords])
+
+  const handleSwitch = (name: string) => {
+    if (name === store.studentName) return
+    if (window.confirm(`현재 학생(${store.studentName || '미지정'})의 진도를 저장하고 ${name}(으)로 전환할까요?`)) {
+      switchToStudent(name)
+      setEditName(name)
+      setEditCode(useGameStore.getState().classCode)
+    }
+  }
+
+  const handleNewStudent = () => {
+    const n = newStudentName.trim()
+    if (!n) return
+    if (window.confirm(`새 학생 "${n}"으로 시작할까요? 현재 진도는 저장돼.`)) {
+      switchToStudent(n, store.classCode)
+      setEditName(n)
+      setNewStudentName('')
+    }
+  }
+
+  const handleDeleteProfile = (name: string) => {
+    if (name === store.studentName) {
+      window.alert('현재 사용 중인 프로파일은 삭제할 수 없어요. 먼저 다른 학생으로 전환하세요.')
+      return
+    }
+    if (window.confirm(`정말 ${name} 학생 프로파일을 삭제할까요? 되돌릴 수 없어요.`)) {
+      deleteProfile(name)
+      setProfiles(listProfiles())
+    }
+  }
 
   const totalCleared = store.clearedChapters.length
   const totalStars = Object.values(store.chapterRecords).reduce((s, r) => s + r.stars, 0)
@@ -53,6 +97,60 @@ export function Dashboard() {
               className="w-full mt-1 px-3 py-1.5 rounded bg-black/40 text-white border border-white/20 focus:outline-none focus:border-space-accent text-sm"
             />
           </div>
+        </div>
+      </section>
+
+      {/* 프로파일 스위처 */}
+      <section className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-bold text-white">👥 학생 빠른 전환</h3>
+          <span className="text-[10px] text-white/40">{profiles.length}명 저장됨</span>
+        </div>
+        {profiles.length === 0 ? (
+          <div className="text-xs text-white/40">아직 등록된 프로파일이 없어요. 위 이름란 작성 후 자동 저장돼요.</div>
+        ) : (
+          <ul className="flex flex-wrap gap-1.5">
+            {profiles.map((p) => {
+              const isCurrent = p === store.studentName
+              return (
+                <li key={p} className="flex items-center">
+                  <button
+                    onClick={() => handleSwitch(p)}
+                    disabled={isCurrent}
+                    className={`px-3 py-1 rounded-l border text-xs ${
+                      isCurrent
+                        ? 'border-space-accent bg-space-accent/30 text-white'
+                        : 'border-white/20 bg-white/5 text-white hover:bg-white/10'
+                    }`}
+                  >
+                    {isCurrent && '● '}{p}
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProfile(p)}
+                    className="px-2 py-1 rounded-r border border-l-0 border-white/20 bg-white/5 text-white/40 hover:text-red-300 text-xs"
+                    title="삭제"
+                  >
+                    ✕
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+        <div className="mt-3 flex gap-2">
+          <input
+            value={newStudentName}
+            onChange={(e) => setNewStudentName(e.target.value)}
+            placeholder="새 학생 이름"
+            className="flex-1 px-2 py-1 rounded bg-black/40 text-white border border-white/20 focus:outline-none focus:border-space-accent text-xs"
+          />
+          <button
+            onClick={handleNewStudent}
+            disabled={!newStudentName.trim()}
+            className="px-3 py-1 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-400/40 text-xs disabled:opacity-30"
+          >
+            + 새 학생
+          </button>
         </div>
       </section>
 

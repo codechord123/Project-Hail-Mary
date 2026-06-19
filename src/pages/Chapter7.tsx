@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo} from 'react' /* useMemo 보강 다음 줄 */
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapter7Phases, QUEEN } from '@/data/chapter7'
@@ -16,7 +16,7 @@ import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { judge } from '@/lib/judge'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { StudentAnswer } from '@/types/problem'
@@ -37,6 +37,7 @@ export function Chapter7() {
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
   const damageIdRef = useRef(0)
   const run = useChapterRun({ chapterId: 7, maxScore: TOTAL_PROBLEMS * 700 })
+  const bonus = useMemo(() => pickBonusProblem(7), [])
 
   const phase = chapter7Phases[phaseIdx]
   const problem = phase.problems[problemIdx]
@@ -241,7 +242,7 @@ export function Chapter7() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[7]}
+          problem={bonus}
           onPass={() => run.finish({ bossDefeated: true })}
           onFail={() => run.store.addOxygen(-5)}
         />

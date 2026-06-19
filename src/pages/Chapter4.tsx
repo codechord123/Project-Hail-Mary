@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo} from 'react' /* useMemo 보강 다음 줄 */
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlockMath } from 'react-katex'
@@ -13,7 +13,7 @@ import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 interface ActiveLane {
@@ -36,6 +36,7 @@ export function Chapter4() {
   const queueRef = useRef<DefenseTarget[]>([...chapter4Targets])
   const [tick, setTick] = useState(0)
   const run = useChapterRun({ chapterId: 4, maxScore: KILLS_TO_CLEAR * 500 })
+  const bonus = useMemo(() => pickBonusProblem(4), [])
 
   // 매 200ms tick (적의 진행도 계산용)
   useEffect(() => {
@@ -233,7 +234,7 @@ export function Chapter4() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[4]}
+          problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}
         />

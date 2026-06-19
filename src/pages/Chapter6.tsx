@@ -11,7 +11,7 @@ import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { sfx } from '@/lib/sfx'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 
 export function Chapter6() {
@@ -23,6 +23,7 @@ export function Chapter6() {
   const [shake, setShake] = useState(0)
   const [resetFlag, setResetFlag] = useState(0)
   const run = useChapterRun({ chapterId: 6, maxScore: deck.length * 250 })
+  const bonus = useMemo(() => pickBonusProblem(6), [])
 
   const allMatched = matched.length === deck.length
 
@@ -182,7 +183,7 @@ export function Chapter6() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[6]}
+          problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}
         />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapter2Waves, chapter2Expected } from '@/data/chapter2'
@@ -14,7 +14,7 @@ import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 export function Chapter2() {
@@ -32,6 +32,7 @@ export function Chapter2() {
   const wave = chapter2Waves[waveIdx]
   const isLast = waveIdx === chapter2Waves.length - 1
   const expectedAns = chapter2Expected(wave.a, wave.b)
+  const bonus = useMemo(() => pickBonusProblem(2), [])
 
   useEffect(() => {
     playBgm('chapter2')
@@ -274,7 +275,7 @@ export function Chapter2() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[2]}
+          problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}
         />

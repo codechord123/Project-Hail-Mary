@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo} from 'react' /* useMemo 보강 다음 줄 */
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapter3Problems, CHAPTER3_BOSS } from '@/data/chapter3'
@@ -20,7 +20,7 @@ import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { judge } from '@/lib/judge'
 import { computeRank } from '@/lib/judge'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import { comboBonusXp } from '@/lib/scoring'
 import { CHAPTER_REWARD_POOL } from '@/data/items'
 import type { StudentAnswer } from '@/types/problem'
@@ -50,6 +50,7 @@ export function Chapter3() {
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [showBonus, setShowBonus] = useState(false)
   const [pendingClear, setPendingClear] = useState<null | (() => void)>(null)
+  const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
   const navigate = useNavigate()
@@ -359,7 +360,7 @@ export function Chapter3() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[3]}
+          problem={bonus}
           onPass={() => pendingClear?.()}
           onFail={() => store.addOxygen(-5)}
         />

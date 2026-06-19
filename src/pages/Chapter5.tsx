@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo} from 'react' /* useMemo 보강 다음 줄 */
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlockMath } from 'react-katex'
@@ -16,7 +16,7 @@ import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
-import { BONUS_PROBLEMS } from '@/data/bonusProblems'
+import { pickBonusProblem } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 type Step = 'commonDenom' | 'calc' | 'simplify'
@@ -33,6 +33,7 @@ export function Chapter5() {
   const [simplifyAns, setSimplifyAns] = useState<Fraction | null>(null)
   const [showBonus, setShowBonus] = useState(false)
   const run = useChapterRun({ chapterId: 5, maxScore: chapter5Breaches.length * 900 })
+  const bonus = useMemo(() => pickBonusProblem(5), [])
 
   const breach = chapter5Breaches[idx]
   const sol = solveBreach(breach)
@@ -250,7 +251,7 @@ export function Chapter5() {
 
       {showBonus && (
         <BonusProblemOverlay
-          problem={BONUS_PROBLEMS[5]}
+          problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}
         />
