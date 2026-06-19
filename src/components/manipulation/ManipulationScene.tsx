@@ -3,6 +3,13 @@ import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import type { Fraction } from '@/types/fraction'
 import { SCENE_THEMES, type SceneThemeId } from './themes'
 
+interface Particle {
+  id: number
+  x: number
+  y: number
+  color: string
+}
+
 interface Props {
   a: Fraction
   b: Fraction
@@ -37,7 +44,23 @@ export function ManipulationScene({ a, b, themeId, resetKey, onComplete, onTrans
   }, [resetKey])
 
   const [cells, setCells] = useState<Cell[]>(initialCells)
+  const [particles, setParticles] = useState<Particle[]>([])
+  const particleIdRef = useRef(0)
   const completedRef = useRef(false)
+
+  const burstParticles = () => {
+    const id = ++particleIdRef.current
+    const batch: Particle[] = Array.from({ length: 4 }).map((_, i) => ({
+      id: id * 10 + i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      color: theme.particleColor,
+    }))
+    setParticles((ps) => [...ps, ...batch])
+    setTimeout(() => {
+      setParticles((ps) => ps.filter((p) => !batch.some((b) => b.id === p.id)))
+    }, 700)
+  }
 
   useEffect(() => {
     setCells(initialCells)
@@ -61,6 +84,7 @@ export function ManipulationScene({ a, b, themeId, resetKey, onComplete, onTrans
   const transfer = (id: string) => {
     setCells((cs) => cs.map((c) => (c.id === id ? { ...c, slot: 'result' } : c)))
     onTransfer?.()
+    burstParticles()
   }
 
   const sendBack = (id: string) => {
@@ -75,7 +99,20 @@ export function ManipulationScene({ a, b, themeId, resetKey, onComplete, onTrans
   }
 
   return (
-    <div className={`w-full p-3 rounded-2xl bg-gradient-to-b ${theme.bgGradient}`}>
+    <div className={`relative w-full p-3 rounded-2xl bg-gradient-to-b ${theme.bgGradient}`}>
+      {/* 전송 파티클 */}
+      <AnimatePresence>
+        {particles.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{ left: `${p.x}%`, top: `${p.y}%`, opacity: 1, scale: 1 }}
+            animate={{ top: `${p.y - 30}%`, opacity: 0, scale: 0.3 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="absolute w-1.5 h-1.5 rounded-full pointer-events-none"
+            style={{ backgroundColor: p.color, boxShadow: `0 0 6px ${p.color}` }}
+          />
+        ))}
+      </AnimatePresence>
       <div className="flex items-center justify-between mb-2">
         <div className="text-xs text-white/60">손가락으로 셀을 옮겨 합쳐봐 👆</div>
         <button

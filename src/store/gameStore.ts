@@ -37,8 +37,14 @@ interface GameState {
   items: Partial<Record<ItemId, number>>
   // 설정
   muted: boolean
+  studentName: string
+  classCode: string
+  presentationMode: boolean
 
   // actions
+  setStudentName: (name: string) => void
+  setClassCode: (code: string) => void
+  togglePresentationMode: () => void
   addOxygen: (delta: number) => void
   setOxygen: (v: number) => void
   addEnergy: (delta: number) => void
@@ -73,6 +79,9 @@ const INITIAL = {
   cosmetics: { ...INITIAL_COSMETICS },
   items: {} as Partial<Record<ItemId, number>>,
   muted: false,
+  studentName: '',
+  classCode: '',
+  presentationMode: false,
 }
 
 const safeStorage = createJSONStorage(() => {
@@ -166,28 +175,40 @@ export const useGameStore = create<GameState>()(
         })),
       resetForChapter: () => set((s) => ({ oxygen: s.maxOxygen(), energy: s.energy })),
       toggleMute: () => set((s) => ({ muted: !s.muted })),
+      setStudentName: (name) => set({ studentName: name.slice(0, 16) }),
+      setClassCode: (code) => set({ classCode: code.slice(0, 16) }),
+      togglePresentationMode: () => set((s) => ({ presentationMode: !s.presentationMode })),
       reset: () => set({ ...INITIAL }),
     }),
     {
       name: 'hailmary-save',
-      version: 2,
+      version: 3,
       storage: safeStorage,
       migrate: (persisted: any, version) => {
         if (!persisted) return persisted
+        let p = persisted
         if (version < 2) {
-          return {
+          p = {
             ...INITIAL,
-            ...persisted,
-            chapterRecords: persisted.chapterRecords ?? {},
-            totalXp: persisted.totalXp ?? 0,
-            statPoints: persisted.statPoints ?? 0,
-            stats: { ...INITIAL_STATS, ...(persisted.stats ?? {}) },
-            cosmetics: { ...INITIAL_COSMETICS, ...(persisted.cosmetics ?? {}) },
-            items: persisted.items ?? {},
-            muted: persisted.muted ?? false,
+            ...p,
+            chapterRecords: p.chapterRecords ?? {},
+            totalXp: p.totalXp ?? 0,
+            statPoints: p.statPoints ?? 0,
+            stats: { ...INITIAL_STATS, ...(p.stats ?? {}) },
+            cosmetics: { ...INITIAL_COSMETICS, ...(p.cosmetics ?? {}) },
+            items: p.items ?? {},
+            muted: p.muted ?? false,
           }
         }
-        return persisted
+        if (version < 3) {
+          p = {
+            ...p,
+            studentName: p.studentName ?? '',
+            classCode: p.classCode ?? '',
+            presentationMode: p.presentationMode ?? false,
+          }
+        }
+        return p
       },
     },
   ),

@@ -8,6 +8,7 @@ import { useGameStore } from '@/store/gameStore'
 export function MainMenu() {
   const muted = useGameStore((s) => s.muted)
   const toggleMute = useGameStore((s) => s.toggleMute)
+  const studentName = useGameStore((s) => s.studentName)
 
   const start = () => {
     unlockAudio()
@@ -27,6 +28,9 @@ export function MainMenu() {
 
       <div className="mt-8 flex flex-col items-center gap-3">
         <CharacterAvatar size={130} />
+        {studentName && (
+          <div className="text-white/80 text-sm">⛑ 항해사 <span className="font-bold text-white">{studentName}</span></div>
+        )}
         <LevelBadge />
       </div>
 
@@ -49,6 +53,12 @@ export function MainMenu() {
           className="px-6 py-3 rounded-xl bg-pink-400/20 text-pink-200 border border-pink-300/40 hover:bg-pink-400/30 transition"
         >
           🧳 내 캐비닛
+        </Link>
+        <Link
+          to="/dashboard"
+          className="px-6 py-2 rounded-xl bg-white/5 text-white/70 border border-white/15 text-sm hover:bg-white/10 transition"
+        >
+          📊 진도판 / 학급 설정
         </Link>
         <button
           onClick={() => {

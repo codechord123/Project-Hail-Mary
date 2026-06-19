@@ -180,17 +180,37 @@ export function Chapter2() {
             )}
           </AnimatePresence>
 
-          {/* 폭발 */}
+          {/* 폭발 — 중앙 + 방사형 파편 8발 */}
           {exploded && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: [0, 2, 0] }}
-              transition={{ duration: 0.7 }}
-              className="absolute left-1/2 text-6xl"
-              style={{ top: `${enemyY * 80}%`, transform: 'translateX(-50%)' }}
-            >
-              💥
-            </motion.div>
+            <>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 2.4, 0] }}
+                transition={{ duration: 0.7 }}
+                className="absolute left-1/2 text-6xl z-10"
+                style={{ top: `${enemyY * 80}%`, transform: 'translateX(-50%)' }}
+              >
+                💥
+              </motion.div>
+              {Array.from({ length: 8 }).map((_, i) => {
+                const angle = (i / 8) * Math.PI * 2
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                    animate={{
+                      x: Math.cos(angle) * 80,
+                      y: Math.sin(angle) * 80,
+                      opacity: 0,
+                      scale: 0.3,
+                    }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="absolute left-1/2 w-2 h-2 rounded-full bg-yellow-300 shadow-[0_0_8px_#fbbf24]"
+                    style={{ top: `${enemyY * 80}%` }}
+                  />
+                )
+              })}
+            </>
           )}
 
           {/* 플레이어 우주선 */}

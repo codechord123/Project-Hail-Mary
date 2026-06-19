@@ -133,10 +133,10 @@ export function Chapter6() {
                 }
                 className={`aspect-square rounded-lg border-2 flex items-center justify-center text-sm transition ${
                   isMatched
-                    ? 'border-emerald-400 bg-emerald-400/20 opacity-70'
+                    ? 'border-emerald-400 bg-emerald-500/20 text-white'
                     : isOpen
-                      ? 'border-yellow-300 bg-white text-space-900'
-                      : 'border-purple-500/40 bg-purple-700/60 text-purple-200 hover:bg-purple-600'
+                      ? 'border-yellow-300 bg-slate-800 text-white shadow-[0_0_16px_rgba(253,224,71,0.35)]'
+                      : 'border-purple-500/40 bg-gradient-to-br from-purple-700 to-purple-900 text-purple-200 hover:from-purple-600'
                 }`}
               >
                 {isOpen ? (
@@ -144,7 +144,9 @@ export function Chapter6() {
                     <BlockMath math={card.display} />
                   </div>
                 ) : (
-                  <div className="text-2xl">🧬</div>
+                  <div className="text-2xl opacity-80">
+                    {['🧬', '🦠', '🧫', '🔬'][parseInt(card.id.slice(-1)) % 4]}
+                  </div>
                 )}
               </motion.button>
             )

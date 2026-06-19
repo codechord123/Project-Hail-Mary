@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { MainMenu } from '@/pages/MainMenu'
 import { ChapterSelect } from '@/pages/ChapterSelect'
 import { Cabinet } from '@/pages/Cabinet'
+import { Dashboard } from '@/pages/Dashboard'
 import { ChapterClear } from '@/pages/ChapterClear'
 import { useGameStore } from '@/store/gameStore'
 import { setMuted } from '@/lib/sfx'
@@ -27,13 +28,18 @@ function Loading() {
 
 export default function App() {
   const muted = useGameStore((s) => s.muted)
+  const presentationMode = useGameStore((s) => s.presentationMode)
   useEffect(() => {
     setMuted(muted)
   }, [muted])
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-b from-space-900 via-space-800 to-space-900 text-white">
+      <div
+        className={`min-h-screen bg-gradient-to-b from-space-900 via-space-800 to-space-900 text-white ${
+          presentationMode ? 'text-lg sm:text-xl' : ''
+        }`}
+      >
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<MainMenu />} />
@@ -48,6 +54,7 @@ export default function App() {
             <Route path="/chapter/7" element={<Chapter7 />} />
             <Route path="/chapter/:chapter/clear" element={<ChapterClear />} />
             <Route path="/cabinet" element={<Cabinet />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/endless" element={<Endless />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
