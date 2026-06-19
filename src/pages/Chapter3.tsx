@@ -164,7 +164,7 @@ export function Chapter3() {
       const reward = CHAPTER_REWARD_POOL[Math.floor(Math.random() * CHAPTER_REWARD_POOL.length)]
       store.giveItem(reward)
       sfx.bossDie()
-      navigate('/chapter/3/clear', {
+      navigate(`/chapter/3/clear`, {
         state: {
           stars,
           rank,

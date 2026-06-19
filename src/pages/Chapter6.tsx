@@ -1,0 +1,173 @@
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { BlockMath } from 'react-katex'
+import { buildChapter6Deck, type MatchCardDef } from '@/data/chapter6'
+import { ResourceBar } from '@/components/ResourceBar'
+import { LevelBadge } from '@/components/LevelBadge'
+import { StageHeader } from '@/components/arcade/StageHeader'
+import { ScreenShake } from '@/components/arcade/ScreenShake'
+import { CountdownTimer } from '@/components/CountdownTimer'
+import { useChapterRun } from '@/hooks/useChapterRun'
+import { sfx } from '@/lib/sfx'
+
+export function Chapter6() {
+  const initialDeck = useMemo(() => buildChapter6Deck(), [])
+  const [deck, setDeck] = useState<MatchCardDef[]>(initialDeck)
+  const [flipped, setFlipped] = useState<string[]>([])
+  const [matched, setMatched] = useState<string[]>([])
+  const [feedback, setFeedback] = useState<'idle' | 'wrong' | 'match'>('idle')
+  const [shake, setShake] = useState(0)
+  const [resetFlag, setResetFlag] = useState(0)
+  const run = useChapterRun({ chapterId: 6, maxScore: deck.length * 250 })
+
+  const allMatched = matched.length === deck.length
+
+  useEffect(() => {
+    if (run.isDead) {
+      run.store.resetForChapter()
+      setMatched([])
+      setFlipped([])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [run.isDead])
+
+  useEffect(() => {
+    if (allMatched && deck.length > 0) {
+      setTimeout(() => run.finish(), 800)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allMatched])
+
+  const handleFlip = useCallback(
+    (id: string) => {
+      if (flipped.includes(id) || matched.includes(id)) return
+      if (flipped.length >= 2) return
+      const next = [...flipped, id]
+      setFlipped(next)
+      if (next.length === 2) {
+        const [a, b] = next.map((fid) => deck.find((c) => c.id === fid)!)
+        if (a.improperKey === b.improperKey) {
+          // 매치
+          setTimeout(() => {
+            setMatched((m) => [...m, a.id, b.id])
+            setFlipped([])
+            sfx.crit()
+            run.onCorrect({ xpBase: 18, scoreGain: 250, crit: run.combo >= 3, difficulty: 2 })
+            setFeedback('match')
+            setTimeout(() => setFeedback('idle'), 700)
+          }, 400)
+        } else {
+          // 미스
+          setTimeout(() => {
+            setFlipped([])
+            run.onWrong(6)
+            setShake((s) => s + 1)
+            setFeedback('wrong')
+            setTimeout(() => setFeedback('idle'), 700)
+          }, 900)
+        }
+      }
+    },
+    [flipped, matched, deck, run],
+  )
+
+  const handleTimeout = () => {
+    run.onTimeout(20)
+    setShake((s) => s + 1)
+  }
+
+  const reshuffle = () => {
+    setDeck(buildChapter6Deck())
+    setFlipped([])
+    setMatched([])
+    setResetFlag((r) => r + 1)
+  }
+
+  return (
+    <div className="min-h-screen px-4 sm:px-6 py-4 max-w-2xl mx-auto flex flex-col">
+      <ScreenShake shake={shake}>
+        <header className="flex items-center justify-between">
+          <Link to="/chapters" className="text-white/60 hover:text-white text-sm">
+            ← 챕터 선택
+          </Link>
+          <LevelBadge compact />
+        </header>
+
+        <StageHeader
+          stage={`STAGE 6 · PUZZLE`}
+          subtitle={`아스트로파지 배양 — 대분수 ↔ 가분수 매칭 (${matched.length / 2}/${deck.length / 2})`}
+          combo={run.combo}
+          score={run.score}
+        />
+        <ResourceBar />
+
+        <div className="mt-2 text-xs text-white/60 text-center">
+          짝이 되는 두 카드를 찾아. 대분수와 같은 값의 가분수를 매칭하면 배양액이 안정돼.
+        </div>
+
+        <div className="mt-3">
+          <CountdownTimer
+            durationSec={120}
+            paused={allMatched}
+            onTimeout={handleTimeout}
+            resetKey={resetFlag}
+          />
+        </div>
+
+        {/* 카드 그리드 */}
+        <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+          {deck.map((card) => {
+            const isOpen = flipped.includes(card.id) || matched.includes(card.id)
+            const isMatched = matched.includes(card.id)
+            return (
+              <motion.button
+                key={card.id}
+                onClick={() => handleFlip(card.id)}
+                disabled={isMatched}
+                whileTap={{ scale: 0.9 }}
+                animate={
+                  feedback === 'match' && flipped.length === 0 && isMatched
+                    ? { scale: [1, 1.1, 1] }
+                    : {}
+                }
+                className={`aspect-square rounded-lg border-2 flex items-center justify-center text-sm transition ${
+                  isMatched
+                    ? 'border-emerald-400 bg-emerald-400/20 opacity-70'
+                    : isOpen
+                      ? 'border-yellow-300 bg-white text-space-900'
+                      : 'border-purple-500/40 bg-purple-700/60 text-purple-200 hover:bg-purple-600'
+                }`}
+              >
+                {isOpen ? (
+                  <div className="px-1">
+                    <BlockMath math={card.display} />
+                  </div>
+                ) : (
+                  <div className="text-2xl">🧬</div>
+                )}
+              </motion.button>
+            )
+          })}
+        </div>
+
+        {feedback === 'wrong' && (
+          <div className="mt-2 p-2 rounded bg-red-500/20 text-red-200 text-xs text-center">
+            ❌ 짝이 아니야 (산소 -6)
+          </div>
+        )}
+        {feedback === 'match' && (
+          <div className="mt-2 p-2 rounded bg-emerald-500/20 text-emerald-200 text-xs text-center">
+            ✨ 매치! 배양액 안정
+          </div>
+        )}
+
+        <div className="mt-3 flex justify-center">
+          <button onClick={reshuffle} className="text-xs px-3 py-1 rounded bg-white/10 text-white/70">
+            🔀 다시 섞기
+          </button>
+        </div>
+      </ScreenShake>
+    </div>
+  )
+}

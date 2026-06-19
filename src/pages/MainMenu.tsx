@@ -39,6 +39,12 @@ export function MainMenu() {
           항해 시작
         </Link>
         <Link
+          to="/endless"
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold border border-yellow-300/40"
+        >
+          🎮 끝없는 항해 (ENDLESS)
+        </Link>
+        <Link
           to="/cabinet"
           className="px-6 py-3 rounded-xl bg-pink-400/20 text-pink-200 border border-pink-300/40 hover:bg-pink-400/30 transition"
         >

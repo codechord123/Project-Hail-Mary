@@ -4,14 +4,14 @@ import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { LevelBadge } from '@/components/LevelBadge'
 
 const CHAPTERS = [
-  { id: 1, title: '깨어남', topic: '분모가 같은 분수의 덧셈', available: true, badge: null as string | null },
-  { id: 2, title: '식량 점검', topic: '분모가 같은 분수의 뺄셈', available: false, badge: null },
-  { id: 3, title: '미지의 신호', topic: '약분과 통분 (응용 + 미니보스)', available: true, badge: '🕹 보스전' },
-  { id: 4, title: '첫 만남', topic: '분모가 다른 분수의 덧셈', available: false, badge: null },
-  { id: 5, title: '위기의 동력실', topic: '분모가 다른 분수의 뺄셈', available: false, badge: null },
-  { id: 6, title: '아스트로파지 배양', topic: '대분수의 덧셈과 뺄셈', available: false, badge: null },
-  { id: 7, title: '귀환 미션', topic: '종합 보스전', available: false, badge: null },
-]
+  { id: 1, title: '깨어남', topic: '같은 분모 덧셈', available: true, badge: '🤲 조작' },
+  { id: 2, title: '식량 점검', topic: '같은 분모 뺄셈', available: true, badge: '🚀 슈팅' },
+  { id: 3, title: '미지의 신호', topic: '약분과 통분', available: true, badge: '🕹 보스' },
+  { id: 4, title: '첫 만남', topic: '다른 분모 덧셈', available: true, badge: '🛡 디펜스' },
+  { id: 5, title: '위기의 동력실', topic: '다른 분모 뺄셈', available: true, badge: '⚡ 리액터' },
+  { id: 6, title: '아스트로파지 배양', topic: '대분수 변환', available: true, badge: '🃏 매칭' },
+  { id: 7, title: '귀환 미션', topic: '종합 + 메가 보스', available: true, badge: '👹 풀보스' },
+] as const
 
 export function ChapterSelect() {
   const records = useGameStore((s) => s.chapterRecords)
@@ -30,7 +30,12 @@ export function ChapterSelect() {
         </div>
       </div>
 
-      <ul className="mt-6 space-y-3">
+      <Link to="/endless" className="mt-4 block p-3 rounded-xl bg-gradient-to-r from-purple-700 to-pink-600 border border-yellow-300/40 text-white">
+        <div className="font-bold">🎮 끝없는 항해 · ENDLESS MODE</div>
+        <div className="text-xs text-white/80">랜덤 응용 문제 · 산소가 다할 때까지 · 최고기록 도전</div>
+      </Link>
+
+      <ul className="mt-4 space-y-3">
         {CHAPTERS.map((c) => {
           const record = records[c.id]
           const inner = (

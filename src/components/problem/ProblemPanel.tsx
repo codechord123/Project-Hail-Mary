@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import type { Problem, StudentAnswer } from '@/types/problem'
 import { FractionInput } from '@/components/FractionInput'
 import { NumericAnswer } from './NumericAnswer'
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
-  const [, setRev] = useState(0)
   const resetKey = problem.id
 
   const handleFraction = useCallback(
@@ -38,13 +37,10 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
     [onAnswerChange],
   )
 
-  // resetKey 변경 시 자식 리마운트 유도
-  useState(() => setRev((r) => r + 1))
-
   return (
     <div className="w-full flex flex-col items-center gap-4">
       {problem.kind === 'fraction' && (
-        <FractionInput onChange={handleFraction} disabled={disabled} />
+        <FractionInput key={resetKey} onChange={handleFraction} disabled={disabled} />
       )}
       {problem.kind === 'numeric' && (
         <NumericAnswer
