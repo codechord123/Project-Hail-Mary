@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useGameStore } from '@/store/gameStore'
+import { CharacterAvatar } from '@/components/CharacterAvatar'
+import { LevelBadge } from '@/components/LevelBadge'
 
 const CHAPTERS = [
   { id: 1, title: '깨어남', topic: '분모가 같은 분수의 덧셈', available: true },
@@ -12,31 +14,43 @@ const CHAPTERS = [
 ]
 
 export function ChapterSelect() {
-  const cleared = useGameStore((s) => s.clearedChapters)
+  const records = useGameStore((s) => s.chapterRecords)
 
   return (
-    <div className="min-h-screen px-6 py-12 max-w-3xl mx-auto">
+    <div className="min-h-screen px-6 py-10 max-w-3xl mx-auto">
       <Link to="/" className="text-white/60 hover:text-white text-sm">
         ← 메인으로
       </Link>
-      <h2 className="mt-4 text-3xl font-bold text-white">챕터 선택</h2>
-      <p className="text-white/60 mt-1">학습 순서대로 진행해보세요.</p>
 
-      <ul className="mt-8 space-y-3">
+      <div className="mt-4 flex items-center gap-4">
+        <CharacterAvatar size={70} />
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-white">챕터 선택</h2>
+          <LevelBadge compact />
+        </div>
+      </div>
+
+      <ul className="mt-6 space-y-3">
         {CHAPTERS.map((c) => {
-          const isCleared = cleared.includes(c.id)
+          const record = records[c.id]
           const inner = (
             <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
               <div>
-                <div className="text-white font-semibold">
+                <div className="text-white font-semibold flex items-center gap-2">
                   Chapter {c.id}. {c.title}
-                  {isCleared && <span className="ml-2 text-green-400 text-sm">✓ 클리어</span>}
+                  {record && (
+                    <span className="text-yellow-300">
+                      {'★'.repeat(record.stars)}
+                      <span className="text-white/20">{'★'.repeat(3 - record.stars)}</span>
+                    </span>
+                  )}
                 </div>
                 <div className="text-white/50 text-sm">{c.topic}</div>
+                {record && (
+                  <div className="text-xs text-white/40 mt-0.5">최고 콤보 {record.bestCombo}</div>
+                )}
               </div>
-              <span className="text-space-accent text-2xl">
-                {c.available ? '▶' : '🔒'}
-              </span>
+              <span className="text-space-accent text-2xl">{c.available ? '▶' : '🔒'}</span>
             </div>
           )
           return c.available ? (

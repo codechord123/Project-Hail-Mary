@@ -1,0 +1,37 @@
+export type ItemId = 'oxygen-pack' | 'time-freeze' | 'simplify-aid'
+
+export interface ItemDef {
+  id: ItemId
+  name: string
+  icon: string
+  description: string
+}
+
+export const ITEMS: Record<ItemId, ItemDef> = {
+  'oxygen-pack': {
+    id: 'oxygen-pack',
+    name: '응급 산소팩',
+    icon: '🫀',
+    description: '산소를 +25 회복한다.',
+  },
+  'time-freeze': {
+    id: 'time-freeze',
+    name: '시간 정지 코어',
+    icon: '⏱️',
+    description: '현재 문제 타이머를 10초 동안 멈춘다.',
+  },
+  'simplify-aid': {
+    id: 'simplify-aid',
+    name: '약분 도우미',
+    icon: '🧪',
+    description: '이번 챕터 동안 기약분수 요구를 해제한다.',
+  },
+}
+
+/** 챕터 클리어 시 무작위 보상 풀 */
+export const CHAPTER_REWARD_POOL: ItemId[] = [
+  'oxygen-pack',
+  'oxygen-pack',
+  'time-freeze',
+  'simplify-aid',
+]
