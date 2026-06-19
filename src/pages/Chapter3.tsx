@@ -19,6 +19,8 @@ import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { judge } from '@/lib/judge'
 import { computeRank } from '@/lib/judge'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import { comboBonusXp } from '@/lib/scoring'
 import { CHAPTER_REWARD_POOL } from '@/data/items'
 import type { StudentAnswer } from '@/types/problem'
@@ -46,6 +48,8 @@ export function Chapter3() {
   const [bossHit, setBossHit] = useState(false)
   const [confetti, setConfetti] = useState(false)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
+  const [showBonus, setShowBonus] = useState(false)
+  const [pendingClear, setPendingClear] = useState<null | (() => void)>(null)
   const damageIdRef = useRef(0)
   const store = useGameStore()
   const navigate = useNavigate()
@@ -158,26 +162,30 @@ export function Chapter3() {
   const next = useCallback(() => {
     const newBossHp = bossHp
     if (newBossHp <= 0 || isLast) {
-      // 클리어
+      // 클리어 — 보너스 게이트
       const maxScorePossible = chapter3Problems.length * 600
       const rank = computeRank(score, maxScorePossible)
       const stars = rank === 'S' ? 3 : rank === 'A' ? 3 : rank === 'B' ? 2 : 1
-      store.recordChapter(3, stars, maxCombo)
-      store.clearChapter(3)
       const reward = CHAPTER_REWARD_POOL[Math.floor(Math.random() * CHAPTER_REWARD_POOL.length)]
-      store.giveItem(reward)
-      sfx.bossDie()
-      navigate(`/chapter/3/clear`, {
-        state: {
-          stars,
-          rank,
-          maxCombo,
-          score,
-          rewardItemId: reward,
-          elapsedMs: Date.now() - startedAt.current,
-          bossDefeated: newBossHp <= 0,
-        },
-      })
+      const doClear = () => {
+        store.recordChapter(3, stars, maxCombo)
+        store.clearChapter(3)
+        store.giveItem(reward)
+        sfx.bossDie()
+        navigate(`/chapter/3/clear`, {
+          state: {
+            stars,
+            rank,
+            maxCombo,
+            score,
+            rewardItemId: reward,
+            elapsedMs: Date.now() - startedAt.current,
+            bossDefeated: newBossHp <= 0,
+          },
+        })
+      }
+      setPendingClear(() => doClear)
+      setShowBonus(true)
       return
     }
     setIdx((i) => i + 1)
@@ -348,6 +356,14 @@ export function Chapter3() {
           )}
         </div>
       </ScreenShake>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[3]}
+          onPass={() => pendingClear?.()}
+          onFail={() => store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }

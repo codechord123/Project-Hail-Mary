@@ -10,6 +10,8 @@ import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { sfx } from '@/lib/sfx'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 
 export function Chapter6() {
@@ -38,9 +40,10 @@ export function Chapter6() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [run.isDead])
 
+  const [showBonus, setShowBonus] = useState(false)
   useEffect(() => {
     if (allMatched && deck.length > 0) {
-      setTimeout(() => run.finish(), 800)
+      setTimeout(() => setShowBonus(true), 800)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allMatched])
@@ -176,6 +179,14 @@ export function Chapter6() {
           </button>
         </div>
       </ScreenShake>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[6]}
+          onPass={() => run.finish()}
+          onFail={() => run.store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }

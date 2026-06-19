@@ -15,6 +15,8 @@ import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 type Step = 'commonDenom' | 'calc' | 'simplify'
@@ -29,6 +31,7 @@ export function Chapter5() {
   const [commonDenomAns, setCommonDenomAns] = useState<number | null>(null)
   const [calcAns, setCalcAns] = useState<Fraction | null>(null)
   const [simplifyAns, setSimplifyAns] = useState<Fraction | null>(null)
+  const [showBonus, setShowBonus] = useState(false)
   const run = useChapterRun({ chapterId: 5, maxScore: chapter5Breaches.length * 900 })
 
   const breach = chapter5Breaches[idx]
@@ -100,7 +103,7 @@ export function Chapter5() {
     setShake((s) => s + 1)
     run.onCorrect({ xpBase: 30, scoreGain: 400, crit: run.combo >= 2, difficulty: 3 })
     if (isLast) {
-      run.finish()
+      setShowBonus(true)
       return
     }
     setTimeout(() => {
@@ -244,6 +247,14 @@ export function Chapter5() {
           )}
         </AnimatePresence>
       </ScreenShake>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[5]}
+          onPass={() => run.finish()}
+          onFail={() => run.store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }

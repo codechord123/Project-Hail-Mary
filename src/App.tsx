@@ -8,7 +8,7 @@ import { Leaderboard } from '@/pages/Leaderboard'
 import { ChapterClear } from '@/pages/ChapterClear'
 import { useGameStore } from '@/store/gameStore'
 import { setMuted } from '@/lib/sfx'
-import { setBgmMuted, stop as stopBgm } from '@/lib/bgm'
+import { setBgmMuted, setBgmVolume, stop as stopBgm } from '@/lib/bgm'
 
 const Chapter1 = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1 })))
 const Chapter1Clear = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1Clear })))
@@ -31,11 +31,16 @@ function Loading() {
 export default function App() {
   const muted = useGameStore((s) => s.muted)
   const presentationMode = useGameStore((s) => s.presentationMode)
+  const bgmEnabled = useGameStore((s) => s.bgmEnabled)
+  const bgmVolume = useGameStore((s) => s.bgmVolume)
   useEffect(() => {
     setMuted(muted)
-    setBgmMuted(muted)
-    if (muted) stopBgm()
-  }, [muted])
+    setBgmMuted(muted || !bgmEnabled)
+    if (muted || !bgmEnabled) stopBgm()
+  }, [muted, bgmEnabled])
+  useEffect(() => {
+    setBgmVolume(bgmVolume)
+  }, [bgmVolume])
 
   return (
     <BrowserRouter>

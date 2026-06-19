@@ -15,6 +15,8 @@ import { DialogueBox } from '@/components/DialogueBox'
 import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { judge } from '@/lib/judge'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import type { StudentAnswer } from '@/types/problem'
@@ -29,6 +31,7 @@ export function Chapter7() {
   const [feedback, setFeedback] = useState<'idle' | 'wrong' | 'simplify' | 'timeout' | 'correct'>('idle')
   const [bossHit, setBossHit] = useState(false)
   const [bossDead, setBossDead] = useState(false)
+  const [showBonus, setShowBonus] = useState(false)
   const [shake, setShake] = useState(0)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
@@ -111,7 +114,7 @@ export function Chapter7() {
     if (newHp <= 0) {
       setBossDead(true)
       sfx.bossDie()
-      setTimeout(() => run.finish({ bossDefeated: true }), 1800)
+      setTimeout(() => setShowBonus(true), 1800)
       return
     }
     // 다음 페이즈/문제
@@ -235,6 +238,14 @@ export function Chapter7() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[7]}
+          onPass={() => run.finish({ bossDefeated: true })}
+          onFail={() => run.store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }

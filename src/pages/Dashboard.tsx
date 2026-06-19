@@ -123,6 +123,30 @@ export function Dashboard() {
             className="w-5 h-5 accent-space-accent"
           />
         </label>
+
+        <label className="mt-2 flex items-center justify-between p-3 rounded-lg bg-black/30 cursor-pointer">
+          <div>
+            <div className="text-white font-semibold">🎵 배경음악 (BGM)</div>
+            <div className="text-xs text-white/60 mt-0.5">챕터별 chiptune 배경음.</div>
+          </div>
+          <input
+            type="checkbox"
+            checked={store.bgmEnabled}
+            onChange={() => store.toggleBgmEnabled()}
+            className="w-5 h-5 accent-space-accent"
+          />
+        </label>
+        <div className={`mt-2 p-3 rounded-lg bg-black/30 ${!store.bgmEnabled ? 'opacity-40' : ''}`}>
+          <div className="text-xs text-white/70">BGM 음량 {Math.round(store.bgmVolume * 100)}%</div>
+          <input
+            type="range"
+            min="0" max="100" step="1"
+            disabled={!store.bgmEnabled}
+            value={Math.round(store.bgmVolume * 100)}
+            onChange={(e) => store.setBgmVolume(parseInt(e.target.value, 10) / 100)}
+            className="w-full mt-1 accent-space-accent"
+          />
+        </div>
         <button
           onClick={() => {
             if (window.confirm('정말 모든 진도와 캐릭터를 초기화할까요?')) {

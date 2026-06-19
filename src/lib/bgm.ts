@@ -122,8 +122,21 @@ const TRACKS: Record<string, Track> = {
 }
 
 let ctx: AudioContext | null = null
+let masterGain: GainNode | null = null
 let muted = false
+let userVolume = 0.5 // 0..1, gameStore에서 주입
 let active: { trackId: string; timeouts: number[]; melodyOsc?: OscillatorNode; bassOsc?: OscillatorNode } | null = null
+
+const getMaster = (): GainNode | null => {
+  const c = getCtx()
+  if (!c) return null
+  if (!masterGain) {
+    masterGain = c.createGain()
+    masterGain.gain.value = userVolume
+    masterGain.connect(c.destination)
+  }
+  return masterGain
+}
 
 const getCtx = (): AudioContext | null => {
   if (typeof window === 'undefined') return null
@@ -140,6 +153,12 @@ const getCtx = (): AudioContext | null => {
 export const setBgmMuted = (m: boolean) => {
   muted = m
   if (m) stop()
+}
+
+export const setBgmVolume = (v: number) => {
+  userVolume = Math.max(0, Math.min(1, v))
+  const g = getMaster()
+  if (g) g.gain.setValueAtTime(userVolume, getCtx()!.currentTime)
 }
 
 const scheduleLoop = (track: Track, notes: 'melody' | 'bass', osc: OscillatorNode, gain: GainNode) => {
@@ -186,7 +205,7 @@ export const playBgm = (trackId: string) => {
   melodyOsc.type = track.leadType
   melodyGain.gain.value = 0
   melodyOsc.connect(melodyGain)
-  melodyGain.connect(c.destination)
+  melodyGain.connect(getMaster() ?? c.destination)
   melodyOsc.start()
 
   const bassOsc = c.createOscillator()
@@ -194,7 +213,7 @@ export const playBgm = (trackId: string) => {
   bassOsc.type = track.bassType
   bassGain.gain.value = 0
   bassOsc.connect(bassGain)
-  bassGain.connect(c.destination)
+  bassGain.connect(getMaster() ?? c.destination)
   bassOsc.start()
 
   active = { trackId, timeouts: [], melodyOsc, bassOsc }

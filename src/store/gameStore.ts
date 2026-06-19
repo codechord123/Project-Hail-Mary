@@ -40,11 +40,15 @@ interface GameState {
   studentName: string
   classCode: string
   presentationMode: boolean
+  bgmEnabled: boolean
+  bgmVolume: number // 0..1
 
   // actions
   setStudentName: (name: string) => void
   setClassCode: (code: string) => void
   togglePresentationMode: () => void
+  toggleBgmEnabled: () => void
+  setBgmVolume: (v: number) => void
   addOxygen: (delta: number) => void
   setOxygen: (v: number) => void
   addEnergy: (delta: number) => void
@@ -82,6 +86,8 @@ const INITIAL = {
   studentName: '',
   classCode: '',
   presentationMode: false,
+  bgmEnabled: true,
+  bgmVolume: 0.5,
 }
 
 const safeStorage = createJSONStorage(() => {
@@ -178,11 +184,13 @@ export const useGameStore = create<GameState>()(
       setStudentName: (name) => set({ studentName: name.slice(0, 16) }),
       setClassCode: (code) => set({ classCode: code.slice(0, 16) }),
       togglePresentationMode: () => set((s) => ({ presentationMode: !s.presentationMode })),
+      toggleBgmEnabled: () => set((s) => ({ bgmEnabled: !s.bgmEnabled })),
+      setBgmVolume: (v) => set({ bgmVolume: Math.max(0, Math.min(1, v)) }),
       reset: () => set({ ...INITIAL }),
     }),
     {
       name: 'hailmary-save',
-      version: 3,
+      version: 4,
       storage: safeStorage,
       migrate: (persisted: any, version) => {
         if (!persisted) return persisted
@@ -206,6 +214,13 @@ export const useGameStore = create<GameState>()(
             studentName: p.studentName ?? '',
             classCode: p.classCode ?? '',
             presentationMode: p.presentationMode ?? false,
+          }
+        }
+        if (version < 4) {
+          p = {
+            ...p,
+            bgmEnabled: p.bgmEnabled ?? true,
+            bgmVolume: p.bgmVolume ?? 0.5,
           }
         }
         return p

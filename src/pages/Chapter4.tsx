@@ -12,6 +12,8 @@ import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 interface ActiveLane {
@@ -77,10 +79,11 @@ export function Chapter4() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [run.isDead])
 
+  const [showBonus, setShowBonus] = useState(false)
   // 클리어 체크
   useEffect(() => {
     if (killed >= KILLS_TO_CLEAR) {
-      run.finish()
+      setShowBonus(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [killed])
@@ -227,6 +230,14 @@ export function Chapter4() {
           </button>
         </div>
       </ScreenShake>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[4]}
+          onPass={() => run.finish()}
+          onFail={() => run.store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }

@@ -9,6 +9,8 @@ import {
   type RosterEntry,
 } from '@/lib/classRoster'
 import { computeLevelInfo } from '@/lib/leveling'
+import { isFirebaseConfigured } from '@/lib/firebase'
+import { cloudPushRoster, cloudFetchRoster } from '@/lib/cloudSync'
 
 const ENDLESS_HI_KEY = 'hailmary-endless-hi'
 
@@ -16,7 +18,10 @@ export function Leaderboard() {
   const store = useGameStore()
   const [tab, setTab] = useState<'stars' | 'endless'>('stars')
   const [filterCode, setFilterCode] = useState(store.classCode)
+  const [cloudEntries, setCloudEntries] = useState<RosterEntry[] | null>(null)
+  const [syncing, setSyncing] = useState(false)
   const info = computeLevelInfo(store.totalXp)
+  const cloudOn = isFirebaseConfigured()
 
   // 현재 학생을 명부에 자동 등록 (mount 시)
   useEffect(() => {
@@ -26,7 +31,7 @@ export function Leaderboard() {
     try {
       endlessBest = parseInt(localStorage.getItem(ENDLESS_HI_KEY) || '0', 10) || 0
     } catch { /* ignore */ }
-    upsertRoster({
+    const entry: RosterEntry = {
       name: store.studentName,
       classCode: store.classCode,
       level: info.level,
@@ -36,7 +41,9 @@ export function Leaderboard() {
       totalStars,
       endlessBest,
       lastUpdated: Date.now(),
-    })
+    }
+    upsertRoster(entry)
+    if (cloudOn) cloudPushRoster(entry).catch(() => {})
   }, [
     store.studentName, store.classCode, store.totalXp,
     store.clearedChapters.length, store.chapterRecords, info.level, info.title,
@@ -44,10 +51,30 @@ export function Leaderboard() {
 
   const entries = useMemo(() => {
     const code = filterCode.trim()
-    return tab === 'stars'
+    const local = tab === 'stars'
       ? leaderboardByStars(code || undefined)
       : leaderboardByEndless(code || undefined)
-  }, [tab, filterCode, store.studentName, store.totalXp])
+    if (!cloudEntries) return local
+    // 클라우드 + 로컬 머지 (name+code 키)
+    const map = new Map<string, RosterEntry>()
+    ;[...local, ...cloudEntries].forEach((e) => {
+      const k = `${e.name}|${e.classCode}`
+      const prev = map.get(k)
+      if (!prev || e.lastUpdated > prev.lastUpdated) map.set(k, e)
+    })
+    const merged = Array.from(map.values())
+    return tab === 'stars'
+      ? merged.sort((a, b) => b.totalStars - a.totalStars || b.level - a.level)
+      : merged.sort((a, b) => b.endlessBest - a.endlessBest)
+  }, [tab, filterCode, cloudEntries, store.studentName, store.totalXp])
+
+  const fetchCloud = async () => {
+    if (!cloudOn || !filterCode.trim()) return
+    setSyncing(true)
+    const data = await cloudFetchRoster(filterCode.trim())
+    setCloudEntries(data)
+    setSyncing(false)
+  }
 
   const handleRemove = (e: RosterEntry) => {
     if (window.confirm(`${e.name}(${e.classCode || '미지정'}) 항목을 명부에서 제거할까요?`)) {
@@ -73,7 +100,23 @@ export function Leaderboard() {
           placeholder="학급 코드 필터 (예: 5-3)"
           className="flex-1 px-3 py-2 rounded bg-black/40 text-white border border-white/20 focus:outline-none focus:border-space-accent text-sm"
         />
+        {cloudOn ? (
+          <button
+            onClick={fetchCloud}
+            disabled={syncing || !filterCode.trim()}
+            className="px-3 py-2 rounded bg-emerald-500/20 text-emerald-200 border border-emerald-400/40 text-sm disabled:opacity-40"
+          >
+            {syncing ? '동기화 중...' : '☁ 클라우드 동기화'}
+          </button>
+        ) : (
+          <span className="text-xs text-white/40 px-2">☁ 클라우드 OFF</span>
+        )}
       </div>
+      {cloudOn && cloudEntries && (
+        <div className="mt-1 text-xs text-emerald-300">
+          ☁ 클라우드 {cloudEntries.length}명 + 로컬 머지 표시 중
+        </div>
+      )}
 
       <div className="mt-4 flex gap-1 border-b border-white/10">
         <button

@@ -13,6 +13,8 @@ import { BlockMath } from 'react-katex'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
+import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
+import { BONUS_PROBLEMS } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
 
 export function Chapter2() {
@@ -102,14 +104,15 @@ export function Chapter2() {
     }, 350)
   }, [answer, expectedAns, exploded, wave, run])
 
+  const [showBonus, setShowBonus] = useState(false)
   const nextOrFinish = useCallback(() => {
     if (isLast) {
-      run.finish()
+      setShowBonus(true)
       return
     }
     setWaveIdx((i) => i + 1)
     setAnswer(null)
-  }, [isLast, run])
+  }, [isLast])
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-4 max-w-2xl mx-auto flex flex-col">
@@ -268,6 +271,14 @@ export function Chapter2() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showBonus && (
+        <BonusProblemOverlay
+          problem={BONUS_PROBLEMS[2]}
+          onPass={() => run.finish()}
+          onFail={() => run.store.addOxygen(-5)}
+        />
+      )}
     </div>
   )
 }
