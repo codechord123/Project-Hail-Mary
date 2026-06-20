@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BlockMath } from 'react-katex'
 import { chapter5Breaches, solveBreach } from '@/data/chapter5'
 import { FractionInput } from '@/components/FractionInput'
 import { NumericAnswer } from '@/components/problem/NumericAnswer'
@@ -189,11 +188,7 @@ export function Chapter5() {
             </div>
             <div className="text-4xl ml-2">⚡</div>
           </div>
-          <div className="mt-2 text-center">
-            <BlockMath
-              math={`\\dfrac{${breach.a.numerator}}{${breach.a.denominator}} - \\dfrac{${breach.b.numerator}}{${breach.b.denominator}} = ?`}
-            />
-          </div>
+          {/* 식 자체는 노출하지 않아 학생이 시나리오를 읽고 식을 세우도록 유도 */}
         </div>
 
         {/* 단계 진행 */}

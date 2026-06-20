@@ -10,13 +10,8 @@ import { GradeFlash, gradeFor, type Grade } from '@/components/arcade/GradeFlash
 import { RoundIntro } from '@/components/arcade/RoundIntro'
 import { useGameStore } from '@/store/gameStore'
 import { useShortcuts } from '@/hooks/useShortcuts'
-import {
-  genSameDenAdd,
-  genDiffDenAdd,
-  genDiffDenSub,
-  genCompare,
-  genThreeAdd,
-} from '@/lib/problemGen'
+import { genApplied } from '@/lib/problemGen'
+import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 import { judge, answerToText, problemAnswerText } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
 import { addWrongNote } from '@/lib/wrongNotes'
@@ -35,12 +30,25 @@ type Boss = {
   gen: () => Problem
 }
 
+/** 보스별로 응용 풀의 특정 카테고리만 픽 — 모두 독해 응용. */
+const pickFrom = (prefix: string) => {
+  const pool = ADVANCED_PROBLEMS.filter((p) => p.id.startsWith(prefix))
+  if (pool.length === 0) return genApplied(2)
+  const p = pool[Math.floor(Math.random() * pool.length)]
+  return { ...p, id: `${p.id}-br-${Math.random().toString(36).slice(2, 6)}` }
+}
+
 const BOSSES: Boss[] = [
-  { id: 'flame', name: '화염 골렘', emoji: '🔥', color: 'from-orange-500 to-red-600', hp: 3, gen: () => genSameDenAdd(2) },
-  { id: 'ice', name: '얼음 마법사', emoji: '❄', color: 'from-cyan-400 to-blue-600', hp: 3, gen: () => genDiffDenAdd(2) },
-  { id: 'thunder', name: '번개 정령', emoji: '⚡', color: 'from-yellow-300 to-amber-500', hp: 3, gen: () => genDiffDenSub(2) },
-  { id: 'poison', name: '독 거미', emoji: '☠', color: 'from-emerald-500 to-green-700', hp: 3, gen: () => genCompare(2) },
-  { id: 'cosmos', name: '우주의 황제', emoji: '👾', color: 'from-fuchsia-500 to-purple-700', hp: 3, gen: () => genThreeAdd(3) },
+  // 화염 — 합/차 응용 (route, app, hard 계열)
+  { id: 'flame', name: '화염 골렘', emoji: '🔥', color: 'from-orange-500 to-red-600', hp: 3, gen: () => pickFrom('adv-route') },
+  // 얼음 — 분수↔소수 변환
+  { id: 'ice', name: '얼음 마법사', emoji: '❄', color: 'from-cyan-400 to-blue-600', hp: 3, gen: () => pickFrom('adv-dec') },
+  // 번개 — 소수+분수 혼합
+  { id: 'thunder', name: '번개 정령', emoji: '⚡', color: 'from-yellow-300 to-amber-500', hp: 3, gen: () => pickFrom('adv-mix') },
+  // 독 — 비교 + 응용
+  { id: 'poison', name: '독 거미', emoji: '☠', color: 'from-emerald-500 to-green-700', hp: 3, gen: () => pickFrom('adv-app') },
+  // 우주 — 최상급 다단계 응용
+  { id: 'cosmos', name: '우주의 황제', emoji: '👾', color: 'from-fuchsia-500 to-purple-700', hp: 3, gen: () => pickFrom('adv-hard') },
 ]
 
 const HI_KEY = 'hailmary-bossrush-hi'

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BlockMath } from 'react-katex'
 import { chapter4Targets, chapter4Expected, LANE_ADVANCE_SEC, type DefenseTarget } from '@/data/chapter4'
 import { buildFractionChoices } from '@/lib/choiceGen'
 import { ResourceBar } from '@/components/ResourceBar'
@@ -192,10 +191,8 @@ export function Chapter4() {
                       transition={{ duration: 0.2, ease: 'linear' }}
                     >
                       <div className="text-3xl">{lane.target.enemy}</div>
-                      <div className="px-2 py-0.5 rounded bg-black/70 text-xs text-white">
-                        <BlockMath
-                          math={`\\dfrac{${lane.target.a.numerator}}{${lane.target.a.denominator}}+\\dfrac{${lane.target.b.numerator}}{${lane.target.b.denominator}}`}
-                        />
+                      <div className="px-2 py-0.5 rounded bg-black/70 text-xs text-white font-mono">
+                        ? + ?
                       </div>
                     </motion.div>
                   )}

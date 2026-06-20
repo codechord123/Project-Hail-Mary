@@ -11,7 +11,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'fraction',
     scenario:
       '로키의 산소가 5/12 통, 우리 산소가 3/8 통이야. 두 통을 합치면 (기약)?',
-    prompt: '5/12 + 3/8 (기약)',
+    prompt: '기약분수로 답해',
     hint: '공통분모 24. 10/24 + 9/24 = 19/24.',
     difficulty: 2,
     answer: { numerator: 19, denominator: 24 },
@@ -22,7 +22,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'fraction',
     scenario:
       '로키의 계측기는 0.36 을 가리키고 있어. 같은 값을 기약분수로 적어줘.',
-    prompt: '0.36 = ? (기약)',
+    prompt: '같은 값을 기약분수로',
     hint: '0.36 = 36/100 → ÷4 = 9/25.',
     difficulty: 2,
     answer: { numerator: 9, denominator: 25 },
@@ -33,7 +33,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'fraction',
     scenario:
       '연료 11/12 통에서 5/8 통을 사용했어. 남은 양 (기약)?',
-    prompt: '11/12 − 5/8 (기약)',
+    prompt: '기약분수로 답해',
     hint: '공통분모 24. 22/24 − 15/24 = 7/24.',
     difficulty: 3,
     answer: { numerator: 7, denominator: 24 },
@@ -56,7 +56,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'compare',
     scenario:
       '두 측정값을 비교해. 우리 센서는 7/20, 로키의 센서는 0.4 야.',
-    prompt: '7/20 vs 0.4',
+    prompt: '더 큰 쪽 (= 이면 등호) 선택',
     hint: '7/20 = 0.35.',
     difficulty: 2,
     left: { numerator: 7, denominator: 20 },
@@ -68,7 +68,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'compare',
     scenario:
       '두 신호 강도를 비교해.',
-    prompt: '5/8 vs 7/12',
+    prompt: '더 큰 쪽 (= 이면 등호) 선택',
     hint: '공통분모 24. 15/24 vs 14/24.',
     difficulty: 2,
     left: { numerator: 5, denominator: 8 },
@@ -91,7 +91,7 @@ export const chapter3Problems: Problem[] = [
     kind: 'fraction',
     scenario:
       '귀환 좌표 — 신호 0.25 와 5/12 를 합한 값을 기약분수로!',
-    prompt: '0.25 + 5/12 (기약)',
+    prompt: '기약분수로 답해',
     hint: '0.25 = 1/4 = 3/12. 3/12 + 5/12 = 8/12 → 2/3.',
     difficulty: 3,
     answer: { numerator: 2, denominator: 3 },

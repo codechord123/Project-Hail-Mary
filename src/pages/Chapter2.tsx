@@ -9,7 +9,6 @@ import { StageHeader } from '@/components/arcade/StageHeader'
 import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
-import { BlockMath } from 'react-katex'
 import { sfx } from '@/lib/sfx'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
 import { StoryOverlay } from '@/components/StoryOverlay'
@@ -175,8 +174,8 @@ export function Chapter2() {
         <ResourceBar />
 
         {wave.story && (
-          <div className="mt-2 p-2 rounded bg-black/30 border border-white/10 text-xs text-white/80 text-center">
-            {wave.story}
+          <div className="mt-2 p-3 rounded-lg bg-amber-400/10 border border-amber-300/30 text-sm text-amber-50 leading-relaxed">
+            📖 {wave.story}
           </div>
         )}
 
@@ -207,9 +206,7 @@ export function Chapter2() {
               >
                 <div className="text-5xl">{wave.enemy}</div>
                 <div className="mt-1 px-2 py-0.5 rounded bg-red-500/80 text-white text-xs font-mono">
-                  <BlockMath
-                    math={`\\dfrac{${wave.a.numerator}}{${wave.a.denominator}} - \\dfrac{${wave.b.numerator}}{${wave.b.denominator}}`}
-                  />
+                  ? = ?
                 </div>
               </motion.div>
             )}

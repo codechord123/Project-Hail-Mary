@@ -217,19 +217,14 @@ export const genNumericNatCount = (_difficulty: number): Problem => {
 
 import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 
-const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd, genDecimalToFraction, genCompareDecFrac]
-
 export const genRandom = (difficulty: number): Problem => {
-  // 학생 수준 ↑↑: 응용 풀 비율 70% — 난이도 2+ 면 80%, 난이도 3+ 면 90%.
-  const advRate = difficulty >= 3 ? 0.9 : difficulty >= 2 ? 0.8 : 0.7
-  if (Math.random() < advRate) {
-    // 난이도 2+ 면 난이도 2 이상 응용 위주로 선별
-    const pool = difficulty >= 2
-      ? ADVANCED_PROBLEMS.filter((p) => (p.difficulty ?? 1) >= 2)
-      : ADVANCED_PROBLEMS
-    const adv = pool[Math.floor(Math.random() * pool.length)]
-    return { ...adv, id: `${adv.id}-${nextId()}` }
-  }
-  const g = ALL_GENS[Math.floor(Math.random() * ALL_GENS.length)]
-  return g(Math.max(difficulty, 2)) // generator 자체도 더 어려운 분모 풀 사용
+  // 응용 풀 100% — 단순 계산 generator 추방, 독해 응용만 출제.
+  const pool = difficulty >= 2
+    ? ADVANCED_PROBLEMS.filter((p) => (p.difficulty ?? 1) >= 2)
+    : ADVANCED_PROBLEMS
+  const adv = pool[Math.floor(Math.random() * pool.length)]
+  return { ...adv, id: `${adv.id}-${nextId()}` }
 }
+
+/** 응용 풀에서만 픽 — TimeAttack/BossRush/Daily/Endless 가 쓸 단일 진입점 */
+export const genApplied = (difficulty: number): Problem => genRandom(difficulty)

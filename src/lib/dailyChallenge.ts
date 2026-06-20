@@ -3,9 +3,7 @@
  * 일일 1회 본인 최고기록 기록, 자정에 새 문제로 갱신.
  */
 
-import {
-  genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount,
-} from './problemGen'
+import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 import type { Problem } from '@/types/problem'
 
 const todayKey = (): string => {
@@ -37,22 +35,24 @@ const withSeededRandom = <T>(seed: number, fn: () => T): T => {
   }
 }
 
-const GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount]
-
 export interface DailyChallenge {
   date: string // YYYYMMDD
   problems: Problem[]
 }
 
 export const getDailyChallenge = (date = todayKey()): DailyChallenge => {
-  // 날짜를 정수 시드로 변환
+  // 날짜 시드로 응용 풀에서 10개 비복원 추출 — 단순 계산 generator 사용 금지.
   const seed = parseInt(date, 10) || 1
   const problems: Problem[] = []
   withSeededRandom(seed, () => {
-    for (let i = 0; i < 10; i++) {
-      const genIdx = Math.floor(Math.random() * GENS.length)
-      const difficulty = Math.floor(i / 3)
-      problems.push(GENS[genIdx](difficulty))
+    const pool = [...ADVANCED_PROBLEMS]
+    // Fisher-Yates 셔플
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[pool[i], pool[j]] = [pool[j], pool[i]]
+    }
+    for (let i = 0; i < Math.min(10, pool.length); i++) {
+      problems.push({ ...pool[i], id: `${pool[i].id}-d${date}-${i}` })
     }
   })
   return { date, problems }
