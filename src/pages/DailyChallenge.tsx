@@ -8,6 +8,7 @@ import { CountdownTimer } from '@/components/CountdownTimer'
 import { DialogueBox } from '@/components/DialogueBox'
 import { LevelBadge } from '@/components/LevelBadge'
 import { useGameStore } from '@/store/gameStore'
+import { useShortcuts } from '@/hooks/useShortcuts'
 import {
   getDailyChallenge, getDailyBest, recordDailyBest, dailyDateLabel, todayDateKey,
 } from '@/lib/dailyChallenge'
@@ -100,6 +101,10 @@ export function DailyChallenge() {
     sfx.wrong()
     setTimeout(() => nextProblem(), 900)
   }, [feedback, nextProblem])
+
+  useShortcuts({
+    onSubmit: feedback === 'idle' && !finished ? submit : undefined,
+  })
 
   if (finished) {
     const newRecord = !previousBest || score > previousBest.score

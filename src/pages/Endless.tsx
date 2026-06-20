@@ -9,6 +9,7 @@ import { ResourceBar } from '@/components/ResourceBar'
 import { LevelBadge } from '@/components/LevelBadge'
 import { DialogueBox } from '@/components/DialogueBox'
 import { useGameStore } from '@/store/gameStore'
+import { useShortcuts } from '@/hooks/useShortcuts'
 import { genRandom } from '@/lib/problemGen'
 import { judge, answerToText, problemAnswerText } from '@/lib/judge'
 import { addWrongNote } from '@/lib/wrongNotes'
@@ -140,6 +141,10 @@ export function Endless() {
     sfx.wrong()
     setTimeout(() => nextProblem(), 900)
   }, [feedback, nextProblem])
+
+  useShortcuts({
+    onSubmit: feedback === 'idle' && !gameOver ? submit : undefined,
+  })
 
   if (gameOver) {
     return (

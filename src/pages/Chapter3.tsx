@@ -15,6 +15,7 @@ import { RockyAvatar } from '@/components/RockyAvatar'
 import { CrisisOverlay } from '@/components/CrisisOverlay'
 import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { useGameStore } from '@/store/gameStore'
+import { useShortcuts } from '@/hooks/useShortcuts'
 import { sfx } from '@/lib/sfx'
 import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
@@ -217,6 +218,12 @@ export function Chapter3() {
     store.addEnergy(-cost)
     setShowHint(true)
   }
+
+  useShortcuts({
+    onSubmit: feedback.kind === 'idle' ? submit : undefined,
+    onHint: feedback.kind === 'idle' ? useHint : undefined,
+    onNotebook: () => setShowNotebook(true),
+  })
 
   const rockyMood = feedback.kind === 'correct'
     ? feedback.crit ? 'excited' : 'happy'

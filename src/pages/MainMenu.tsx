@@ -63,77 +63,73 @@ export function MainMenu() {
         <LevelBadge />
       </div>
 
-      <div className="mt-10 flex flex-col gap-3 w-full max-w-xs">
+      <div className="mt-10 flex flex-col gap-3 w-full max-w-md">
+        {/* 메인 액션 */}
         <Link
           to="/chapters"
           onClick={start}
-          className="px-6 py-3 rounded-xl bg-space-accent text-space-900 font-bold hover:brightness-110 active:scale-95 transition"
+          className="px-6 py-4 rounded-xl bg-space-accent text-space-900 font-bold text-lg hover:brightness-110 active:scale-95 transition text-center"
         >
-          항해 시작
+          🚀 항해 시작
         </Link>
-        <Link
-          to="/daily"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold border border-yellow-200/50"
-        >
-          🌟 오늘의 챌린지 (DAILY)
-        </Link>
-        <Link
-          to="/endless"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold border border-yellow-300/40"
-        >
-          🎮 끝없는 항해 (ENDLESS)
-        </Link>
-        <Link
-          to="/cabinet"
-          className="px-6 py-3 rounded-xl bg-pink-400/20 text-pink-200 border border-pink-300/40 hover:bg-pink-400/30 transition"
-        >
-          🧳 내 캐비닛
-        </Link>
-        <Link
-          to="/dashboard"
-          className="px-6 py-2 rounded-xl bg-white/5 text-white/70 border border-white/15 text-sm hover:bg-white/10 transition"
-        >
-          📊 진도판 / 학급 설정
-        </Link>
-        <Link
-          to="/leaderboard"
-          className="px-6 py-2 rounded-xl bg-yellow-400/10 text-yellow-200 border border-yellow-300/30 text-sm hover:bg-yellow-400/20 transition"
-        >
-          🏆 학급 리더보드
-        </Link>
-        <Link
-          to="/story"
-          className="px-6 py-2 rounded-xl bg-purple-400/10 text-purple-200 border border-purple-300/30 text-sm hover:bg-purple-400/20 transition"
-        >
-          📚 항해 일지 (스토리 회상)
-        </Link>
-        <Link
-          to="/shop"
-          className="px-6 py-2 rounded-xl bg-emerald-400/10 text-emerald-200 border border-emerald-300/30 text-sm hover:bg-emerald-400/20 transition"
-        >
-          🏪 우주 상점
-        </Link>
-        <Link
-          to="/wrong-notes"
-          className="px-6 py-2 rounded-xl bg-rose-400/10 text-rose-200 border border-rose-300/30 text-sm hover:bg-rose-400/20 transition"
-        >
-          📝 오답 노트
-        </Link>
-        <Link
-          to="/achievements"
-          className="px-6 py-2 rounded-xl bg-amber-400/10 text-amber-200 border border-amber-300/30 text-sm hover:bg-amber-400/20 transition"
-        >
-          🏅 업적
-        </Link>
-        <button
-          onClick={() => {
-            toggleMute()
-            setMuted(!muted)
-          }}
-          className="px-6 py-2 rounded-xl bg-white/10 text-white/70 border border-white/20 text-sm"
-        >
-          {muted ? '🔇 소리 꺼짐' : '🔊 소리 켜짐'}
-        </button>
+
+        {/* 도전 모드 */}
+        <div className="grid grid-cols-2 gap-2">
+          <Link
+            to="/daily"
+            className="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white font-bold border border-yellow-200/50 text-center text-sm"
+          >
+            🌟<br />오늘의 챌린지
+          </Link>
+          <Link
+            to="/endless"
+            className="p-3 rounded-xl bg-gradient-to-br from-purple-600 to-pink-500 text-white font-bold border border-yellow-300/40 text-center text-sm"
+          >
+            🎮<br />끝없는 항해
+          </Link>
+        </div>
+
+        {/* 학습 도구 */}
+        <div className="grid grid-cols-3 gap-2">
+          <Link to="/wrong-notes" className="p-2 rounded-lg bg-rose-400/10 text-rose-200 border border-rose-300/30 text-xs text-center">
+            📝<br />오답 노트
+          </Link>
+          <Link to="/achievements" className="p-2 rounded-lg bg-amber-400/10 text-amber-200 border border-amber-300/30 text-xs text-center">
+            🏅<br />업적
+          </Link>
+          <Link to="/story" className="p-2 rounded-lg bg-purple-400/10 text-purple-200 border border-purple-300/30 text-xs text-center">
+            📚<br />항해 일지
+          </Link>
+        </div>
+
+        {/* 캐릭터 / 자원 */}
+        <div className="grid grid-cols-3 gap-2">
+          <Link to="/cabinet" className="p-2 rounded-lg bg-pink-400/10 text-pink-200 border border-pink-300/30 text-xs text-center">
+            🧳<br />캐비닛
+          </Link>
+          <Link to="/shop" className="p-2 rounded-lg bg-emerald-400/10 text-emerald-200 border border-emerald-300/30 text-xs text-center">
+            🏪<br />상점
+          </Link>
+          <Link to="/leaderboard" className="p-2 rounded-lg bg-yellow-400/10 text-yellow-200 border border-yellow-300/30 text-xs text-center">
+            🏆<br />리더보드
+          </Link>
+        </div>
+
+        {/* 설정 */}
+        <div className="grid grid-cols-2 gap-2">
+          <Link to="/dashboard" className="p-2 rounded-lg bg-white/5 text-white/70 border border-white/15 text-xs text-center">
+            📊 진도판 / 학급
+          </Link>
+          <button
+            onClick={() => {
+              toggleMute()
+              setMuted(!muted)
+            }}
+            className="p-2 rounded-lg bg-white/10 text-white/70 border border-white/20 text-xs"
+          >
+            {muted ? '🔇 소리 꺼짐' : '🔊 소리 켜짐'}
+          </button>
+        </div>
       </div>
 
       <button
