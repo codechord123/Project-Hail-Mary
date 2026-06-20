@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { LevelBadge } from '@/components/LevelBadge'
 import { Tutorial } from '@/components/Tutorial'
 import { unlockAudio, setMuted } from '@/lib/sfx'
 import { useGameStore } from '@/store/gameStore'
+import { clearSession } from '@/lib/auth'
+import { saveCurrentSlot } from '@/lib/profileSwitch'
 
 export function MainMenu() {
+  const navigate = useNavigate()
   const muted = useGameStore((s) => s.muted)
   const toggleMute = useGameStore((s) => s.toggleMute)
   const studentName = useGameStore((s) => s.studentName)
@@ -20,6 +23,13 @@ export function MainMenu() {
   const start = () => {
     unlockAudio()
     setMuted(muted)
+  }
+
+  const handleLogout = () => {
+    if (!window.confirm(`정말 로그아웃할까? ${studentName} 의 진도는 저장돼.`)) return
+    saveCurrentSlot()
+    clearSession()
+    navigate('/login')
   }
 
   return (
@@ -58,7 +68,15 @@ export function MainMenu() {
       <div className="mt-8 flex flex-col items-center gap-3">
         <CharacterAvatar size={130} />
         {studentName && (
-          <div className="text-white/80 text-sm">⛑ 항해사 <span className="font-bold text-white">{studentName}</span></div>
+          <div className="flex items-center gap-2">
+            <div className="text-white/80 text-sm">⛑ 항해사 <span className="font-bold text-white">{studentName}</span></div>
+            <button
+              onClick={handleLogout}
+              className="px-2 py-0.5 rounded bg-white/10 text-white/70 border border-white/20 text-xs hover:bg-white/20"
+            >
+              🚪 로그아웃
+            </button>
+          </div>
         )}
         <LevelBadge />
       </div>
