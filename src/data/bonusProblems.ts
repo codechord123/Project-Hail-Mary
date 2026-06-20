@@ -96,6 +96,21 @@ const POOLS: Record<number, Problem[]> = {
       left: { numerator: 7, denominator: 10 }, right: { decimal: 0.75 },
       correctOp: '<',
     },
+    {
+      id: 'c3-bonus-g', kind: 'numeric', difficulty: 3,
+      scenario: '2/5 의 분자에 4를 더했더니 분수의 크기가 변하지 않았어. 분모에는 얼마를 더한 거야?',
+      prompt: '분모에 더한 수',
+      hint: '분자 2 → 6 (×3). 분모도 ×3 → 15. 15 − 5 = ?',
+      answer: 10, unit: '',
+    },
+    {
+      id: 'c3-bonus-h', kind: 'multi', difficulty: 3,
+      scenario: '어떤 분수의 분모에 3을 더하고 4로 약분했더니 1/3이 됐어. 원래 분수를 기약으로!',
+      prompt: '원래 분수 (기약)',
+      hint: '4로 약분 후 1/3 → 약분 전 4/12. 분모에 3 더해서 12였으니 원래 분모 9 → 4/9.',
+      workspacePlaceholder: '예: 1/3 = 4/12, 12 - 3 = 9 → 4/9',
+      finalAnswer: { numerator: 4, denominator: 9 }, requireSimplified: true,
+    },
   ],
   4: [
     {
@@ -134,6 +149,20 @@ const POOLS: Record<number, Problem[]> = {
       prompt: '1/3 + 1/4 vs 1/2', hint: '1/3+1/4=7/12, 1/2=6/12.',
       left: { numerator: 7, denominator: 12 }, right: { numerator: 1, denominator: 2 },
       correctOp: '>',
+    },
+    {
+      id: 'c4-bonus-g', kind: 'numeric', difficulty: 3,
+      scenario: '두 분수 5/12 와 1/4 의 공통분모로 가능한 수가 후보 [12, 24, 30, 36, 48, 50] 중 몇 개?',
+      prompt: '공통분모 후보 개수',
+      hint: '공통분모는 12와 4의 공배수. 12의 배수 = 12, 24, 36, 48.',
+      answer: 4, unit: '개',
+    },
+    {
+      id: 'c4-bonus-h', kind: 'fraction', difficulty: 3,
+      scenario: '연료 1/2 + 1/3 + 1/6 — 세 개를 합하면 (기약, 가분수 OK)?',
+      prompt: '합 (기약)',
+      hint: '공통분모 6. 3/6 + 2/6 + 1/6 = 6/6 = 1.',
+      answer: { numerator: 1, denominator: 1 }, requireSimplified: true,
     },
   ],
   5: [
@@ -188,10 +217,12 @@ const POOLS: Record<number, Problem[]> = {
       answer: { numerator: 8, denominator: 5 }, requireSimplified: true,
     },
     {
-      id: 'c6-bonus-c', kind: 'fraction', difficulty: 3,
-      scenario: '가분수 7/2를 대분수로… 가분수 그대로 입력 (기약).',
-      prompt: '7/2를 기약 가분수로', hint: '이미 기약.',
-      answer: { numerator: 7, denominator: 2 }, requireSimplified: true,
+      id: 'c6-bonus-c', kind: 'mcq', difficulty: 2,
+      scenario: '가분수 11/3 을 대분수로 바꾸면?',
+      prompt: '11/3 의 대분수 표현 = ?',
+      hint: '11 ÷ 3 = 3 나머지 2.',
+      choices: ['3⅓', '3⅔', '2⅔', '4⅓', '⅓'],
+      correctIndexes: [1], multiple: false,
     },
     {
       id: 'c6-bonus-d', kind: 'fraction', difficulty: 3,
@@ -252,6 +283,21 @@ const POOLS: Record<number, Problem[]> = {
       scenario: '5/6 보다 크고 1 보다 작은 분수 중에서, 분모가 12인 진분수의 개수는?',
       prompt: '개수', hint: '5/6=10/12, 1=12/12. 11/12 만.',
       answer: 1, unit: '개',
+    },
+    {
+      id: 'c7-bonus-g', kind: 'multi', difficulty: 3,
+      scenario: '여왕의 마지막 함정 — 어떤 분수의 분자에 6을 더하고 5로 약분하니 4/5가 됐어. 원래 분수를 기약으로!',
+      prompt: '원래 분수 (기약)',
+      hint: '5로 약분 후 4/5 → 약분 전 20/25. 분자 -6 = 14 → 14/25.',
+      workspacePlaceholder: '예: 4/5 = 20/25, 20-6=14 → 14/25',
+      finalAnswer: { numerator: 14, denominator: 25 }, requireSimplified: true,
+    },
+    {
+      id: 'c7-bonus-h', kind: 'numeric', difficulty: 3,
+      scenario: '귀환 항로 — 1/3 보다 크고 2/3 보다 작은 분수 중 분모가 9인 진분수는 모두 몇 개?',
+      prompt: '개수',
+      hint: '1/3=3/9, 2/3=6/9. 분자 4와 5 → 2개.',
+      answer: 2, unit: '개',
     },
   ],
 }

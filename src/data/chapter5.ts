@@ -10,11 +10,16 @@ export interface ReactorBreach {
 }
 
 export const chapter5Breaches: ReactorBreach[] = [
-  { id: 'c5-1', a: { numerator: 5, denominator: 6 }, b: { numerator: 3, denominator: 4 }, location: '냉각 펌프' },
+  // 2/3 - 1/6 = 1/2 (약분 필요: 3/6 → 1/2)
+  { id: 'c5-1', a: { numerator: 2, denominator: 3 }, b: { numerator: 1, denominator: 6 }, location: '냉각 펌프' },
+  // 7/10 - 2/5 = 3/10 (이미 기약)
   { id: 'c5-2', a: { numerator: 7, denominator: 10 }, b: { numerator: 2, denominator: 5 }, location: '연료 라인' },
-  { id: 'c5-3', a: { numerator: 11, denominator: 12 }, b: { numerator: 2, denominator: 3 }, location: '추진 노즐' },
+  // 5/6 - 1/3 = 1/2 (약분 필요: 3/6 → 1/2)
+  { id: 'c5-3', a: { numerator: 5, denominator: 6 }, b: { numerator: 1, denominator: 3 }, location: '추진 노즐' },
+  // 4/5 - 1/4 = 11/20 (이미 기약)
   { id: 'c5-4', a: { numerator: 4, denominator: 5 }, b: { numerator: 1, denominator: 4 }, location: '생명 유지' },
-  { id: 'c5-5', a: { numerator: 9, denominator: 14 }, b: { numerator: 3, denominator: 7 }, location: '냉각 펌프' },
+  // 11/12 - 1/4 = 2/3 (약분 필요: 8/12 → 2/3)
+  { id: 'c5-5', a: { numerator: 11, denominator: 12 }, b: { numerator: 1, denominator: 4 }, location: '냉각 펌프' },
 ]
 
 export interface BreachSolution {

@@ -245,7 +245,15 @@ export function Chapter5() {
           {step === 'simplify' && (
             <>
               <div className="text-sm text-white/70 text-center">
-                {sol.result.numerator}/{sol.result.denominator}을 기약분수로!
+                {isSimplified(sol.result) ? (
+                  <>
+                    <b>{sol.result.numerator}/{sol.result.denominator}</b>은 <span className="text-emerald-300">이미 기약분수</span>!
+                    <br />
+                    그대로 다시 입력해서 확인해줘.
+                  </>
+                ) : (
+                  <>{sol.result.numerator}/{sol.result.denominator}을 기약분수로 줄여!</>
+                )}
               </div>
               <FractionInput key={`${idx}-simp`} onChange={setSimplifyAns} />
             </>
