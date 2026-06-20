@@ -25,6 +25,14 @@ export function Shop() {
     store.giveItem(entry.id, 1)
   }
 
+  const bundleCost = (entry: ShopEntry) => Math.ceil(entry.costEnergy * 5 * 0.85) // 15% 할인
+  const buyBundle = (entry: ShopEntry) => {
+    const cost = bundleCost(entry)
+    if (store.energy < cost) return
+    store.addEnergy(-cost)
+    store.giveItem(entry.id, 5)
+  }
+
   return (
     <div className="min-h-screen px-6 py-8 max-w-3xl mx-auto">
       <Link to="/" className="text-white/60 hover:text-white text-sm">
@@ -60,7 +68,14 @@ export function Shop() {
                 disabled={!canBuy}
                 className="w-full mt-3 px-3 py-2 rounded-lg bg-space-accent text-space-900 font-bold text-sm disabled:opacity-30"
               >
-                ⚡ {entry.costEnergy} · 구매
+                ⚡ {entry.costEnergy} · 1개 구매
+              </button>
+              <button
+                onClick={() => buyBundle(entry)}
+                disabled={store.energy < bundleCost(entry)}
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-yellow-400/20 text-yellow-200 border border-yellow-300/40 font-bold text-xs disabled:opacity-30"
+              >
+                🎁 ⚡ {bundleCost(entry)} · 5개 묶음 (15% 할인)
               </button>
             </li>
           )

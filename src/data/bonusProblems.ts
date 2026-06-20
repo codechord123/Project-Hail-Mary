@@ -43,6 +43,18 @@ const POOLS: Record<number, Problem[]> = {
       prompt: 'X/12 — X는?', hint: '12 - 2×4 = ?',
       answer: 4, unit: '',
     },
+    {
+      id: 'c2-bonus-g', kind: 'fraction', difficulty: 3,
+      scenario: '구조선 식량 5/6 에서 도둑 한 마리당 1/3 씩 두 마리가 가져갔어. 남은 양 (기약)?',
+      prompt: '남은 양 (기약)', hint: '5/6 - 4/6 = 1/6.',
+      answer: { numerator: 1, denominator: 6 }, requireSimplified: true,
+    },
+    {
+      id: 'c2-bonus-h', kind: 'fraction', difficulty: 3,
+      scenario: '비상 전력 7/10 에서 3/5 만큼 누출. 남은 전력 (기약)?',
+      prompt: '남은 양 (기약)', hint: '3/5 = 6/10. 7/10 - 6/10 = 1/10.',
+      answer: { numerator: 1, denominator: 10 }, requireSimplified: true,
+    },
   ],
   3: [
     {

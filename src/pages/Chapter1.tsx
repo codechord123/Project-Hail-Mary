@@ -383,6 +383,12 @@ export function Chapter1() {
             {manipProblem.requireSimplified && !simplifyAidActive && (
               <div className="text-xs text-yellow-300/90">⚠ 기약분수로 답해야 정답이야.</div>
             )}
+            {manipProblem.requireSimplified && !simplifyAidActive && seedAnswer && !isSimplified(seedAnswer) && (
+              <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-400/40 rounded-md p-2 max-w-sm text-center">
+                💡 셀을 다 옮기면 <b>{seedAnswer.numerator}/{seedAnswer.denominator}</b>야.
+                분자와 분모를 같은 수로 나눠 <b>약분</b>해서 입력해봐!
+              </div>
+            )}
           </>
         )}
         {appProblem && (
