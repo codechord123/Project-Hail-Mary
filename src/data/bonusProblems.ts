@@ -2,302 +2,346 @@ import type { Problem } from '@/types/problem'
 
 /**
  * 챕터 메인 메커니즘 종료 후 등장하는 보너스 응용 문제 풀.
- * 챕터당 여러 문항 중 매 진입 시 랜덤 picking → 재플레이 다양성.
+ * 모든 문제: 단순 계산식이 아닌 우주 서사 독해 응용.
+ * 범위 문제는 모두 이분모 (양 끝 분모 다름).
  */
 const POOLS: Record<number, Problem[]> = {
   2: [
     {
+      // 3/4 - 1/8 = 5/8 (B 배수, 약분 X — 식량 잔량 응용)
       id: 'c2-bonus-a', kind: 'fraction', difficulty: 2,
-      scenario: '식량 점검 마무리! 비축 식량 3/4 에서 1/8 을 먹었어. 남은 양 (기약)?',
+      scenario: '식량 점검 마무리! 비축 식량이 3/4 박스였는데 점검 중 1/8 박스를 시식용으로 썼어. 박스에 남은 양을 기약분수로!',
       prompt: '남은 식량 (기약)', hint: '공통분모 8. 6/8 - 1/8 = 5/8.',
       answer: { numerator: 5, denominator: 8 }, requireSimplified: true,
     },
     {
-      id: 'c2-bonus-b', kind: 'fraction', difficulty: 2,
-      scenario: '연료 5/6 에서 1/3 만큼 빠져나갔어. 남은 연료를 기약분수로!',
-      prompt: '남은 연료 (기약)', hint: '공통분모 6. 5/6 - 2/6 = 3/6 → 약분.',
-      answer: { numerator: 1, denominator: 2 }, requireSimplified: true,
+      // 7/9 - 1/3 = 4/9 — 항해 자원 응용
+      id: 'c2-bonus-b', kind: 'fraction', difficulty: 3,
+      scenario: '비상 산소 라인이 7/9 까지 채워져 있었는데, 야간 순찰 동안 1/3 만큼 사용했어. 라인 잔량을 기약으로!',
+      prompt: '남은 산소 (기약)', hint: '공통분모 9. 7/9 - 3/9 = 4/9.',
+      answer: { numerator: 4, denominator: 9 }, requireSimplified: true,
     },
     {
-      id: 'c2-bonus-c', kind: 'fraction', difficulty: 2,
-      scenario: '비상 식수 7/10 에서 1/2 을 마셨어. 남은 양 (기약)?',
-      prompt: '남은 양 (기약)', hint: '공통분모 10. 7/10 - 5/10 = 2/10 → 약분.',
-      answer: { numerator: 1, denominator: 5 }, requireSimplified: true,
+      // 11/14 - 3/7 = 11/14 - 6/14 = 5/14 — 새로운 분모 14 도입
+      id: 'c2-bonus-c', kind: 'fraction', difficulty: 3,
+      scenario: '비상 식수 11/14 통 중에 우주복 정화 시스템이 3/7 통을 끌어 썼어. 식수 잔량을 기약분수로!',
+      prompt: '남은 식수 (기약)', hint: '공통분모 14. 11/14 - 6/14 = 5/14.',
+      answer: { numerator: 5, denominator: 14 }, requireSimplified: true,
     },
     {
+      // 0.7 - 3/8 = 7/10 - 3/8 = 28/40 - 15/40 = 13/40 — 소수 응용
       id: 'c2-bonus-d', kind: 'fraction', difficulty: 3,
-      scenario: '약품 5/6 에서 3/4 을 사용. 남은 약품을 기약분수로!',
-      prompt: '남은 약품 (기약)', hint: '공통분모 12. 10/12 - 9/12 = 1/12.',
-      answer: { numerator: 1, denominator: 12 }, requireSimplified: true,
+      scenario: '약품 0.7 L 가 비축돼 있었는데 실험에 3/8 L 를 사용. 남은 약품을 기약분수로!',
+      prompt: '남은 약품 (기약)', hint: '0.7 = 7/10. 공통분모 40. 28/40 - 15/40 = 13/40.',
+      answer: { numerator: 13, denominator: 40 }, requireSimplified: true,
     },
     {
-      id: 'c2-bonus-e', kind: 'mcq', difficulty: 2,
-      scenario: '통분해서 계산한 결과가 1/2 이 되는 식을 모두 골라.',
-      prompt: '결과가 1/2 인 식', hint: '각 식을 통분해서 1/2(=다양한 동치)인지 확인.',
-      choices: ['3/4 - 1/4', '5/6 - 1/3', '2/3 - 1/6', '7/8 - 1/4', '3/4 - 1/8'],
-      correctIndexes: [0, 1, 2], multiple: true,
+      // 분수 vs 소수 비교 — 보급 비교
+      id: 'c2-bonus-e', kind: 'compare', difficulty: 2,
+      scenario: '두 보급선의 식량 적재량 비교. A선은 5/8 박스, B선은 0.65 박스를 운반 중이야. 누가 더 많이 갖고 와?',
+      prompt: '5/8 vs 0.65', hint: '5/8 = 0.625.',
+      left: { numerator: 5, denominator: 8 }, right: { decimal: 0.65 },
+      correctOp: '<',
     },
     {
+      // 11/12 - 5/8 = 22/24 - 15/24 = 7/24 — 큰 분모 응용
       id: 'c2-bonus-f', kind: 'fraction', difficulty: 3,
-      scenario: '산소 11/12 에서 2/3 만큼 소비. 남은 산소 (기약)?',
-      prompt: '남은 산소 (기약)', hint: '공통분모 12. 11/12 - 8/12 = 3/12 → 약분.',
-      answer: { numerator: 1, denominator: 4 }, requireSimplified: true,
+      scenario: '산소통 11/12 까지 채워져 있었는데 유출 점검 중 5/8 만큼이 새어 나갔어. 통에 남은 산소를 기약분수로!',
+      prompt: '남은 산소 (기약)', hint: '공통분모 24. 22/24 - 15/24 = 7/24.',
+      answer: { numerator: 7, denominator: 24 }, requireSimplified: true,
     },
     {
+      // 0.45 → 9/20 — 소수 변환 응용
       id: 'c2-bonus-g', kind: 'fraction', difficulty: 3,
-      scenario: '구조선 식량 5/6 에서 도둑 한 마리당 1/3 씩 두 마리가 가져갔어. 남은 양 (기약)?',
-      prompt: '남은 양 (기약)', hint: '5/6 - 4/6 = 1/6.',
-      answer: { numerator: 1, denominator: 6 }, requireSimplified: true,
+      scenario: '구조선 화물칸 적재율이 0.45 야. 같은 양을 분모 20 형태의 기약분수로 적어 인계 서류에 기록해야 해.',
+      prompt: '0.45 = ? (기약)', hint: '45/100 → ÷5 = 9/20.',
+      answer: { numerator: 9, denominator: 20 }, requireSimplified: true,
     },
     {
-      id: 'c2-bonus-h', kind: 'fraction', difficulty: 3,
-      scenario: '비상 전력 7/10 에서 3/5 만큼 누출. 남은 전력 (기약)?',
-      prompt: '남은 양 (기약)', hint: '3/5 = 6/10. 7/10 - 6/10 = 1/10.',
-      answer: { numerator: 1, denominator: 10 }, requireSimplified: true,
+      // 이분모 범위 — 4/15 < □/30 < 7/10 (분모 30, 양 끝 분모 15·10)
+      id: 'c2-bonus-h', kind: 'numeric', difficulty: 3,
+      scenario: '비상 전력선 출력은 4/15 단계 이상 7/10 단계 미만에 머물러야 안전해. 우리 계측기 분모 30 의 자연수 출력값 □ 는 몇 가지 가능?',
+      prompt: '4/15 < □/30 < 7/10 의 자연수 □ 개수',
+      hint: '4/15 = 8/30, 7/10 = 21/30. □ ∈ {9...20} → 12개.',
+      answer: 12, unit: '개',
     },
   ],
   3: [
     {
-      id: 'c3-bonus-a', kind: 'mcq', difficulty: 2,
-      scenario: '아스트로파지의 환영! 진짜 등가 분수만 모두 골라.',
-      prompt: '4/6과 크기가 같은 분수를 모두 골라.', hint: '약분 또는 동치로 검산.',
-      choices: ['2/3', '6/9', '8/12', '10/14', '12/18'],
-      correctIndexes: [0, 1, 2, 4], multiple: true,
-    },
-    {
-      id: 'c3-bonus-b', kind: 'numeric', difficulty: 2,
-      scenario: '분모가 12인 진분수 중에서 기약분수는 모두 몇 개야?',
-      prompt: '기약분수 개수', hint: '1, 5, 7, 11.',
-      answer: 4, unit: '개',
-    },
-    {
-      id: 'c3-bonus-c', kind: 'compare', difficulty: 2,
-      scenario: '두 신호 강도 비교.',
-      prompt: '3/4 vs 5/7', hint: '3/4 = 21/28, 5/7 = 20/28.',
-      left: { numerator: 3, denominator: 4 }, right: { numerator: 5, denominator: 7 },
-      correctOp: '>',
-    },
-    {
-      id: 'c3-bonus-d', kind: 'fraction', difficulty: 3,
-      scenario: '8/12 와 같은 값을 가지는, 분모가 9인 분수의 분자는? 답을 분수로 입력.',
-      prompt: '분모 9 형태의 동치 분수', hint: '8/12 = 2/3 = 6/9.',
-      answer: { numerator: 6, denominator: 9 }, requireSimplified: false,
-    },
-    {
-      id: 'c3-bonus-e', kind: 'numeric', difficulty: 2,
-      scenario: '분모가 8인 진분수 중 기약분수는 모두 몇 개?',
-      prompt: '기약분수 개수', hint: '1, 3, 5, 7.',
-      answer: 4, unit: '개',
-    },
-    {
-      id: 'c3-bonus-f', kind: 'compare', difficulty: 2,
-      scenario: '두 잔량 비교.',
-      prompt: '7/10 vs 0.75', hint: '7/10 = 0.7.',
-      left: { numerator: 7, denominator: 10 }, right: { decimal: 0.75 },
+      // 분수 비교 응용 (이분모) — 임무 진행률 비교
+      id: 'c3-bonus-a', kind: 'compare', difficulty: 3,
+      scenario: '아스트로파지 정찰병의 환영이 두 번 등장. 첫 번째는 거리 7/8 광년, 두 번째는 11/12 광년이야. 더 가까운 환영이 진짜! 어느 쪽이 더 가까운가?',
+      prompt: '7/8 vs 11/12', hint: '공통분모 24. 21/24 vs 22/24.',
+      left: { numerator: 7, denominator: 8 }, right: { numerator: 11, denominator: 12 },
       correctOp: '<',
     },
     {
+      // 이분모 범위 — 2/9 < □/18 < 5/6 (분모 18, bounds 분모 9, 6)
+      id: 'c3-bonus-b', kind: 'numeric', difficulty: 3,
+      scenario: '아스트로파지 둥지의 안전 진입 범위는 2/9 광년 ~ 5/6 광년이야. 분모 18 의 정수 분자 □ 가 진입 가능한 경우의 수는?',
+      prompt: '2/9 < □/18 < 5/6 의 □ 개수',
+      hint: '2/9 = 4/18, 5/6 = 15/18. □ ∈ {5...14} → 10개.',
+      answer: 10, unit: '개',
+    },
+    {
+      // 분수 vs 소수 — 신호 강도
+      id: 'c3-bonus-c', kind: 'compare', difficulty: 3,
+      scenario: '두 정찰병의 신호 강도 비교 — 한 쪽은 9/16, 다른 쪽은 0.6. 더 강한 쪽을 추적해야 해.',
+      prompt: '9/16 vs 0.6', hint: '9/16 = 0.5625.',
+      left: { numerator: 9, denominator: 16 }, right: { decimal: 0.6 },
+      correctOp: '<',
+    },
+    {
+      // 0.16 = 4/25 — 소수→분수 응용
+      id: 'c3-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '정찰병이 내뿜는 가스 농도 0.16 을 같은 값의 기약분수 (분모 25 형태) 로 기록해 분석실로 전송해.',
+      prompt: '0.16 = ? (기약)', hint: '16/100 → ÷4 = 4/25.',
+      answer: { numerator: 4, denominator: 25 }, requireSimplified: true,
+    },
+    {
+      // 분수 + 분수 응용 (이분모) — 자원 합산
+      id: 'c3-bonus-e', kind: 'fraction', difficulty: 3,
+      scenario: '정찰병의 분비물 분석 — 시료 1번이 3/10 g, 시료 2번이 5/8 g 일 때 총 시료의 합을 기약분수로!',
+      prompt: '3/10 + 5/8 (기약)', hint: '공통분모 40. 12/40 + 25/40 = 37/40.',
+      answer: { numerator: 37, denominator: 40 }, requireSimplified: true,
+    },
+    {
+      // 분수 vs 소수 — 항법 비교
+      id: 'c3-bonus-f', kind: 'compare', difficulty: 3,
+      scenario: '두 신호 위치 — 좌표 A 는 11/20 광년, 좌표 B 는 0.55 광년. 두 좌표는 같을까 다를까?',
+      prompt: '11/20 vs 0.55', hint: '11/20 = 55/100 = 0.55.',
+      left: { numerator: 11, denominator: 20 }, right: { decimal: 0.55 },
+      correctOp: '=',
+    },
+    {
+      // 비례 동치 응용
       id: 'c3-bonus-g', kind: 'numeric', difficulty: 3,
-      scenario: '2/5 의 분자에 4를 더했더니 분수의 크기가 변하지 않았어. 분모에는 얼마를 더한 거야?',
+      scenario: '정찰병이 보낸 분수 2/5 의 분자에 4 를 더했더니 분수의 크기가 변하지 않았어. 분모에는 얼마를 더해야 했을까?',
       prompt: '분모에 더한 수',
-      hint: '분자 2 → 6 (×3). 분모도 ×3 → 15. 15 − 5 = ?',
+      hint: '2+4=6. 분자가 ×3 됐으니 분모도 ×3 → 15. 15-5=10.',
       answer: 10, unit: '',
     },
     {
+      // 다단계 역산
       id: 'c3-bonus-h', kind: 'multi', difficulty: 3,
-      scenario: '어떤 분수의 분모에 3을 더하고 4로 약분했더니 1/3이 됐어. 원래 분수를 기약으로!',
+      scenario: '정찰병이 마지막 코드를 흘렸어 — 어떤 분수의 분모에 4 를 더하고 5 로 약분하니 2/3 이 됐어. 원래 분수를 기약으로 입력해 코드 해제!',
       prompt: '원래 분수 (기약)',
-      hint: '4로 약분 후 1/3 → 약분 전 4/12. 분모에 3 더해서 12였으니 원래 분모 9 → 4/9.',
-      workspacePlaceholder: '예: 1/3 = 4/12, 12 - 3 = 9 → 4/9',
-      finalAnswer: { numerator: 4, denominator: 9 }, requireSimplified: true,
+      hint: '5로 약분 후 2/3 → 약분 전 10/15. 분모에 4 더해 15였으니 원래 분모 11 → 10/11.',
+      workspacePlaceholder: '예: 2/3 = 10/15, 15 - 4 = 11 → 10/11',
+      finalAnswer: { numerator: 10, denominator: 11 }, requireSimplified: true,
     },
   ],
   4: [
     {
-      id: 'c4-bonus-a', kind: 'fraction', difficulty: 2,
-      scenario: '디펜스 통과! 연료 1/4 + 1/6 = ? (기약)',
-      prompt: '합을 기약분수로', hint: '공통분모 12.',
-      answer: { numerator: 5, denominator: 12 }, requireSimplified: true,
-    },
-    {
-      id: 'c4-bonus-b', kind: 'fraction', difficulty: 3,
-      scenario: '회수된 자원 2/5 + 3/10 = ? (기약)',
-      prompt: '합 (기약)', hint: '공통분모 10.',
-      answer: { numerator: 7, denominator: 10 }, requireSimplified: true,
-    },
-    {
-      id: 'c4-bonus-c', kind: 'fraction', difficulty: 2,
-      scenario: '응원 보고: 1/3 + 1/2 = ? (기약)',
-      prompt: '합 (기약)', hint: '공통분모 6.',
-      answer: { numerator: 5, denominator: 6 }, requireSimplified: true,
-    },
-    {
-      id: 'c4-bonus-d', kind: 'fraction', difficulty: 2,
-      scenario: '응원 함대 — 2/3 + 1/4 = ? (기약)',
-      prompt: '합 (기약)', hint: '공통분모 12, 8+3=11.',
-      answer: { numerator: 11, denominator: 12 }, requireSimplified: true,
-    },
-    {
-      id: 'c4-bonus-e', kind: 'fraction', difficulty: 3,
-      scenario: '두 부대 합류: 5/8 + 1/6 = ? (기약)',
-      prompt: '합 (기약)', hint: '공통분모 24, 15+4=19.',
+      // 5/12 + 3/8 = 10/24 + 9/24 = 19/24 — 디펜스 응용
+      id: 'c4-bonus-a', kind: 'fraction', difficulty: 3,
+      scenario: '디펜스 후 합류 자원 — 우리 5/12 통, 동맹 3/8 통. 합치면 베이스 총 자원량은 기약분수로?',
+      prompt: '5/12 + 3/8 (기약)', hint: '공통분모 24. 10/24 + 9/24 = 19/24.',
       answer: { numerator: 19, denominator: 24 }, requireSimplified: true,
     },
     {
-      id: 'c4-bonus-f', kind: 'compare', difficulty: 2,
-      scenario: '두 시작 분량 비교.',
-      prompt: '1/3 + 1/4 vs 1/2', hint: '1/3+1/4=7/12, 1/2=6/12.',
-      left: { numerator: 7, denominator: 12 }, right: { numerator: 1, denominator: 2 },
-      correctOp: '>',
+      // 0.25 + 5/12 = 1/4 + 5/12 = 3/12 + 5/12 = 8/12 = 2/3
+      id: 'c4-bonus-b', kind: 'fraction', difficulty: 3,
+      scenario: '회수된 자원: 우주잔해에서 0.25 통, 노출된 운석에서 5/12 통. 두 자원을 합한 양을 기약분수로!',
+      prompt: '0.25 + 5/12 (기약)', hint: '0.25 = 1/4 = 3/12. 3/12 + 5/12 = 8/12 → 2/3.',
+      answer: { numerator: 2, denominator: 3 }, requireSimplified: true,
     },
     {
+      // 분수 비교 — 부대 진행률
+      id: 'c4-bonus-c', kind: 'compare', difficulty: 3,
+      scenario: '두 부대가 동시에 디펜스 임무 수행 중. A 부대는 5/9 완료, B 부대는 7/12 완료. 누가 더 진행됐을까?',
+      prompt: '5/9 vs 7/12', hint: '공통분모 36. 20/36 vs 21/36.',
+      left: { numerator: 5, denominator: 9 }, right: { numerator: 7, denominator: 12 },
+      correctOp: '<',
+    },
+    {
+      // 7/15 + 1/6 = 14/30 + 5/30 = 19/30 — 큰 분모 응용
+      id: 'c4-bonus-d', kind: 'fraction', difficulty: 3,
+      scenario: '응원 함대 — 본진 7/15 + 지원군 1/6 의 화력을 합치면 총 화력이 얼마? (기약)',
+      prompt: '7/15 + 1/6 (기약)', hint: '공통분모 30. 14/30 + 5/30 = 19/30.',
+      answer: { numerator: 19, denominator: 30 }, requireSimplified: true,
+    },
+    {
+      // 11/16 + 1/4 = 11/16 + 4/16 = 15/16 — 새 분모 16 도입
+      id: 'c4-bonus-e', kind: 'fraction', difficulty: 3,
+      scenario: '두 베이스 합산 — 알파 베이스 방어막 11/16, 베타 베이스 1/4. 합쳐서 총 방어막의 비율은? (기약)',
+      prompt: '11/16 + 1/4 (기약)', hint: '공통분모 16. 11/16 + 4/16 = 15/16.',
+      answer: { numerator: 15, denominator: 16 }, requireSimplified: true,
+    },
+    {
+      // 분수 + 소수 비교 응용
+      id: 'c4-bonus-f', kind: 'compare', difficulty: 3,
+      scenario: '아군 부대 5/8 + 1/4 의 화력 vs 적군 0.95 의 화력. 누가 우세할까?',
+      prompt: '5/8 + 1/4 vs 0.95', hint: '5/8 + 1/4 = 7/8 = 0.875.',
+      left: { numerator: 7, denominator: 8 }, right: { decimal: 0.95 },
+      correctOp: '<',
+    },
+    {
+      // 이분모 범위 — 1/4 < □/20 < 3/5
       id: 'c4-bonus-g', kind: 'numeric', difficulty: 3,
-      scenario: '두 분수 5/12 와 1/4 의 공통분모로 가능한 수가 후보 [12, 24, 30, 36, 48, 50] 중 몇 개?',
-      prompt: '공통분모 후보 개수',
-      hint: '공통분모는 12와 4의 공배수. 12의 배수 = 12, 24, 36, 48.',
-      answer: 4, unit: '개',
+      scenario: '디펜스 라인 안전 범위는 1/4 ~ 3/5. 분모 20 의 자연수 출력 □ 는 몇 개?',
+      prompt: '1/4 < □/20 < 3/5 의 □ 개수',
+      hint: '1/4 = 5/20, 3/5 = 12/20. □ ∈ {6...11} → 6개.',
+      answer: 6, unit: '개',
     },
     {
+      // 세 자원 합 응용
       id: 'c4-bonus-h', kind: 'fraction', difficulty: 3,
-      scenario: '연료 1/2 + 1/3 + 1/6 — 세 개를 합하면 (기약, 가분수 OK)?',
-      prompt: '합 (기약)',
-      hint: '공통분모 6. 3/6 + 2/6 + 1/6 = 6/6 = 1.',
-      answer: { numerator: 1, denominator: 1 }, requireSimplified: true,
+      scenario: '세 보급선의 비상 자원: 1번 3/10, 2번 1/4, 3번 1/5. 셋 다 합치면 베이스 잔량은 기약분수로?',
+      prompt: '3/10 + 1/4 + 1/5 (기약)',
+      hint: '공통분모 20. 6/20 + 5/20 + 4/20 = 15/20 = 3/4.',
+      answer: { numerator: 3, denominator: 4 }, requireSimplified: true,
     },
   ],
   5: [
     {
-      id: 'c5-bonus-a', kind: 'compare', difficulty: 2,
-      scenario: '리액터 라인 잔량 비교.',
-      prompt: '5/8 vs 0.6', hint: '5/8 = 0.625.',
-      left: { numerator: 5, denominator: 8 }, right: { decimal: 0.6 }, correctOp: '>',
+      // 분수 vs 소수 — 잔량 비교
+      id: 'c5-bonus-a', kind: 'compare', difficulty: 3,
+      scenario: '리액터 라인 잔량 비교 — 라인 A 11/16 단계, 라인 B 0.65 단계. 어느 쪽이 더 위험 (적은) 가?',
+      prompt: '11/16 vs 0.65', hint: '11/16 = 0.6875.',
+      left: { numerator: 11, denominator: 16 }, right: { decimal: 0.65 }, correctOp: '>',
     },
     {
+      // 7/10 - 3/8 = 28/40 - 15/40 = 13/40 — 응용
       id: 'c5-bonus-b', kind: 'fraction', difficulty: 3,
-      scenario: '잔량 차이 계산: 7/10 − 1/4 = ? (기약)',
-      prompt: '차이 (기약)', hint: '공통분모 20.',
-      answer: { numerator: 9, denominator: 20 }, requireSimplified: true,
+      scenario: '연료 잔량 7/10 통에서 비상 점화로 3/8 통을 추가 소비했어. 라인 잔량을 기약으로!',
+      prompt: '7/10 - 3/8 (기약)', hint: '공통분모 40. 28/40 - 15/40 = 13/40.',
+      answer: { numerator: 13, denominator: 40 }, requireSimplified: true,
     },
     {
+      // LCM 응용
       id: 'c5-bonus-c', kind: 'numeric', difficulty: 3,
-      scenario: '두 분모 8과 12의 최소공배수를 입력해.',
-      prompt: 'LCM(8,12)', hint: '24.',
-      answer: 24, unit: '',
+      scenario: '리액터 두 코어 주기를 맞추려면 LCM(9, 12) 분 마다 동기화해야 해. 그 주기는?',
+      prompt: 'LCM(9, 12)', hint: '36.',
+      answer: 36, unit: '',
     },
     {
+      // 0.6 - 1/3 = 3/5 - 1/3 = 9/15 - 5/15 = 4/15
       id: 'c5-bonus-d', kind: 'fraction', difficulty: 3,
-      scenario: '잔량 차이: 4/5 - 1/3 = ? (기약)',
-      prompt: '차이 (기약)', hint: '공통분모 15, 12-5=7.',
-      answer: { numerator: 7, denominator: 15 }, requireSimplified: true,
+      scenario: '냉각수 0.6 통이 있고, 비상 분사로 1/3 통이 소모됐어. 잔량을 기약으로!',
+      prompt: '0.6 - 1/3 (기약)', hint: '0.6 = 3/5. 9/15 - 5/15 = 4/15.',
+      answer: { numerator: 4, denominator: 15 }, requireSimplified: true,
     },
     {
-      id: 'c5-bonus-e', kind: 'numeric', difficulty: 2,
-      scenario: '두 분모 6과 9의 최소공배수는?',
-      prompt: 'LCM(6,9)', hint: '18.',
-      answer: 18, unit: '',
+      // 이분모 범위 — 3/10 < □/30 < 7/15
+      id: 'c5-bonus-e', kind: 'numeric', difficulty: 3,
+      scenario: '리액터 출력 안정 범위는 3/10 ~ 7/15 단계. 분모 30 의 자연수 출력 □ 는 몇 개?',
+      prompt: '3/10 < □/30 < 7/15 의 □ 개수',
+      hint: '3/10 = 9/30, 7/15 = 14/30. □ ∈ {10, 11, 12, 13} → 4개.',
+      answer: 4, unit: '개',
     },
     {
+      // 0.84 - 5/8 = 21/25 - 5/8 = 168/200 - 125/200 = 43/200
       id: 'c5-bonus-f', kind: 'fraction', difficulty: 3,
-      scenario: '전력 손실: 5/6 - 2/9 = ? (기약)',
-      prompt: '차이 (기약)', hint: '공통분모 18, 15-4=11.',
-      answer: { numerator: 11, denominator: 18 }, requireSimplified: true,
+      scenario: '비상 전력 0.84 단위 중 5/8 단위가 메인 컴퓨터로 흘러갔어. 라인에 남은 전력을 기약분수로!',
+      prompt: '0.84 - 5/8 (기약)', hint: '0.84 = 21/25. 21/25 - 5/8 → 공통분모 200. 168/200 - 125/200 = 43/200.',
+      answer: { numerator: 43, denominator: 200 }, requireSimplified: true,
     },
   ],
   6: [
     {
       id: 'c6-bonus-a', kind: 'fraction', difficulty: 3,
-      scenario: '배양 마무리! 대분수 2¾를 가분수로 (기약).',
-      prompt: '가분수 (기약)', hint: '2×4+3=11, 분모 4.',
+      scenario: '배양조 1번에 우주 미생물이 2¾ 통 들어 있어. 같은 양을 가분수로 적어 분석기에 입력해.',
+      prompt: '2¾ 의 가분수 (기약)', hint: '2×4+3=11, 분모 4.',
       answer: { numerator: 11, denominator: 4 }, requireSimplified: true,
     },
     {
       id: 'c6-bonus-b', kind: 'fraction', difficulty: 3,
-      scenario: '1⅗ 를 가분수로 (기약).',
-      prompt: '가분수 (기약)', hint: '1×5+3=8, 분모 5.',
+      scenario: '아스트로파지 표본 1⅗ 박스를 정밀 분석기에 넣으려면 가분수 표기가 필요해.',
+      prompt: '1⅗ 의 가분수 (기약)', hint: '1×5+3=8, 분모 5.',
       answer: { numerator: 8, denominator: 5 }, requireSimplified: true,
     },
     {
       id: 'c6-bonus-c', kind: 'mcq', difficulty: 2,
-      scenario: '가분수 11/3 을 대분수로 바꾸면?',
-      prompt: '11/3 의 대분수 표현 = ?',
+      scenario: '연구원이 가분수 11/3 박스의 표본을 가져왔어. 같은 양을 대분수로 적으면?',
+      prompt: '11/3 의 대분수 = ?',
       hint: '11 ÷ 3 = 3 나머지 2.',
       choices: ['3⅓', '3⅔', '2⅔', '4⅓', '⅓'],
       correctIndexes: [1], multiple: false,
     },
     {
       id: 'c6-bonus-d', kind: 'fraction', difficulty: 3,
-      scenario: '2⅖ 를 가분수로 (기약).',
-      prompt: '가분수 (기약)', hint: '2×5+2=12, 분모 5. 약분 X.',
+      scenario: '냉동 보관 박스에 2⅖ 박스가 보관 중이야. 컴퓨터 시스템은 가분수만 인식해. 변환해줘.',
+      prompt: '2⅖ 의 가분수 (기약)', hint: '2×5+2=12, 분모 5. 약분 X.',
       answer: { numerator: 12, denominator: 5 }, requireSimplified: true,
     },
     {
       id: 'c6-bonus-e', kind: 'fraction', difficulty: 3,
-      scenario: '3⅔ 를 가분수로 (기약).',
-      prompt: '가분수 (기약)', hint: '3×3+2=11, 분모 3.',
+      scenario: '아스트로파지 3⅔ 박스를 분석실로 인계하려면 가분수 표기로 인계서에 적어야 해.',
+      prompt: '3⅔ 의 가분수 (기약)', hint: '3×3+2=11, 분모 3.',
       answer: { numerator: 11, denominator: 3 }, requireSimplified: true,
     },
     {
       id: 'c6-bonus-f', kind: 'mcq', difficulty: 2,
-      scenario: '가분수 9/4 와 같은 대분수는?',
-      prompt: '9/4의 대분수 표현 = ?', hint: '9 = 4×2 + 1.',
+      scenario: '센서가 가분수 9/4 박스로 잡혔어. 분석실은 대분수로 받아. 변환은?',
+      prompt: '9/4 의 대분수 = ?', hint: '9 = 4×2 + 1.',
       choices: ['1¾', '2¼', '2¾', '3¼', '1¼'],
       correctIndexes: [1], multiple: false,
     },
   ],
   7: [
     {
+      // 다단계 역산
       id: 'c7-bonus-a', kind: 'multi', difficulty: 3,
-      scenario: '귀환 잠금: 분자에 7 더하고 5로 약분하니 3/5. 원래 분수 기약으로!',
+      scenario: '귀환 잠금 — 결계 코드는 분자에 7 더하고 5로 약분하면 3/5 이 되는 분수야. 원래 기약 분수는?',
       prompt: '풀이 + 기약 답', hint: '3/5 = 15/25, 15-7=8 → 8/25.',
       workspacePlaceholder: '예: 3/5 = 15/25, 15-7=8 → 8/25',
       finalAnswer: { numerator: 8, denominator: 25 }, requireSimplified: true,
     },
     {
+      // 다단계 역산
       id: 'c7-bonus-b', kind: 'multi', difficulty: 3,
-      scenario: '분자에 3을 더하고 7로 약분하니 2/3. 원래 분수 기약으로!',
+      scenario: '여왕의 봉인을 풀기 위해 — 분자에 3을 더하고 7로 약분하니 2/3 이 됐어. 원래 기약 분수는?',
       prompt: '풀이 + 기약 답', hint: '2/3 = 14/21, 14-3=11 → 11/21.',
       workspacePlaceholder: '풀이...',
       finalAnswer: { numerator: 11, denominator: 21 }, requireSimplified: true,
     },
     {
+      // 대분수 합 응용
       id: 'c7-bonus-c', kind: 'fraction', difficulty: 3,
-      scenario: '대분수의 합 2¼ + 1⅔ = ? (가분수 기약).',
-      prompt: '가분수 기약', hint: '9/4 + 5/3 = 27/12 + 20/12 = 47/12.',
+      scenario: '연합 함대의 무기 마력을 합산. 항해사 2¼, 로키 1⅔. 합쳐 봉인 일격을 가분수 기약으로!',
+      prompt: '2¼ + 1⅔ 의 가분수 기약', hint: '9/4 + 5/3 = 27/12 + 20/12 = 47/12.',
       answer: { numerator: 47, denominator: 12 }, requireSimplified: true,
     },
     {
+      // 대분수 차 응용
       id: 'c7-bonus-d', kind: 'fraction', difficulty: 3,
-      scenario: '대분수의 차 3⅓ − 1½ = ? (가분수 기약).',
-      prompt: '차 (가분수 기약)', hint: '10/3 - 3/2 = 20/6 - 9/6 = 11/6.',
+      scenario: '여왕의 잔여 체력은 3⅓ 이었는데, 1½ 만큼 봉인 일격을 가했어. 남은 체력을 가분수 기약으로!',
+      prompt: '3⅓ − 1½ = ? (가분수 기약)', hint: '10/3 - 3/2 = 20/6 - 9/6 = 11/6.',
       answer: { numerator: 11, denominator: 6 }, requireSimplified: true,
     },
     {
-      id: 'c7-bonus-e', kind: 'mcq', difficulty: 2,
-      scenario: '여왕의 마지막 술책 — 1/2 와 크기가 같은 분수는?',
-      prompt: '1/2와 동치인 분수를 모두 골라.', hint: '분자×2 = 분모.',
-      choices: ['2/4', '3/6', '5/10', '7/14', '4/9'],
-      correctIndexes: [0, 1, 2, 3], multiple: true,
+      // 분수 vs 소수 비교
+      id: 'c7-bonus-e', kind: 'compare', difficulty: 3,
+      scenario: '여왕의 환영 — 환영 A 는 11/16 광년, 환영 B 는 0.7 광년 거리에 있어. 진짜 여왕은 더 가까운 쪽.',
+      prompt: '11/16 vs 0.7', hint: '11/16 = 0.6875.',
+      left: { numerator: 11, denominator: 16 }, right: { decimal: 0.7 },
+      correctOp: '<',
     },
     {
+      // 이분모 범위 응용
       id: 'c7-bonus-f', kind: 'numeric', difficulty: 3,
-      scenario: '5/6 보다 크고 1 보다 작은 분수 중에서, 분모가 12인 진분수의 개수는?',
-      prompt: '개수', hint: '5/6=10/12, 1=12/12. 11/12 만.',
-      answer: 1, unit: '개',
+      scenario: '여왕 봉인 결계의 안전 진입 범위는 1/6 광년 ~ 5/8 광년. 분모 24 의 자연수 좌표 □ 는 몇 개?',
+      prompt: '1/6 < □/24 < 5/8 의 □ 개수',
+      hint: '1/6 = 4/24, 5/8 = 15/24. □ ∈ {5...14} → 10개.',
+      answer: 10, unit: '개',
     },
     {
+      // 다단계 역산
       id: 'c7-bonus-g', kind: 'multi', difficulty: 3,
-      scenario: '여왕의 마지막 함정 — 어떤 분수의 분자에 6을 더하고 5로 약분하니 4/5가 됐어. 원래 분수를 기약으로!',
+      scenario: '여왕의 마지막 함정 — 분자에 6을 더하고 5로 약분하니 4/5 가 됐어. 원래 기약 분수는?',
       prompt: '원래 분수 (기약)',
       hint: '5로 약분 후 4/5 → 약분 전 20/25. 분자 -6 = 14 → 14/25.',
       workspacePlaceholder: '예: 4/5 = 20/25, 20-6=14 → 14/25',
       finalAnswer: { numerator: 14, denominator: 25 }, requireSimplified: true,
     },
     {
+      // 이분모 범위 응용
       id: 'c7-bonus-h', kind: 'numeric', difficulty: 3,
-      scenario: '귀환 항로 — 1/3 보다 크고 2/3 보다 작은 분수 중 분모가 9인 진분수는 모두 몇 개?',
-      prompt: '개수',
-      hint: '1/3=3/9, 2/3=6/9. 분자 4와 5 → 2개.',
-      answer: 2, unit: '개',
+      scenario: '귀환 항로 — 1/3 광년 ~ 3/4 광년 사이의 분모 36 자연수 좌표 □ 는 몇 개?',
+      prompt: '1/3 < □/36 < 3/4 의 □ 개수',
+      hint: '1/3 = 12/36, 3/4 = 27/36. □ ∈ {13...26} → 14개.',
+      answer: 14, unit: '개',
     },
   ],
 }

@@ -101,6 +101,6 @@ export const chapter4Targets: DefenseTarget[] = [
 export const chapter4Expected = (t: DefenseTarget) => addFractions(t.a, t.b)
 
 /** 한 적이 화면 끝에 도달하기까지 (초) — 응용 독해 시간 확보 */
-export const LANE_ADVANCE_SEC = 22
+export const LANE_ADVANCE_SEC = 32
 /** 동시 등장 레인 수 */
 export const LANE_COUNT = 3

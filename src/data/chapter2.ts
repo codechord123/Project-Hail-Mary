@@ -22,7 +22,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 5, denominator: 6 },
     b: { numerator: 1, denominator: 4 },
     enemy: '🐛',
-    speedSec: 22,
+    speedSec: 32,
     requireSimplified: true,
     story:
       '식량 모듈에 비축된 양은 한 통의 5/6 이었어. 그런데 야간에 미생물이 1/4 통을 갉아먹었다. 남은 식량을 기약분수로!',
@@ -32,7 +32,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 11, denominator: 12 },
     b: { numerator: 1, denominator: 3 },
     enemy: '👾',
-    speedSec: 20,
+    speedSec: 30,
     requireSimplified: true,
     story:
       '물탱크에 11/12 통의 물이 있었지만, 새벽에 1/3 통이 증발했어. 지금 탱크에 남은 물은 (기약)?',
@@ -42,7 +42,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 5, denominator: 8 },
     b: { numerator: 1, denominator: 3 },
     enemy: '🪳',
-    speedSec: 19,
+    speedSec: 28,
     requireSimplified: true,
     story:
       '항해 전 연료 통이 5/8 차 있었어. 이번 워프 점화로 1/3 통이 소비됐다. 남은 연료의 비율은 (기약)?',
@@ -52,7 +52,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 9, denominator: 10 },
     b: { numerator: 2, denominator: 5 },
     enemy: '🦠',
-    speedSec: 18,
+    speedSec: 26,
     requireSimplified: true,
     story:
       '비상 에너지 전지의 9/10 만큼 충전돼 있었어. 통신 시스템이 2/5 통을 끌어 썼다. 남은 충전량을 기약분수로!',
@@ -62,7 +62,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 4, denominator: 5 },
     b: { numerator: 1, denominator: 3 },
     enemy: '🐛',
-    speedSec: 17,
+    speedSec: 25,
     requireSimplified: true,
     story:
       '응급 산소 라인 4/5 만큼이 활성화됐는데, 작은 균열로 1/3 통이 빠져나갔어. 지금 사용 가능한 산소는 (기약)?',
@@ -72,7 +72,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 11, denominator: 15 },
     b: { numerator: 1, denominator: 6 },
     enemy: '👾',
-    speedSec: 16,
+    speedSec: 24,
     requireSimplified: true,
     story:
       '냉각수 11/15 통에서 누출이 발생해 1/6 통이 사라졌어. 반응로를 식힐 수 있는 잔량은 (기약)?',
@@ -82,7 +82,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 7, denominator: 8 },
     b: { numerator: 5, denominator: 12 },
     enemy: '🪳',
-    speedSec: 15,
+    speedSec: 22,
     requireSimplified: true,
     story:
       '비상 산소팩 7/8 통 중에서 응급 수리 작업으로 5/12 통을 썼어. 다음 임무에 쓸 수 있는 산소를 기약분수로 적어!',
@@ -92,7 +92,7 @@ export const chapter2Waves: ShooterWave[] = [
     a: { numerator: 7, denominator: 9 },
     b: { numerator: 1, denominator: 4 },
     enemy: '🛸',
-    speedSec: 15,
+    speedSec: 22,
     requireSimplified: true,
     story:
       '🛸 보스 침입! 우주선 외벽 보호막이 7/9 였는데, 보스의 첫 일격이 1/4 만큼 깎아냈어. 남은 보호막을 기약분수로!',

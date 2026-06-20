@@ -178,23 +178,26 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     finalAnswer: { numerator: 3, denominator: 16 }, requireSimplified: true,
   },
   {
+    // 이분모 범위 (2/3, 5/6 분모 다름)
     id: 'adv-multi-2', kind: 'numeric', difficulty: 3,
-    scenario: '2/3 보다 크고 5/6 보다 작은 수 중에서, 분모가 12인 진분수의 개수는?',
-    prompt: '개수',
-    hint: '2/3 = 8/12, 5/6 = 10/12. 9/12 만.',
-    answer: 1, unit: '개',
+    scenario: '아군 함대 위치는 2/3 광년 너머이고, 적군 함대는 5/6 광년 안쪽에 있어. 우리 좌표 분모 18 의 자연수 □ 가 두 함대 사이에 들어갈 수 있는 경우는 몇 가지?',
+    prompt: '2/3 < □/18 < 5/6 의 □ 개수',
+    hint: '2/3 = 12/18, 5/6 = 15/18. □ ∈ {13, 14} → 2개.',
+    answer: 2, unit: '개',
   },
   {
+    // 이분모 범위 (0.3, 0.7 → 3/10, 7/10 — diversify with 분모 20)
     id: 'adv-multi-3', kind: 'numeric', difficulty: 3,
-    scenario: '0.3보다 크고 0.7보다 작은 수 중에서, 분모가 10인 기약 분수는 모두 몇 개?',
-    prompt: '개수',
-    hint: '4/10, 5/10, 6/10 모두 약분 가능. 분모 10 유지하는 기약은 0개.',
-    answer: 0, unit: '개',
+    scenario: '비상 출력은 0.3 단계보다 높고 0.7 단계보다 낮아야 안전해. 우리 계측기 분모 20 의 자연수 출력 □ 는 모두 몇 개?',
+    prompt: '0.3 < □/20 < 0.7 의 □ 개수',
+    hint: '0.3 = 6/20, 0.7 = 14/20. □ ∈ {7...13} → 7개.',
+    answer: 7, unit: '개',
   },
   {
+    // 이분모 범위 (1/6, 1/3 분모 다름)
     id: 'adv-multi-4', kind: 'numeric', difficulty: 3,
-    scenario: '1/6 < □/24 < 1/3 을 만족하는 자연수 □의 개수는?',
-    prompt: '개수',
+    scenario: '항법 안전 범위는 1/6 광년 이상 1/3 광년 이하야. 분모 24 의 자연수 좌표 □ 가 가능한 경우는?',
+    prompt: '1/6 < □/24 < 1/3 의 □ 개수',
     hint: '1/6 = 4/24, 1/3 = 8/24. □는 5, 6, 7.',
     answer: 3, unit: '개',
   },
@@ -391,10 +394,11 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     left: { numerator: 3, denominator: 8 }, right: { decimal: 0.4 }, correctOp: '<',
   },
   {
+    // 이분모 범위 (0.3 = 3/10, 1/2 → 분모 다름)
     id: 'adv-mix-7', kind: 'numeric', difficulty: 3,
-    scenario: '0.3 보다 크고 0.5 보다 작은 분수 중에서, 분모가 20인 진분수는 모두 몇 개?',
-    prompt: '개수',
-    hint: '0.3 = 6/20, 0.5 = 10/20. 분자 7, 8, 9 → 3개.',
+    scenario: '연료 라인 압력이 0.3 단계 ~ 1/2 단계 사이에 있어야 안전 운행 가능. 분모 20 의 자연수 압력 □ 는 몇 가지?',
+    prompt: '0.3 < □/20 < 1/2 의 □ 개수',
+    hint: '0.3 = 6/20, 1/2 = 10/20. □ ∈ {7, 8, 9} → 3개.',
     answer: 3, unit: '개',
   },
   {
@@ -508,9 +512,10 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     finalAnswer: { numerator: 9, denominator: 13 }, requireSimplified: true,
   },
   {
+    // 이분모 범위 (1/4, 2/3 → 분모 다름)
     id: 'adv-app-5', kind: 'numeric', difficulty: 3,
-    scenario: '구조 신호 — 1/4 광년 보다 멀고 2/3 광년 보다 가까운 분수 중 분모 12 인 진분수는 모두 몇 개?',
-    prompt: '개수',
+    scenario: '구조 신호의 발신 거리는 1/4 광년 ~ 2/3 광년 사이로 잡혀. 우리 좌표 분모 12 의 자연수 발신 거리 □ 의 후보는 몇 개?',
+    prompt: '1/4 < □/12 < 2/3 의 □ 개수',
     hint: '1/4 = 3/12, 2/3 = 8/12. 분자 4, 5, 6, 7 → 4개.',
     answer: 4, unit: '개',
   },
@@ -582,18 +587,93 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     finalAnswer: { numerator: 1, denominator: 3 }, requireSimplified: true,
   },
   {
+    // 이분모 범위 (3/8, 7/12 → 분모 다름)
     id: 'adv-hard-7', kind: 'numeric', difficulty: 3,
-    scenario: '3/8 광년 보다 멀고 5/8 광년 보다 가까운 분수 중 분모가 24 인 진분수는 모두 몇 개?',
-    prompt: '개수',
-    hint: '3/8 = 9/24, 5/8 = 15/24. 분자 10, 11, 12, 13, 14 → 5개.',
-    answer: 5, unit: '개',
+    scenario: '항해사가 잠입할 행성의 안전 구역은 3/8 광년 ~ 7/12 광년 사이. 우리 좌표 분모 24 의 자연수 잠입 좌표 □ 의 가능한 수는?',
+    prompt: '3/8 < □/24 < 7/12 의 □ 개수',
+    hint: '3/8 = 9/24, 7/12 = 14/24. □ ∈ {10, 11, 12, 13} → 4개.',
+    answer: 4, unit: '개',
   },
   {
     id: 'adv-hard-8', kind: 'fraction', difficulty: 3,
-    scenario: '항해 일지 — 3일간 5/12, 1/3, 7/24 광년씩 이동. 총 거리 (기약, 가분수 OK)?',
+    scenario: '항해 일지 — 3일간 5/12, 1/3, 7/24 광년씩 이동. 총 이동 거리를 기약 가분수로!',
     prompt: '5/12 + 1/3 + 7/24 (기약)',
     hint: '공통분모 24. 10/24 + 8/24 + 7/24 = 25/24.',
     answer: { numerator: 25, denominator: 24 }, requireSimplified: true,
+  },
+
+  // === 소수 둘째자리 ↔ 분수 응용 (분수 다양화 — 새 분모 도입) ===
+  {
+    // 0.55 = 11/20 — 분수 다양화 (분모 20)
+    id: 'adv-dec3-1', kind: 'fraction', difficulty: 3,
+    scenario: '함선 외부 압력이 0.55 단위로 측정됐어. 같은 값을 분모 20 의 기약분수로 적어 인계 서류에 기록해.',
+    prompt: '0.55 = ? (기약)',
+    hint: '55/100 → ÷5 = 11/20.',
+    answer: { numerator: 11, denominator: 20 }, requireSimplified: true,
+  },
+  {
+    // 0.12 = 3/25 — 새 분모 25
+    id: 'adv-dec3-2', kind: 'fraction', difficulty: 3,
+    scenario: '실험실 농도 미터가 0.12 를 가리켜. 분모 25 의 기약분수로 보고서에 적어줘.',
+    prompt: '0.12 = ? (기약)',
+    hint: '12/100 → ÷4 = 3/25.',
+    answer: { numerator: 3, denominator: 25 }, requireSimplified: true,
+  },
+  {
+    // 0.95 = 19/20
+    id: 'adv-dec3-3', kind: 'fraction', difficulty: 3,
+    scenario: '비상 전력 충전률이 0.95 까지 도달했어. 분모 20 의 기약분수로 메인 컴퓨터에 등록!',
+    prompt: '0.95 = ? (기약)',
+    hint: '95/100 → ÷5 = 19/20.',
+    answer: { numerator: 19, denominator: 20 }, requireSimplified: true,
+  },
+  {
+    // 분수+소수 차 응용 (새 분수 11/16)
+    id: 'adv-dec3-4', kind: 'fraction', difficulty: 3,
+    scenario: '메인 산소통이 11/16 채워져 있었는데, 응급 보충 0.25 통을 추가했어. 산소통의 현재 양을 기약분수로!',
+    prompt: '11/16 + 0.25 (기약)',
+    hint: '0.25 = 1/4 = 4/16. 11/16 + 4/16 = 15/16.',
+    answer: { numerator: 15, denominator: 16 }, requireSimplified: true,
+  },
+  {
+    // 분수 차 — 새 분수 13/18
+    id: 'adv-dec3-5', kind: 'fraction', difficulty: 3,
+    scenario: '냉각수가 13/18 만큼 있었어. 그 중 0.4 만큼이 증발. 남은 냉각수를 기약분수로!',
+    prompt: '13/18 − 0.4 (기약)',
+    hint: '0.4 = 2/5. 공통분모 90. 65/90 − 36/90 = 29/90.',
+    answer: { numerator: 29, denominator: 90 }, requireSimplified: true,
+  },
+  {
+    // 분수 vs 소수 비교 — 새 분수 7/16
+    id: 'adv-dec3-6', kind: 'compare', difficulty: 3,
+    scenario: '두 우주선 속도 비교 — 우리 선박은 7/16 광속, 적 선박은 0.5 광속이야. 누가 더 빠른가?',
+    prompt: '7/16 vs 0.5',
+    hint: '7/16 = 0.4375.',
+    left: { numerator: 7, denominator: 16 }, right: { decimal: 0.5 }, correctOp: '<',
+  },
+  {
+    // 분수 vs 소수 비교 — 새 분수 13/25
+    id: 'adv-dec3-7', kind: 'compare', difficulty: 3,
+    scenario: '두 행성의 자전 속도 — 행성 X 는 13/25, 행성 Y 는 0.52. 두 행성의 속도는 같을까?',
+    prompt: '13/25 vs 0.52',
+    hint: '13/25 = 52/100 = 0.52.',
+    left: { numerator: 13, denominator: 25 }, right: { decimal: 0.52 }, correctOp: '=',
+  },
+  {
+    // 이분모 범위 — 새 분모 36 / 분수 다양화
+    id: 'adv-dec3-8', kind: 'numeric', difficulty: 3,
+    scenario: '워프 안전 범위는 1/4 광년 ~ 5/9 광년. 분모 36 자연수 워프 좌표 □ 의 가능한 수는?',
+    prompt: '1/4 < □/36 < 5/9 의 □ 개수',
+    hint: '1/4 = 9/36, 5/9 = 20/36. □ ∈ {10...19} → 10개.',
+    answer: 10, unit: '개',
+  },
+  {
+    // 이분모 범위 — 새 분모 40 / 소수 + 분수 bounds
+    id: 'adv-dec3-9', kind: 'numeric', difficulty: 3,
+    scenario: '비상 출력 안전 범위는 0.2 단계 ~ 7/10 단계. 분모 40 의 자연수 출력 □ 가 안전 구간에 들어가는 경우는?',
+    prompt: '0.2 < □/40 < 7/10 의 □ 개수',
+    hint: '0.2 = 8/40, 7/10 = 28/40. □ ∈ {9...27} → 19개.',
+    answer: 19, unit: '개',
   },
 ]
 
