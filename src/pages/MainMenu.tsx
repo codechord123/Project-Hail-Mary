@@ -94,6 +94,14 @@ export function MainMenu() {
             ⏱<br />타임 어택
           </Link>
         </div>
+        <div className="grid grid-cols-1 gap-2">
+          <Link
+            to="/bossrush"
+            className="p-3 rounded-xl bg-gradient-to-br from-fuchsia-600 via-purple-700 to-indigo-700 text-white font-bold border border-yellow-300/40 text-center text-sm"
+          >
+            👑 BOSS RUSH · 5보스 격파
+          </Link>
+        </div>
 
         {/* 학습 도구 */}
         <div className="grid grid-cols-3 gap-2">
