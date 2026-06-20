@@ -11,28 +11,28 @@ const POOLS: Record<number, Problem[]> = {
       // 3/4 - 1/8 = 5/8 (B 배수, 약분 X — 식량 잔량 응용)
       id: 'c2-bonus-a', kind: 'fraction', difficulty: 2,
       scenario: '식량 점검 마무리! 비축 식량이 3/4 박스였는데 점검 중 1/8 박스를 시식용으로 썼어. 박스에 남은 양을 기약분수로!',
-      prompt: '남은 양을 기약분수로', hint: '공통분모 8. 6/8 - 1/8.',
+      prompt: '남은 양을 기약분수로', hint: '공통분모 8.',
       answer: { numerator: 5, denominator: 8 }, requireSimplified: true,
     },
     {
       // 7/9 - 1/3 = 4/9 — 항해 자원 응용
       id: 'c2-bonus-b', kind: 'fraction', difficulty: 3,
       scenario: '비상 산소 라인이 7/9 까지 채워져 있었는데, 야간 순찰 동안 1/3 만큼 사용했어. 라인 잔량을 기약으로!',
-      prompt: '남은 양을 기약분수로', hint: '공통분모 9. 7/9 - 3/9.',
+      prompt: '남은 양을 기약분수로', hint: '공통분모 9.',
       answer: { numerator: 4, denominator: 9 }, requireSimplified: true,
     },
     {
       // 11/14 - 3/7 = 11/14 - 6/14 = 5/14 — 새로운 분모 14 도입
       id: 'c2-bonus-c', kind: 'fraction', difficulty: 3,
       scenario: '비상 식수 11/14 통 중에 우주복 정화 시스템이 3/7 통을 끌어 썼어. 식수 잔량을 기약분수로!',
-      prompt: '남은 양을 기약분수로', hint: '공통분모 14. 11/14 - 6/14.',
+      prompt: '남은 양을 기약분수로', hint: '공통분모 14.',
       answer: { numerator: 5, denominator: 14 }, requireSimplified: true,
     },
     {
       // 0.7 - 3/8 = 7/10 - 3/8 = 28/40 - 15/40 = 13/40 — 소수 응용
       id: 'c2-bonus-d', kind: 'fraction', difficulty: 3,
       scenario: '약품 0.7 L 가 비축돼 있었는데 실험에 3/8 L 를 사용. 남은 약품을 기약분수로!',
-      prompt: '남은 양을 기약분수로', hint: '0.7 = 7/10. 공통분모 40. 28/40 - 15/40.',
+      prompt: '남은 양을 기약분수로', hint: '0.7 = 7/10. 공통분모 40.',
       answer: { numerator: 13, denominator: 40 }, requireSimplified: true,
     },
     {
@@ -47,7 +47,7 @@ const POOLS: Record<number, Problem[]> = {
       // 11/12 - 5/8 = 22/24 - 15/24 = 7/24 — 큰 분모 응용
       id: 'c2-bonus-f', kind: 'fraction', difficulty: 3,
       scenario: '산소통 11/12 까지 채워져 있었는데 유출 점검 중 5/8 만큼이 새어 나갔어. 통에 남은 산소를 기약분수로!',
-      prompt: '남은 양을 기약분수로', hint: '공통분모 24. 22/24 - 15/24.',
+      prompt: '남은 양을 기약분수로', hint: '공통분모 24.',
       answer: { numerator: 7, denominator: 24 }, requireSimplified: true,
     },
     {
@@ -71,7 +71,7 @@ const POOLS: Record<number, Problem[]> = {
       // 분수 비교 응용 (이분모) — 임무 진행률 비교
       id: 'c3-bonus-a', kind: 'compare', difficulty: 3,
       scenario: '아스트로파지 정찰병의 환영이 두 번 등장. 첫 번째는 거리 7/8 광년, 두 번째는 11/12 광년이야. 더 가까운 환영이 진짜! 어느 쪽이 더 가까운가?',
-      prompt: '더 큰 쪽 (= 이면 등호) 선택', hint: '공통분모 24. 21/24 vs 22/24.',
+      prompt: '더 큰 쪽 (= 이면 등호) 선택', hint: '공통분모 24.',
       left: { numerator: 7, denominator: 8 }, right: { numerator: 11, denominator: 12 },
       correctOp: '<',
     },
@@ -102,7 +102,7 @@ const POOLS: Record<number, Problem[]> = {
       // 분수 + 분수 응용 (이분모) — 자원 합산
       id: 'c3-bonus-e', kind: 'fraction', difficulty: 3,
       scenario: '정찰병의 분비물 분석 — 시료 1번이 3/10 g, 시료 2번이 5/8 g 일 때 총 시료의 합을 기약분수로!',
-      prompt: '기약분수로 답해', hint: '공통분모 40. 12/40 + 25/40.',
+      prompt: '기약분수로 답해', hint: '공통분모 40.',
       answer: { numerator: 37, denominator: 40 }, requireSimplified: true,
     },
     {
@@ -136,7 +136,7 @@ const POOLS: Record<number, Problem[]> = {
       // 5/12 + 3/8 = 10/24 + 9/24 = 19/24 — 디펜스 응용
       id: 'c4-bonus-a', kind: 'fraction', difficulty: 3,
       scenario: '디펜스 후 합류 자원 — 우리 5/12 통, 동맹 3/8 통. 합치면 베이스 총 자원량은 기약분수로?',
-      prompt: '기약분수로 답해', hint: '공통분모 24. 10/24 + 9/24.',
+      prompt: '기약분수로 답해', hint: '공통분모 24.',
       answer: { numerator: 19, denominator: 24 }, requireSimplified: true,
     },
     {
@@ -150,7 +150,7 @@ const POOLS: Record<number, Problem[]> = {
       // 분수 비교 — 부대 진행률
       id: 'c4-bonus-c', kind: 'compare', difficulty: 3,
       scenario: '두 부대가 동시에 디펜스 임무 수행 중. A 부대는 5/9 완료, B 부대는 7/12 완료. 누가 더 진행됐을까?',
-      prompt: '더 큰 쪽 (= 이면 등호) 선택', hint: '공통분모 36. 20/36 vs 21/36.',
+      prompt: '더 큰 쪽 (= 이면 등호) 선택', hint: '공통분모 36.',
       left: { numerator: 5, denominator: 9 }, right: { numerator: 7, denominator: 12 },
       correctOp: '<',
     },
@@ -158,14 +158,14 @@ const POOLS: Record<number, Problem[]> = {
       // 7/15 + 1/6 = 14/30 + 5/30 = 19/30 — 큰 분모 응용
       id: 'c4-bonus-d', kind: 'fraction', difficulty: 3,
       scenario: '응원 함대 — 본진 7/15 + 지원군 1/6 의 화력을 합치면 총 화력이 얼마? (기약)',
-      prompt: '기약분수로 답해', hint: '공통분모 30. 14/30 + 5/30.',
+      prompt: '기약분수로 답해', hint: '공통분모 30.',
       answer: { numerator: 19, denominator: 30 }, requireSimplified: true,
     },
     {
       // 11/16 + 1/4 = 11/16 + 4/16 = 15/16 — 새 분모 16 도입
       id: 'c4-bonus-e', kind: 'fraction', difficulty: 3,
       scenario: '두 베이스 합산 — 알파 베이스 방어막 11/16, 베타 베이스 1/4. 합쳐서 총 방어막의 비율은? (기약)',
-      prompt: '기약분수로 답해', hint: '공통분모 16. 11/16 + 4/16.',
+      prompt: '기약분수로 답해', hint: '공통분모 16.',
       answer: { numerator: 15, denominator: 16 }, requireSimplified: true,
     },
     {
@@ -189,7 +189,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c4-bonus-h', kind: 'fraction', difficulty: 3,
       scenario: '세 보급선의 비상 자원: 1번 3/10, 2번 1/4, 3번 1/5. 셋 다 합치면 베이스 잔량은 기약분수로?',
       prompt: '기약분수로 답해',
-      hint: '공통분모 20. 6/20 + 5/20 + 4/20 = 15/20.',
+      hint: '공통분모 20.',
       answer: { numerator: 3, denominator: 4 }, requireSimplified: true,
     },
   ],
@@ -205,7 +205,7 @@ const POOLS: Record<number, Problem[]> = {
       // 7/10 - 3/8 = 28/40 - 15/40 = 13/40 — 응용
       id: 'c5-bonus-b', kind: 'fraction', difficulty: 3,
       scenario: '연료 잔량 7/10 통에서 비상 점화로 3/8 통을 추가 소비했어. 라인 잔량을 기약으로!',
-      prompt: '기약분수로 답해', hint: '공통분모 40. 28/40 - 15/40.',
+      prompt: '기약분수로 답해', hint: '공통분모 40.',
       answer: { numerator: 13, denominator: 40 }, requireSimplified: true,
     },
     {
@@ -234,7 +234,7 @@ const POOLS: Record<number, Problem[]> = {
       // 0.84 - 5/8 = 21/25 - 5/8 = 168/200 - 125/200 = 43/200
       id: 'c5-bonus-f', kind: 'fraction', difficulty: 3,
       scenario: '비상 전력 0.84 단위 중 5/8 단위가 메인 컴퓨터로 흘러갔어. 라인에 남은 전력을 기약분수로!',
-      prompt: '기약분수로 답해', hint: '0.84 = 21/25. 21/25 - 5/8 → 공통분모 200. 168/200 - 125/200.',
+      prompt: '기약분수로 답해', hint: '0.84 = 21/25. 21/25 - 5/8 → 공통분모 200.',
       answer: { numerator: 43, denominator: 200 }, requireSimplified: true,
     },
   ],

@@ -117,9 +117,17 @@ export function Chapter4() {
     if (!lane) return
     const expected = chapter4Expected(lane.target)
     if (!valueEquals(choice, expected)) {
-      run.onWrong(8)
+      // 오답 시 산소 차감 ↑↑ + 적이 8초만큼 베이스 쪽으로 점프 (찍기 방지)
+      run.onWrong(18)
       setFeedback('wrong')
       setShake((s) => s + 1)
+      setLanes((cur) =>
+        cur.map((l, j) =>
+          j === laneIdx && l
+            ? { ...l, spawnTime: l.spawnTime - 8000 }
+            : l,
+        ),
+      )
       return
     }
     // 처치
@@ -221,8 +229,8 @@ export function Chapter4() {
 
         {/* 피드백 */}
         {feedback === 'wrong' && (
-          <div className="mt-2 p-2 rounded bg-red-500/20 text-red-200 text-xs text-center">
-            ❌ 빗나감 (산소 -8)
+          <div className="mt-2 p-2 rounded bg-red-500/20 text-red-200 text-sm text-center font-bold">
+            ❌ 오답! 산소 -18, 적이 8초만큼 베이스로 점프했어. (찍기 금지!)
           </div>
         )}
         {feedback === 'simplify' && (

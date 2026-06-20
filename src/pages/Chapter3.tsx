@@ -51,7 +51,6 @@ export function Chapter3() {
   const [combo, setCombo] = useState(0)
   const [maxCombo, setMaxCombo] = useState(0)
   const [score, setScore] = useState(0)
-  const [showHint, setShowHint] = useState(false)
   const [shakeKey, setShakeKey] = useState(0)
   const [bossHit, setBossHit] = useState(false)
   const [confetti, setConfetti] = useState(false)
@@ -61,7 +60,6 @@ export function Chapter3() {
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
-  const [hintFormulaShown, setHintFormulaShown] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
   const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
   const [grade, setGrade] = useState<Grade>(null)
@@ -220,22 +218,12 @@ export function Chapter3() {
     }
     setIdx((i) => i + 1)
     setFeedback({ kind: 'idle' })
-    setShowHint(false)
     setMagnetSeed(null)
     setStudentAnswer({ kind: 'fraction', value: null })
-    setHintFormulaShown(false)
   }, [bossHp, isLast, score, maxCombo, store, navigate])
-
-  const useHint = () => {
-    const cost = Math.max(1, 1 - Math.floor(store.stats.intuition / 2))
-    if (store.energy < cost) return
-    store.addEnergy(-cost)
-    setShowHint(true)
-  }
 
   useShortcuts({
     onSubmit: feedback.kind === 'idle' ? submit : undefined,
-    onHint: feedback.kind === 'idle' ? useHint : undefined,
     onNotebook: () => setShowNotebook(true),
   })
 
@@ -243,9 +231,7 @@ export function Chapter3() {
     ? feedback.crit ? 'excited' : 'happy'
     : feedback.kind === 'wrong' || feedback.kind === 'timeout'
       ? 'sad'
-      : showHint
-        ? 'thinking'
-        : 'neutral'
+      : 'neutral'
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-4 max-w-2xl mx-auto flex flex-col">
@@ -313,7 +299,6 @@ export function Chapter3() {
               sfx.hit()
               store.addXp(10)
             }}
-            onUseHintFormula={() => setHintFormulaShown(true)}
             shieldActive={shieldActive}
           />
         </div>
@@ -335,7 +320,7 @@ export function Chapter3() {
         <div className="mt-4">
           <CountdownTimer
             durationSec={timerSeconds}
-            paused={feedback.kind !== 'idle' || showHint || bossDead || timerPaused}
+            paused={feedback.kind !== 'idle' || bossDead || timerPaused}
             onTimeout={handleTimeout}
             resetKey={`${idx}-${timerSeconds}`}
             crisis={crisis}
@@ -346,12 +331,7 @@ export function Chapter3() {
           <RockyAvatar mood={rockyMood} size={64} />
           <div className="flex-1 space-y-2">
             <DialogueBox speaker="시스템" tone="system" text={problem.scenario} />
-            {showHint && <DialogueBox speaker="로키" tone="rocky" text={problem.hint} />}
-            {hintFormulaShown && (
-              <div className="p-2 rounded bg-yellow-400/15 border border-yellow-300/40 text-yellow-100 font-mono text-sm">
-                💡 식 힌트: {problem.hint}
-              </div>
-            )}
+            {/* 챕터 3 — 힌트 제거 (학생이 시나리오만 보고 직접 풀도록) */}
             <DialogueBox
               speaker={`문제 · 난이도 ${'★'.repeat(problem.difficulty)}`}
               tone="narrator"
@@ -437,13 +417,6 @@ export function Chapter3() {
                 className="flex-1 px-4 py-3 rounded-xl bg-space-accent text-space-900 font-bold"
               >
                 ⚔ 공격
-              </button>
-              <button
-                onClick={useHint}
-                disabled={showHint || store.energy < 1}
-                className="px-3 py-3 rounded-xl bg-rocky/20 text-rocky border border-rocky/40 disabled:opacity-30"
-              >
-                💡 힌트
               </button>
             </>
           ) : (
