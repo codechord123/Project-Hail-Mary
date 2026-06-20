@@ -62,7 +62,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c2-bonus-h', kind: 'numeric', difficulty: 3,
       scenario: '비상 전력선 출력은 4/15 단계 이상 7/10 단계 미만에 머물러야 안전해. 우리 계측기 분모 30 의 자연수 출력값 □ 는 몇 가지 가능?',
       prompt: '식: 4/15 < □/30 < 7/10 — 자연수 □ 의 개수',
-      hint: '4/15 = 8/30, 7/10 = 21/30. □ ∈ {9...20}',
+      hint: '4/15 = 8/30, 7/10 = 21/30.',
       answer: 12, unit: '개',
     },
   ],
@@ -80,7 +80,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c3-bonus-b', kind: 'numeric', difficulty: 3,
       scenario: '아스트로파지 둥지의 안전 진입 범위는 2/9 광년 ~ 5/6 광년이야. 분모 18 의 정수 분자 □ 가 진입 가능한 경우의 수는?',
       prompt: '식: 2/9 < □/18 < 5/6 — 자연수 □ 의 개수',
-      hint: '2/9 = 4/18, 5/6 = 15/18. □ ∈ {5...14}',
+      hint: '2/9 = 4/18, 5/6 = 15/18.',
       answer: 10, unit: '개',
     },
     {
@@ -181,7 +181,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c4-bonus-g', kind: 'numeric', difficulty: 3,
       scenario: '디펜스 라인 안전 범위는 1/4 ~ 3/5. 분모 20 의 자연수 출력 □ 는 몇 개?',
       prompt: '식: 1/4 < □/20 < 3/5 — 자연수 □ 의 개수',
-      hint: '1/4 = 5/20, 3/5 = 12/20. □ ∈ {6...11}',
+      hint: '1/4 = 5/20, 3/5 = 12/20.',
       answer: 6, unit: '개',
     },
     {
@@ -227,7 +227,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c5-bonus-e', kind: 'numeric', difficulty: 3,
       scenario: '리액터 출력 안정 범위는 3/10 ~ 7/15 단계. 분모 30 의 자연수 출력 □ 는 몇 개?',
       prompt: '식: 3/10 < □/30 < 7/15 — 자연수 □ 의 개수',
-      hint: '3/10 = 9/30, 7/15 = 14/30. □ ∈ {10, 11, 12, 13}',
+      hint: '3/10 = 9/30, 7/15 = 14/30.',
       answer: 4, unit: '개',
     },
     {
@@ -323,7 +323,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c7-bonus-f', kind: 'numeric', difficulty: 3,
       scenario: '여왕 봉인 결계의 안전 진입 범위는 1/6 광년 ~ 5/8 광년. 분모 24 의 자연수 좌표 □ 는 몇 개?',
       prompt: '식: 1/6 < □/24 < 5/8 — 자연수 □ 의 개수',
-      hint: '1/6 = 4/24, 5/8 = 15/24. □ ∈ {5...14}',
+      hint: '1/6 = 4/24, 5/8 = 15/24.',
       answer: 10, unit: '개',
     },
     {
@@ -340,7 +340,7 @@ const POOLS: Record<number, Problem[]> = {
       id: 'c7-bonus-h', kind: 'numeric', difficulty: 3,
       scenario: '귀환 항로 — 1/3 광년 ~ 3/4 광년 사이의 분모 36 자연수 좌표 □ 는 몇 개?',
       prompt: '식: 1/3 < □/36 < 3/4 — 자연수 □ 의 개수',
-      hint: '1/3 = 12/36, 3/4 = 27/36. □ ∈ {13...26}',
+      hint: '1/3 = 12/36, 3/4 = 27/36.',
       answer: 14, unit: '개',
     },
   ],
