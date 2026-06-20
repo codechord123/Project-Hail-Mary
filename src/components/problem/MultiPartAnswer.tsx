@@ -7,14 +7,16 @@ interface Props {
   onChange: (data: { workspace: string; value: Fraction | null }) => void
   resetKey: string
   disabled?: boolean
+  initialValue?: { workspace?: string; value?: Fraction | null }
 }
 
-export function MultiPartAnswer({ placeholder, onChange, resetKey, disabled }: Props) {
-  const [workspace, setWorkspace] = useState('')
-  const [value, setValue] = useState<Fraction | null>(null)
+export function MultiPartAnswer({ placeholder, onChange, resetKey, disabled, initialValue }: Props) {
+  const [workspace, setWorkspace] = useState(initialValue?.workspace ?? '')
+  const [value, setValue] = useState<Fraction | null>(initialValue?.value ?? null)
   useEffect(() => {
-    setWorkspace('')
-    setValue(null)
+    setWorkspace(initialValue?.workspace ?? '')
+    setValue(initialValue?.value ?? null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetKey])
   useEffect(() => {
     onChange({ workspace, value })
@@ -31,7 +33,7 @@ export function MultiPartAnswer({ placeholder, onChange, resetKey, disabled }: P
         className="w-full p-3 rounded-lg bg-white/95 text-space-900 text-sm focus:outline-none focus:ring-2 focus:ring-space-accent"
       />
       <div className="text-xs text-white/60">최종 답</div>
-      <FractionInput key={resetKey} onChange={setValue} disabled={disabled} />
+      <FractionInput key={resetKey} onChange={setValue} disabled={disabled} initialValue={initialValue?.value ?? null} />
     </div>
   )
 }

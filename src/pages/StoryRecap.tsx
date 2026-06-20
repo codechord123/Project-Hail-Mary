@@ -27,6 +27,19 @@ export function StoryRecap() {
   const maxBestCombo = Object.values(records).reduce((m, r) => Math.max(m, r.bestCombo), 0)
   const clearedCount = cleared.length
   const totalChapters = allChapters.length
+  const totalElapsedMs = Object.values(records).reduce((s, r) => s + (r.elapsedMs ?? 0), 0)
+  const validAccuracies = Object.values(records)
+    .map((r) => r.accuracy)
+    .filter((a): a is number => a != null)
+  const avgAccuracy =
+    validAccuracies.length > 0
+      ? validAccuracies.reduce((s, a) => s + a, 0) / validAccuracies.length
+      : null
+  const fmtMs = (ms: number) => {
+    const s = Math.floor(ms / 1000)
+    const m = Math.floor(s / 60)
+    return m > 0 ? `${m}분 ${s % 60}초` : `${s}초`
+  }
 
   return (
     <div className="min-h-screen px-6 py-8 max-w-3xl mx-auto">
@@ -41,10 +54,12 @@ export function StoryRecap() {
       {/* 항해 통계 */}
       <section className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
         <h3 className="text-sm font-bold text-white mb-2">📊 항해 통계</h3>
-        <div className="grid grid-cols-3 gap-2 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center">
           <Stat label="클리어" value={`${clearedCount}/${totalChapters}`} color="text-cyan-300" />
           <Stat label="총 별" value={`${totalStars}/${totalChapters * 3}`} color="text-yellow-300" />
           <Stat label="최고 콤보" value={`×${maxBestCombo}`} color="text-pink-300" />
+          <Stat label="총 풀이 시간" value={fmtMs(totalElapsedMs)} color="text-emerald-300" />
+          <Stat label="평균 정답률" value={avgAccuracy != null ? `${Math.round(avgAccuracy * 100)}%` : '—'} color="text-amber-300" />
         </div>
       </section>
 
@@ -52,6 +67,7 @@ export function StoryRecap() {
         {allChapters.map((id) => {
           const isCleared = cleared.includes(id)
           const story = STORY[id]
+          const rec = records[id]
           return (
             <motion.section
               key={id}
@@ -64,12 +80,20 @@ export function StoryRecap() {
                   : 'bg-white/[0.02] border-white/5 opacity-50'
               }`}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <h3 className="text-white font-bold">
                   Chapter {id}. {CHAPTER_TITLES[id]}
                   {isCleared && <span className="ml-2 text-emerald-300 text-xs">✓ 클리어</span>}
                   {!isCleared && <span className="ml-2 text-white/30 text-xs">🔒 잠김</span>}
                 </h3>
+                {rec && (
+                  <div className="text-[10px] text-white/60 font-mono">
+                    {'★'.repeat(rec.stars)}{'☆'.repeat(3 - rec.stars)} · ×{rec.bestCombo}
+                    {rec.elapsedMs != null && <> · ⏱ {fmtMs(rec.elapsedMs)}</>}
+                    {rec.accuracy != null && <> · 🎯 {Math.round(rec.accuracy * 100)}%</>}
+                    {rec.attempts != null && <> · 시도 {rec.attempts}회</>}
+                  </div>
+                )}
                 {isCleared && (
                   <div className="flex gap-2">
                     <button

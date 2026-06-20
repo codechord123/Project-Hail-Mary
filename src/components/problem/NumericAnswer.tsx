@@ -5,12 +5,14 @@ interface Props {
   onChange: (n: number | null) => void
   resetKey: string
   disabled?: boolean
+  initialValue?: number | null
 }
 
-export function NumericAnswer({ unit, onChange, resetKey, disabled }: Props) {
-  const [val, setVal] = useState('')
+export function NumericAnswer({ unit, onChange, resetKey, disabled, initialValue }: Props) {
+  const [val, setVal] = useState(initialValue != null ? String(initialValue) : '')
   useEffect(() => {
-    setVal('')
+    setVal(initialValue != null ? String(initialValue) : '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetKey])
   useEffect(() => {
     const n = parseInt(val, 10)

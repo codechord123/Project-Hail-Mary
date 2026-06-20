@@ -40,7 +40,7 @@ export function Chapter7() {
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
-  const [magnetAnswer, setMagnetAnswer] = useState<string | null>(null)
+  const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
   const [shake, setShake] = useState(0)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
@@ -144,7 +144,7 @@ export function Chapter7() {
       setPhaseIdx(nextPhase)
       setProblemIdx(nextProblem)
       setFeedback('idle')
-      setMagnetAnswer(null)
+      setMagnetSeed(null)
       setStudentAnswer({ kind: 'fraction', value: null })
     }, 1000)
   }, [problem, studentAnswer, hp, phaseIdx, problemIdx, phase.problems.length, crisis, run])
@@ -189,16 +189,7 @@ export function Chapter7() {
               setTimeout(() => setTimerPaused(false), 10000)
             }}
             onUseMagnet={() => {
-              const ans = correctAnswerFor(problem)
-              let text = ''
-              switch (ans.kind) {
-                case 'fraction': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
-                case 'numeric': text = String(ans.value); break
-                case 'mcq': text = ans.values.map((i) => `${['①','②','③','④','⑤'][i]}`).join(' '); break
-                case 'compare': text = ans.op!; break
-                case 'multi': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
-              }
-              setMagnetAnswer(text)
+              setMagnetSeed({ id: Date.now(), answer: correctAnswerFor(problem) })
               const dmg = 30
               setHp((h) => Math.max(0, h - dmg))
               pushDamage(dmg, 'normal')
@@ -234,16 +225,16 @@ export function Chapter7() {
         </div>
 
         <div className="mt-3 p-3 rounded-xl bg-white/5 border border-white/10">
-          {magnetAnswer && (
-            <div className="mb-3 p-2 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-center text-sm">
-              🧲 자석 정답: <b>{magnetAnswer}</b>
-              <div className="text-xs text-white/60 mt-0.5">직접 입력 후 일격!</div>
+          {magnetSeed && (
+            <div className="mb-3 p-2 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-center text-xs">
+              🧲 자석이 입력칸을 채웠어! 그대로 일격!
             </div>
           )}
           <ProblemPanel
             problem={problem}
             onAnswerChange={setStudentAnswer}
             disabled={feedback === 'correct' || bossDead}
+            externalSeed={magnetSeed}
           />
         </div>
 

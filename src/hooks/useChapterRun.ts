@@ -88,7 +88,10 @@ export function useChapterRun({ chapterId, maxScore }: Options) {
         timeoutCount,
       })
       const finalStars: 1 | 2 | 3 = Math.max(stars, accStars) as 1 | 2 | 3
-      store.recordChapter(chapterId, finalStars, maxCombo)
+      const elapsedMs = Date.now() - startedAt.current
+      const totalAttempts = correctCount + wrongCount + timeoutCount
+      const accuracy = totalAttempts > 0 ? correctCount / totalAttempts : 1
+      store.recordChapter(chapterId, finalStars, maxCombo, { elapsedMs, accuracy })
       store.clearChapter(chapterId)
       const reward: ItemId = CHAPTER_REWARD_POOL[Math.floor(Math.random() * CHAPTER_REWARD_POOL.length)]
       store.giveItem(reward)

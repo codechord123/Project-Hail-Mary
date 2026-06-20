@@ -6,12 +6,14 @@ interface Props {
   onChange: (values: number[]) => void
   resetKey: string
   disabled?: boolean
+  initialValue?: number[]
 }
 
-export function MCQAnswer({ choices, multiple, onChange, resetKey, disabled }: Props) {
-  const [picked, setPicked] = useState<number[]>([])
+export function MCQAnswer({ choices, multiple, onChange, resetKey, disabled, initialValue }: Props) {
+  const [picked, setPicked] = useState<number[]>(initialValue ?? [])
   useEffect(() => {
-    setPicked([])
+    setPicked(initialValue ?? [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetKey])
   useEffect(() => {
     onChange(picked)

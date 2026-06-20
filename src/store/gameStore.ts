@@ -19,6 +19,9 @@ export interface Cosmetics {
 interface ChapterClearRecord {
   stars: number
   bestCombo: number
+  elapsedMs?: number
+  accuracy?: number // 0~1
+  attempts?: number
 }
 
 interface GameState {
@@ -59,7 +62,7 @@ interface GameState {
   setCosmetic: (key: keyof Cosmetics, id: string) => void
   giveItem: (id: ItemId, qty?: number) => void
   useItem: (id: ItemId) => boolean
-  recordChapter: (chapter: number, stars: number, bestCombo: number) => void
+  recordChapter: (chapter: number, stars: number, bestCombo: number, extras?: { elapsedMs?: number; accuracy?: number }) => void
   clearChapter: (chapter: number) => void
   resetForChapter: () => void
   toggleMute: () => void
@@ -164,12 +167,27 @@ export const useGameStore = create<GameState>()(
         set((s) => ({ items: { ...s.items, [id]: (s.items[id] ?? 0) - 1 } }))
         return true
       },
-      recordChapter: (chapter, stars, bestCombo) =>
+      recordChapter: (chapter, stars, bestCombo, extras) =>
         set((s) => {
           const prev = s.chapterRecords[chapter]
+          // 통계는 본 시도 값 또는 이전 최고 (시간은 더 짧은 쪽, accuracy는 더 높은 쪽)
+          const newElapsed = extras?.elapsedMs
+          const prevElapsed = prev?.elapsedMs
+          const bestElapsed =
+            newElapsed && prevElapsed
+              ? Math.min(newElapsed, prevElapsed)
+              : newElapsed ?? prevElapsed
+          const newAccuracy = extras?.accuracy
+          const bestAccuracy =
+            newAccuracy != null && prev?.accuracy != null
+              ? Math.max(newAccuracy, prev.accuracy)
+              : newAccuracy ?? prev?.accuracy
           const next: ChapterClearRecord = {
             stars: Math.max(prev?.stars ?? 0, stars),
             bestCombo: Math.max(prev?.bestCombo ?? 0, bestCombo),
+            elapsedMs: bestElapsed,
+            accuracy: bestAccuracy,
+            attempts: (prev?.attempts ?? 0) + 1,
           }
           return { chapterRecords: { ...s.chapterRecords, [chapter]: next } }
         }),
@@ -190,7 +208,7 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'hailmary-save',
-      version: 4,
+      version: 5,
       storage: safeStorage,
       migrate: (persisted: any, version) => {
         if (!persisted) return persisted
@@ -222,6 +240,10 @@ export const useGameStore = create<GameState>()(
             bgmEnabled: p.bgmEnabled ?? true,
             bgmVolume: p.bgmVolume ?? 0.5,
           }
+        }
+        if (version < 5) {
+          // chapterRecords에 elapsedMs/accuracy/attempts 필드 없는 옛 데이터 호환
+          p = { ...p, chapterRecords: p.chapterRecords ?? {} }
         }
         return p
       },

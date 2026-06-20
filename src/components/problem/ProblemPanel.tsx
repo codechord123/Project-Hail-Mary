@@ -10,10 +10,13 @@ interface Props {
   problem: Problem
   onAnswerChange: (a: StudentAnswer) => void
   disabled?: boolean
+  /** 자석 등 외부 시드: id가 바뀌면 child가 리마운트되며 정답이 초기값으로 채워짐 */
+  externalSeed?: { id: number; answer: StudentAnswer } | null
 }
 
-export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
-  const resetKey = problem.id
+export function ProblemPanel({ problem, onAnswerChange, disabled, externalSeed }: Props) {
+  const resetKey = externalSeed ? `${problem.id}-seed-${externalSeed.id}` : problem.id
+  const seedAns = externalSeed?.answer ?? null
 
   const handleFraction = useCallback(
     (v: any) => onAnswerChange({ kind: 'fraction', value: v }),
@@ -40,7 +43,12 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
   return (
     <div className="w-full flex flex-col items-center gap-4">
       {problem.kind === 'fraction' && (
-        <FractionInput key={resetKey} onChange={handleFraction} disabled={disabled} />
+        <FractionInput
+          key={resetKey}
+          onChange={handleFraction}
+          disabled={disabled}
+          initialValue={seedAns?.kind === 'fraction' ? seedAns.value : null}
+        />
       )}
       {problem.kind === 'numeric' && (
         <NumericAnswer
@@ -48,6 +56,7 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
           onChange={handleNumeric}
           resetKey={resetKey}
           disabled={disabled}
+          initialValue={seedAns?.kind === 'numeric' ? seedAns.value : null}
         />
       )}
       {problem.kind === 'mcq' && (
@@ -57,6 +66,7 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
           onChange={handleMcq}
           resetKey={resetKey}
           disabled={disabled}
+          initialValue={seedAns?.kind === 'mcq' ? seedAns.values : undefined}
         />
       )}
       {problem.kind === 'compare' && (
@@ -66,6 +76,7 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
           onChange={handleCompare}
           resetKey={resetKey}
           disabled={disabled}
+          initialValue={seedAns?.kind === 'compare' ? seedAns.op : null}
         />
       )}
       {problem.kind === 'multi' && (
@@ -74,6 +85,11 @@ export function ProblemPanel({ problem, onAnswerChange, disabled }: Props) {
           onChange={handleMulti}
           resetKey={resetKey}
           disabled={disabled}
+          initialValue={
+            seedAns?.kind === 'multi'
+              ? { workspace: seedAns.workspace, value: seedAns.value }
+              : undefined
+          }
         />
       )}
     </div>

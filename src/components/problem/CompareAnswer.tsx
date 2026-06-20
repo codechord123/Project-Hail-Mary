@@ -10,15 +10,17 @@ interface Props {
   onChange: (op: '>' | '<' | '=' | null) => void
   resetKey: string
   disabled?: boolean
+  initialValue?: '>' | '<' | '=' | null
 }
 
 const sideTex = (s: Side): string =>
   'decimal' in s ? `${s.decimal}` : `\\dfrac{${s.numerator}}{${s.denominator}}`
 
-export function CompareAnswer({ left, right, onChange, resetKey, disabled }: Props) {
-  const [op, setOp] = useState<'>' | '<' | '=' | null>(null)
+export function CompareAnswer({ left, right, onChange, resetKey, disabled, initialValue }: Props) {
+  const [op, setOp] = useState<'>' | '<' | '=' | null>(initialValue ?? null)
   useEffect(() => {
-    setOp(null)
+    setOp(initialValue ?? null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetKey])
   useEffect(() => {
     onChange(op)

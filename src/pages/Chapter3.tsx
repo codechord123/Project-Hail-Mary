@@ -58,7 +58,7 @@ export function Chapter3() {
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
-  const [magnetAnswer, setMagnetAnswer] = useState<string | null>(null)
+  const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
   const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
@@ -183,7 +183,8 @@ export function Chapter3() {
       const stars = rank === 'S' ? 3 : rank === 'A' ? 3 : rank === 'B' ? 2 : 1
       const reward = CHAPTER_REWARD_POOL[Math.floor(Math.random() * CHAPTER_REWARD_POOL.length)]
       const doClear = () => {
-        store.recordChapter(3, stars, maxCombo)
+        const elapsedMs = Date.now() - startedAt.current
+        store.recordChapter(3, stars, maxCombo, { elapsedMs })
         store.clearChapter(3)
         store.giveItem(reward)
         sfx.bossDie()
@@ -206,7 +207,7 @@ export function Chapter3() {
     setIdx((i) => i + 1)
     setFeedback({ kind: 'idle' })
     setShowHint(false)
-    setMagnetAnswer(null)
+    setMagnetSeed(null)
     setStudentAnswer({ kind: 'fraction', value: null })
   }, [bossHp, isLast, score, maxCombo, store, navigate])
 
@@ -265,17 +266,8 @@ export function Chapter3() {
               setTimeout(() => setTimerPaused(false), 10000)
             }}
             onUseMagnet={() => {
-              // 자석: 정답 텍스트로 노출 (학생이 보고 입력) + 보스에 소량 데미지 + XP 절반
-              const ans = correctAnswerFor(problem)
-              let text = ''
-              switch (ans.kind) {
-                case 'fraction': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
-                case 'numeric': text = String(ans.value); break
-                case 'mcq': text = ans.values.map((i) => `${['①','②','③','④','⑤'][i]}`).join(' '); break
-                case 'compare': text = ans.op!; break
-                case 'multi': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
-              }
-              setMagnetAnswer(text)
+              // 자석: 정답을 input에 자동 채움 + 보스 데미지 + XP 절반
+              setMagnetSeed({ id: Date.now(), answer: correctAnswerFor(problem) })
               const dmg = 20
               setBossHp((hp) => Math.max(0, hp - dmg))
               pushDamage(dmg, 'normal')
@@ -324,16 +316,16 @@ export function Chapter3() {
         </div>
 
         <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
-          {magnetAnswer && (
-            <div className="mb-3 p-2 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-center text-sm">
-              🧲 자석이 알려주는 정답: <b>{magnetAnswer}</b>
-              <div className="text-xs text-white/60 mt-0.5">직접 입력하고 제출하면 정답 처리돼!</div>
+          {magnetSeed && (
+            <div className="mb-3 p-2 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-center text-xs">
+              🧲 자석이 입력칸에 정답을 채웠어! 제출하면 정답 처리.
             </div>
           )}
           <ProblemPanel
             problem={problem}
             onAnswerChange={handleAnswerChange}
             disabled={feedback.kind === 'correct' || bossDead}
+            externalSeed={magnetSeed}
           />
         </div>
 

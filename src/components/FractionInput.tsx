@@ -6,11 +6,13 @@ interface Props {
   disabled?: boolean
   /** 외부에서 답을 제안 (조작 씬 완료 시 자동 채움). 객체 참조 변경 시 1회 반영 */
   seed?: Fraction | null
+  /** 마운트 시 초기 값 (자석 효과 등 강제 시드용) */
+  initialValue?: Fraction | null
 }
 
-export function FractionInput({ onChange, disabled, seed }: Props) {
-  const [num, setNum] = useState('')
-  const [den, setDen] = useState('')
+export function FractionInput({ onChange, disabled, seed, initialValue }: Props) {
+  const [num, setNum] = useState(initialValue ? String(initialValue.numerator) : '')
+  const [den, setDen] = useState(initialValue ? String(initialValue.denominator) : '')
   const lastSeedRef = useRef<Fraction | null>(null)
 
   useEffect(() => {
