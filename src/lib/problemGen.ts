@@ -6,8 +6,8 @@ const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min
 let idSeq = 0
 const nextId = () => `g-${++idSeq}`
 
-/** 작은 분모 풀에서 서로 다른 두 분모를 뽑는다 (통분 연습용) */
-const EASY_DENOMS = [2, 3, 4, 5, 6, 8, 10, 12]
+/** 작은 분모 풀 — 7, 9, 15 추가로 서로소·공통인수 패턴 다양화 */
+const EASY_DENOMS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15]
 const pickTwoDenoms = (difficulty: number): [number, number] => {
   const pool = EASY_DENOMS.slice(0, Math.min(EASY_DENOMS.length, 4 + difficulty))
   const d1 = pool[rand(0, pool.length - 1)]
@@ -16,6 +16,29 @@ const pickTwoDenoms = (difficulty: number): [number, number] => {
   while (d2 === d1 && guard++ < 20) d2 = pool[rand(0, pool.length - 1)]
   if (d2 === d1) d2 = d1 === 2 ? 3 : 2
   return [d1, d2]
+}
+
+/** 세 분수 합 생성기 — 세 분모 통분 연습 */
+export const genThreeAdd = (difficulty: number): Problem => {
+  const [d1, d2] = pickTwoDenoms(difficulty)
+  const pool = EASY_DENOMS.slice(0, Math.min(EASY_DENOMS.length, 4 + difficulty))
+  let d3 = pool[rand(0, pool.length - 1)]
+  let guard = 0
+  while ((d3 === d1 || d3 === d2) && guard++ < 20) d3 = pool[rand(0, pool.length - 1)]
+  if (d3 === d1 || d3 === d2) d3 = d1 + d2
+  const a = { numerator: rand(1, d1 - 1), denominator: d1 }
+  const b = { numerator: rand(1, d2 - 1), denominator: d2 }
+  const c = { numerator: rand(1, d3 - 1), denominator: d3 }
+  const ab = addFractions(a, b)
+  const abc = addFractions(ab, c)
+  const ans = simplify(abc)
+  return {
+    id: nextId(), kind: 'fraction', difficulty: 3,
+    scenario: `세 분수 합: ${a.numerator}/${a.denominator} + ${b.numerator}/${b.denominator} + ${c.numerator}/${c.denominator}`,
+    prompt: '통분 후 기약분수 (가분수 OK)',
+    hint: '세 분모의 공통분모(LCM)를 먼저 찾아.',
+    answer: ans, requireSimplified: true,
+  }
 }
 
 // genSameDenAdd / genSameDenSub 는 이름을 유지하되 통분(이분모) 문제를 생성한다.
@@ -128,7 +151,7 @@ export const genNumericNatCount = (_difficulty: number): Problem => {
 
 import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 
-const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount]
+const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd]
 
 export const genRandom = (difficulty: number): Problem => {
   // 일정 확률로 사전 응용 문제 풀에서 픽 (난이도 ↑)
