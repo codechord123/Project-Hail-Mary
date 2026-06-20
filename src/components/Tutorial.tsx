@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useGameStore } from '@/store/gameStore'
 
-const KEY = 'hailmary-tutorial-seen'
+const KEY_PREFIX = 'hailmary-tutorial-seen'
+const seenKey = (name: string) => `${KEY_PREFIX}-${name || '__guest__'}`
 
 interface Slide {
   emoji: string
@@ -43,6 +45,7 @@ interface Props {
 }
 
 export function Tutorial({ forceShow, onClose }: Props) {
+  const studentName = useGameStore((s) => s.studentName)
   const [open, setOpen] = useState(false)
   const [idx, setIdx] = useState(0)
 
@@ -52,16 +55,17 @@ export function Tutorial({ forceShow, onClose }: Props) {
       return
     }
     try {
-      const seen = localStorage.getItem(KEY)
+      // 학생별로 \"본 적 있음\" 기록 — 새 학생이 로그인하면 다시 등장.
+      const seen = localStorage.getItem(seenKey(studentName))
       if (!seen) setOpen(true)
     } catch {
       /* ignore */
     }
-  }, [forceShow])
+  }, [forceShow, studentName])
 
   const close = () => {
     try {
-      localStorage.setItem(KEY, '1')
+      localStorage.setItem(seenKey(studentName), '1')
     } catch {
       /* ignore */
     }

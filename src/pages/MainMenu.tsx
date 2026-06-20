@@ -29,6 +29,8 @@ export function MainMenu() {
     if (!window.confirm(`정말 로그아웃할까? ${studentName} 의 진도는 저장돼.`)) return
     saveCurrentSlot()
     clearSession()
+    // store 의 studentName 도 비워 다음 로그인 학생과 섞이지 않도록.
+    useGameStore.setState({ studentName: '' })
     navigate('/login')
   }
 
