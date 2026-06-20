@@ -126,9 +126,16 @@ export const genNumericNatCount = (_difficulty: number): Problem => {
   }
 }
 
+import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
+
 const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount]
 
 export const genRandom = (difficulty: number): Problem => {
+  // 일정 확률로 사전 응용 문제 풀에서 픽 (난이도 ↑)
+  if (difficulty >= 1 && Math.random() < 0.3) {
+    const adv = ADVANCED_PROBLEMS[Math.floor(Math.random() * ADVANCED_PROBLEMS.length)]
+    return { ...adv, id: `${adv.id}-${nextId()}` }
+  }
   const g = ALL_GENS[Math.floor(Math.random() * ALL_GENS.length)]
   return g(difficulty)
 }

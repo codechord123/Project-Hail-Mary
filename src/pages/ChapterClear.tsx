@@ -4,6 +4,7 @@ import { useGameStore } from '@/store/gameStore'
 import { computeLevelInfo } from '@/lib/leveling'
 import { ITEMS, type ItemId } from '@/data/items'
 import { getDailyBest } from '@/lib/dailyChallenge'
+import { unresolvedCount } from '@/lib/wrongNotes'
 import { STORY } from '@/data/story'
 import { StoryOverlay } from '@/components/StoryOverlay'
 import { useState } from 'react'
@@ -42,6 +43,7 @@ export function ChapterClear() {
   const reward = state.rewardItemId ? ITEMS[state.rewardItemId] : null
   const nextRoute = NEXT_CHAPTER[chapter ?? '1'] ?? '/chapters'
   const dailyDone = getDailyBest() !== null
+  const wrongCount = unresolvedCount()
   const chapterNum = parseInt(chapter ?? '1', 10)
   const outroLines = STORY[chapterNum]?.outro ?? []
   const [showOutro, setShowOutro] = useState(outroLines.length > 0)
@@ -100,7 +102,28 @@ export function ChapterClear() {
         </motion.div>
       )}
 
-      <div className="mt-8 flex flex-wrap gap-3 justify-center">
+      {wrongCount > 0 && (
+        <motion.div
+          initial={{ scale: 0, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          transition={{ delay: 0.6, type: 'spring' }}
+          className="mt-3 p-3 rounded-2xl bg-rose-500/20 border border-rose-400/40 max-w-sm text-center"
+        >
+          <div className="text-xs text-rose-200">💡 학습 팁</div>
+          <div className="text-white text-sm mt-1">
+            오답 노트에 <b>미해결 {wrongCount}건</b> 이 있어요.
+            다시 풀어보고 진짜 내 것으로 만들어요!
+          </div>
+          <Link
+            to="/wrong-notes"
+            className="block mt-2 px-3 py-1.5 rounded-lg bg-rose-400 text-space-900 font-bold text-xs"
+          >
+            📝 오답 노트 열기
+          </Link>
+        </motion.div>
+      )}
+
+      <div className="mt-6 flex flex-wrap gap-3 justify-center">
         <Link to={`/chapter/${chapter}`} className="px-6 py-3 rounded-xl bg-white/10 text-white border border-white/20">
           ↺ 재도전
         </Link>

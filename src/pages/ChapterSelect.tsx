@@ -30,6 +30,20 @@ export function ChapterSelect() {
         </div>
       </div>
 
+      {/* 진행률 게이지 */}
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-white/60">
+          <span>전체 진행률</span>
+          <span>{Object.keys(records).length} / {CHAPTERS.length} 챕터</span>
+        </div>
+        <div className="mt-1 h-2 rounded-full bg-white/10 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all"
+            style={{ width: `${(Object.keys(records).length / CHAPTERS.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
       <Link to="/endless" className="mt-4 block p-3 rounded-xl bg-gradient-to-r from-purple-700 to-pink-600 border border-yellow-300/40 text-white">
         <div className="font-bold">🎮 끝없는 항해 · ENDLESS MODE</div>
         <div className="text-xs text-white/80">랜덤 응용 문제 · 산소가 다할 때까지 · 최고기록 도전</div>
