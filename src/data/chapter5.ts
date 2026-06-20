@@ -21,64 +21,56 @@ export const chapter5Breaches: ReactorBreach[] = [
     id: 'c5-1',
     a: { numerator: 5, denominator: 6 }, b: { numerator: 1, denominator: 2 },
     location: '냉각 펌프',
-    story:
-      '냉각 펌프의 액체가 5/6 통 채워져 있었는데, 1/2 통 분량이 균열로 빠져나갔어. 통분 후 기약분수로 잔량을 계산해 누출을 막자.',
+    story: '냉각 펌프에 5/6 통이 차 있었어. 균열로 1/2 통이 새어 나갔어. 남은 양은?',
   },
   {
     // 11/12 - 1/4 → 8/12 → 2/3
     id: 'c5-2',
     a: { numerator: 11, denominator: 12 }, b: { numerator: 1, denominator: 4 },
     location: '연료 라인',
-    story:
-      '연료 라인이 11/12 만큼 충전됐는데, 응급 추진 명령으로 1/4 통이 소모됐어. 남은 연료를 기약분수로 적어 라인 압력을 안정시키자.',
+    story: '연료 라인이 11/12 만큼 충전됐어. 추진 명령으로 1/4 통이 소모됐어. 남은 연료는?',
   },
   {
     // 9/10 - 2/5 → 5/10 → 1/2
     id: 'c5-3',
     a: { numerator: 9, denominator: 10 }, b: { numerator: 2, denominator: 5 },
     location: '추진 노즐',
-    story:
-      '추진 노즐의 가스 압력은 9/10 단계까지 차 있었어. 점화 시퀀스가 2/5 단계만큼 빠르게 소비했지. 남은 압력을 기약분수로!',
+    story: '노즐의 가스 압력이 9/10 단계였어. 점화로 2/5 단계가 빠졌어. 남은 압력은?',
   },
   {
     // 17/20 - 1/4 → 12/20 → 3/5
     id: 'c5-4',
     a: { numerator: 17, denominator: 20 }, b: { numerator: 1, denominator: 4 },
     location: '생명 유지',
-    story:
-      '생명유지 산소 농도가 17/20 으로 유지되고 있었는데, 1/4 만큼 누출이 시작됐어. 통분해서 빼고 약분해 잔여 농도를 알려줘.',
+    story: '산소 농도가 17/20 이었어. 누출로 1/4 만큼 줄어들었어. 남은 농도는?',
   },
   {
     // 5/6 - 7/12 → 3/12 → 1/4
     id: 'c5-5',
     a: { numerator: 5, denominator: 6 }, b: { numerator: 7, denominator: 12 },
     location: '냉각 펌프',
-    story:
-      '냉각 펌프 백업 라인이 5/6 채워져 있었지만 메인 라인 정비로 7/12 만큼 흘려보냈어. 백업 잔량을 기약분수로!',
+    story: '백업 라인이 5/6 차 있었어. 정비로 7/12 만큼 흘려보냈어. 남은 백업은?',
   },
   {
     // 11/15 - 1/3 → 6/15 → 2/5
     id: 'c5-6',
     a: { numerator: 11, denominator: 15 }, b: { numerator: 1, denominator: 3 },
     location: '연료 라인',
-    story:
-      '예비 연료 11/15 통 중 1/3 통을 비상 발전기로 옮겼어. 라인에 남아 있는 양을 기약분수로 적어 라인 봉인을 풀자.',
+    story: '예비 연료가 11/15 통이었어. 비상 발전기로 1/3 통을 보냈어. 남은 양은?',
   },
   {
     // 13/18 - 1/2 → 4/18 → 2/9
     id: 'c5-7',
     a: { numerator: 13, denominator: 18 }, b: { numerator: 1, denominator: 2 },
     location: '추진 노즐',
-    story:
-      '노즐 1번이 13/18 만큼 가열됐고, 1/2 의 열을 방열판으로 흘려보냈어. 노즐에 남은 열량을 기약분수로!',
+    story: '노즐 열량이 13/18 이었어. 방열판으로 1/2 만큼 흘려보냈어. 남은 열량은?',
   },
   {
     // 7/12 - 1/4 → 4/12 → 1/3
     id: 'c5-8',
     a: { numerator: 7, denominator: 12 }, b: { numerator: 1, denominator: 4 },
     location: '생명 유지',
-    story:
-      '생명유지 모듈의 정수 필터 1통 중 7/12 가 깨끗했어. 사용 중 1/4 통이 오염됐다. 아직 깨끗한 정수의 비율을 기약분수로!',
+    story: '정수 필터의 7/12 가 깨끗했어. 사용 중 1/4 가 오염됐어. 남은 깨끗한 양은?',
   },
 ]
 

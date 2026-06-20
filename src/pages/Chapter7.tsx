@@ -43,6 +43,7 @@ export function Chapter7() {
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
+  const [hintFormulaShown, setHintFormulaShown] = useState(false)
   const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
   const [grade, setGrade] = useState<Grade>(null)
   const [showRoundIntro, setShowRoundIntro] = useState(true)
@@ -156,6 +157,7 @@ export function Chapter7() {
       setProblemIdx(nextProblem)
       setFeedback('idle')
       setMagnetSeed(null)
+      setHintFormulaShown(false)
       setStudentAnswer({ kind: 'fraction', value: null })
     }, 1000)
   }, [problem, studentAnswer, hp, phaseIdx, problemIdx, phase.problems.length, crisis, run])
@@ -225,6 +227,7 @@ export function Chapter7() {
               sfx.hit()
               run.store.addXp(15)
             }}
+            onUseHintFormula={() => setHintFormulaShown(true)}
             shieldActive={shieldActive}
           />
         </div>
@@ -250,6 +253,11 @@ export function Chapter7() {
           <div className="flex-1 space-y-2">
             <DialogueBox speaker={`PHASE ${phaseIdx + 1}`} tone="system" text={problem.scenario} />
             <DialogueBox speaker={`★ 난이도 ${problem.difficulty}`} tone="narrator" text={problem.prompt} />
+            {hintFormulaShown && (
+              <div className="p-2 rounded bg-yellow-400/15 border border-yellow-300/40 text-yellow-100 font-mono text-sm">
+                💡 식 힌트: {problem.hint}
+              </div>
+            )}
           </div>
         </div>
 

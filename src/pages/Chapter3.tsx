@@ -61,6 +61,7 @@ export function Chapter3() {
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
+  const [hintFormulaShown, setHintFormulaShown] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
   const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
   const [grade, setGrade] = useState<Grade>(null)
@@ -222,6 +223,7 @@ export function Chapter3() {
     setShowHint(false)
     setMagnetSeed(null)
     setStudentAnswer({ kind: 'fraction', value: null })
+    setHintFormulaShown(false)
   }, [bossHp, isLast, score, maxCombo, store, navigate])
 
   const useHint = () => {
@@ -311,6 +313,7 @@ export function Chapter3() {
               sfx.hit()
               store.addXp(10)
             }}
+            onUseHintFormula={() => setHintFormulaShown(true)}
             shieldActive={shieldActive}
           />
         </div>
@@ -344,6 +347,11 @@ export function Chapter3() {
           <div className="flex-1 space-y-2">
             <DialogueBox speaker="시스템" tone="system" text={problem.scenario} />
             {showHint && <DialogueBox speaker="로키" tone="rocky" text={problem.hint} />}
+            {hintFormulaShown && (
+              <div className="p-2 rounded bg-yellow-400/15 border border-yellow-300/40 text-yellow-100 font-mono text-sm">
+                💡 식 힌트: {problem.hint}
+              </div>
+            )}
             <DialogueBox
               speaker={`문제 · 난이도 ${'★'.repeat(problem.difficulty)}`}
               tone="narrator"

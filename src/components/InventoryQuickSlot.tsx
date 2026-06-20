@@ -12,6 +12,7 @@ interface Props {
   onUseShield?: () => void
   onUseTimeFreeze?: () => void
   onUseSimplifyAid?: () => void
+  onUseHintFormula?: () => void
   /** shield 활성 여부 표시 */
   shieldActive?: boolean
   /** simplify-aid 활성 여부 표시 */
@@ -44,6 +45,9 @@ export function InventoryQuickSlot(props: Props) {
     shield: () => {
       if (store.useItem('shield')) props.onUseShield?.()
     },
+    'hint-formula': () => {
+      if (store.useItem('hint-formula')) props.onUseHintFormula?.()
+    },
   }
 
   const enabled: Record<ItemId, boolean> = {
@@ -53,9 +57,10 @@ export function InventoryQuickSlot(props: Props) {
     bomb: !!props.onUseBomb,
     magnet: !!props.onUseMagnet,
     shield: !!props.onUseShield && !props.shieldActive,
+    'hint-formula': !!props.onUseHintFormula,
   }
 
-  const ids: ItemId[] = ['oxygen-pack', 'bomb', 'magnet', 'shield', 'time-freeze', 'simplify-aid']
+  const ids: ItemId[] = ['oxygen-pack', 'hint-formula', 'bomb', 'magnet', 'shield', 'time-freeze', 'simplify-aid']
 
   const handlePress = (id: ItemId, qty: number, disabled: boolean) => {
     // 잔량 0이거나 비활성 슬롯은 툴팁만 토글

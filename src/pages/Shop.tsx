@@ -10,6 +10,7 @@ interface ShopEntry {
 const SHOP_LIST: ShopEntry[] = [
   // 가격 ↑↑ — 문제를 풀게 만들기 위해 아이템 의존도 ↓
   { id: 'oxygen-pack', costEnergy: 15 },
+  { id: 'hint-formula', costEnergy: 18 }, // 식만 보여주고 답은 직접 — 학습 보조
   { id: 'time-freeze', costEnergy: 25 },
   { id: 'simplify-aid', costEnergy: 35 },
   { id: 'shield', costEnergy: 20 },

@@ -123,6 +123,7 @@ export function Chapter2() {
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
+  const [hintFormulaShown, setHintFormulaShown] = useState(false)
   const [grade, setGrade] = useState<Grade>(null)
   const [showRoundIntro, setShowRoundIntro] = useState(true)
   const freezeUntilRef = useRef(0)
@@ -133,6 +134,7 @@ export function Chapter2() {
     }
     setWaveIdx((i) => i + 1)
     setAnswer(null)
+    setHintFormulaShown(false)
   }, [isLast])
 
   return (
@@ -168,6 +170,7 @@ export function Chapter2() {
               run.onCorrect({ xpBase: 15, scoreGain: 200, difficulty: 1 })
               setTimeout(() => nextOrFinish(), 800)
             }}
+            onUseHintFormula={() => setHintFormulaShown(true)}
             shieldActive={shieldActive}
           />
         </div>
@@ -176,6 +179,11 @@ export function Chapter2() {
         {wave.story && (
           <div className="mt-2 p-3 rounded-lg bg-amber-400/10 border border-amber-300/30 text-sm text-amber-50 leading-relaxed">
             📖 {wave.story}
+          </div>
+        )}
+        {hintFormulaShown && (
+          <div className="mt-1 p-2 rounded bg-yellow-400/15 border border-yellow-300/40 text-yellow-100 font-mono text-sm text-center">
+            💡 식: {wave.a.numerator}/{wave.a.denominator} − {wave.b.numerator}/{wave.b.denominator}
           </div>
         )}
 

@@ -186,10 +186,7 @@ export function DailyChallenge() {
             <button onClick={submit} className="flex-1 px-4 py-3 rounded-xl bg-space-accent text-space-900 font-bold">제출</button>
           )}
           {(feedback === 'wrong' || feedback === 'simplify') && (
-            <>
-              <button onClick={() => setFeedback('idle')} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white border border-white/20">다시 시도</button>
-              <button onClick={nextProblem} className="px-4 py-3 rounded-xl bg-white/5 text-white/60 border border-white/20 text-sm">⏭ 패스</button>
-            </>
+            <button onClick={() => setFeedback('idle')} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white border border-white/20">다시 시도</button>
           )}
         </div>
       </ScreenShake>

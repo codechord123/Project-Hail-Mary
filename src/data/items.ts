@@ -5,6 +5,7 @@ export type ItemId =
   | 'bomb'
   | 'magnet'
   | 'shield'
+  | 'hint-formula'
 
 export interface ItemDef {
   id: ItemId
@@ -50,6 +51,12 @@ export const ITEMS: Record<ItemId, ItemDef> = {
     icon: '🛡️',
     description: '다음 오답 1회를 무효 처리한다.',
   },
+  'hint-formula': {
+    id: 'hint-formula',
+    name: '식 힌트',
+    icon: '💡',
+    description: '현재 문제의 식을 보여준다 (답은 직접 풀어야 해). 획득 XP 30% 감소.',
+  },
 }
 
 /** 챕터 클리어 시 무작위 보상 풀 */
@@ -61,4 +68,6 @@ export const CHAPTER_REWARD_POOL: ItemId[] = [
   'bomb',
   'magnet',
   'shield',
+  'hint-formula',
+  'hint-formula',
 ]

@@ -39,6 +39,7 @@ export function Chapter5() {
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
+  const [hintFormulaShown, setHintFormulaShown] = useState(false)
   const run = useChapterRun({ chapterId: 5, maxScore: chapter5Breaches.length * 900 })
   const bonus = useMemo(() => pickBonusProblem(5), [])
 
@@ -122,6 +123,7 @@ export function Chapter5() {
       setCalcAns(null)
       setSimplifyAns(null)
       setFeedback('idle')
+      setHintFormulaShown(false)
     }, 600)
   }, [step, commonDenomAns, calcAns, simplifyAns, sol, isLast, run])
 
@@ -172,6 +174,7 @@ export function Chapter5() {
               setStep('commonDenom')
               setCommonDenomAns(null); setCalcAns(null); setSimplifyAns(null)
             }}
+            onUseHintFormula={() => setHintFormulaShown(true)}
             shieldActive={shieldActive}
           />
         </div>
@@ -185,6 +188,11 @@ export function Chapter5() {
               <div className="text-white mt-1 text-sm leading-relaxed">
                 {breach.story}
               </div>
+              {hintFormulaShown && (
+                <div className="mt-2 p-2 rounded bg-yellow-400/15 border border-yellow-300/40 text-yellow-100 font-mono text-sm">
+                  💡 식: {breach.a.numerator}/{breach.a.denominator} − {breach.b.numerator}/{breach.b.denominator}
+                </div>
+              )}
             </div>
             <div className="text-4xl ml-2">⚡</div>
           </div>
