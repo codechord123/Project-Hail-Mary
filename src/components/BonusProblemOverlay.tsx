@@ -70,7 +70,10 @@ export function BonusProblemOverlay({ problem, onPass, onFail }: Props) {
           <div className="mt-2 p-2 rounded bg-red-500/20 text-red-200 text-xs text-center">❌ {reason} · 다시</div>
         )}
         {feedback === 'simplify' && (
-          <div className="mt-2 p-2 rounded bg-yellow-500/20 text-yellow-200 text-xs text-center">🤏 기약분수로!</div>
+          <div className="mt-2 p-3 rounded bg-yellow-500/20 text-yellow-200 text-xs text-center leading-relaxed">
+            🤏 <b>값은 맞지만 더 줄일 수 있어!</b><br />
+            분자와 분모를 같은 수로 나눠서 더 작은 분수로 만든 다음 다시 입력해.
+          </div>
         )}
         {feedback === 'correct' && (
           <div className="mt-2 p-2 rounded bg-emerald-500/20 text-emerald-200 text-xs text-center">✨ 보너스 클리어!</div>

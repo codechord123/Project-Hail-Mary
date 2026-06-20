@@ -167,15 +167,15 @@ export function Chapter6() {
 
         <div className="mt-3">
           <CountdownTimer
-            durationSec={120}
+            durationSec={180}
             paused={allMatched || timerPaused}
             onTimeout={handleTimeout}
             resetKey={resetFlag}
           />
         </div>
 
-        {/* 카드 그리드 */}
-        <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+        {/* 카드 그리드 4×4 (총 16장) */}
+        <div className="mt-3 grid grid-cols-4 gap-1.5 sm:gap-2">
           {deck.map((card) => {
             const isOpen = flipped.includes(card.id) || matched.includes(card.id)
             const isMatched = matched.includes(card.id)

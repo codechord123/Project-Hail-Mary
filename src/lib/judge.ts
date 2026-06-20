@@ -72,3 +72,14 @@ export const computeRank = (score: number, maxScore: number): Rank => {
   if (pct >= 0.6) return 'B'
   return 'C'
 }
+
+/** 자석 아이템: 문제의 정답을 그대로 학생 답안 형태로 변환 */
+export const correctAnswerFor = (p: Problem): StudentAnswer => {
+  switch (p.kind) {
+    case 'fraction': return { kind: 'fraction', value: p.answer }
+    case 'numeric': return { kind: 'numeric', value: p.answer }
+    case 'mcq': return { kind: 'mcq', values: [...p.correctIndexes] }
+    case 'compare': return { kind: 'compare', op: p.correctOp }
+    case 'multi': return { kind: 'multi', value: p.finalAnswer, workspace: '자석으로 자동 풀이' }
+  }
+}

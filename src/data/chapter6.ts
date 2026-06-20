@@ -20,6 +20,8 @@ const PAIRS: Pair[] = [
   { improper: { whole: 3, num: 1, denom: 2 }, improperFrac: { num: 7, denom: 2 } },
   { improper: { whole: 2, num: 3, denom: 5 }, improperFrac: { num: 13, denom: 5 } },
   { improper: { whole: 1, num: 5, denom: 6 }, improperFrac: { num: 11, denom: 6 } },
+  { improper: { whole: 2, num: 3, denom: 4 }, improperFrac: { num: 11, denom: 4 } },
+  { improper: { whole: 3, num: 1, denom: 3 }, improperFrac: { num: 10, denom: 3 } },
 ]
 
 export const buildChapter6Deck = (): MatchCardDef[] => {

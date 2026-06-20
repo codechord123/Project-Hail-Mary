@@ -104,6 +104,12 @@ export function MainMenu() {
         >
           📚 항해 일지 (스토리 회상)
         </Link>
+        <Link
+          to="/shop"
+          className="px-6 py-2 rounded-xl bg-emerald-400/10 text-emerald-200 border border-emerald-300/30 text-sm hover:bg-emerald-400/20 transition"
+        >
+          🏪 우주 상점
+        </Link>
         <button
           onClick={() => {
             toggleMute()

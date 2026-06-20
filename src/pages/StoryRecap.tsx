@@ -18,9 +18,15 @@ const CHAPTER_TITLES: Record<number, string> = {
 
 export function StoryRecap() {
   const cleared = useGameStore((s) => s.clearedChapters)
+  const records = useGameStore((s) => s.chapterRecords)
   const [playLines, setPlayLines] = useState<StoryLine[] | null>(null)
 
   const allChapters = Object.keys(STORY).map(Number).sort((a, b) => a - b)
+
+  const totalStars = Object.values(records).reduce((s, r) => s + r.stars, 0)
+  const maxBestCombo = Object.values(records).reduce((m, r) => Math.max(m, r.bestCombo), 0)
+  const clearedCount = cleared.length
+  const totalChapters = allChapters.length
 
   return (
     <div className="min-h-screen px-6 py-8 max-w-3xl mx-auto">
@@ -31,6 +37,16 @@ export function StoryRecap() {
       <p className="text-white/60 text-sm mt-1">
         헤일메리호의 모든 기록 — 클리어한 챕터의 이야기를 다시 볼 수 있어요.
       </p>
+
+      {/* 항해 통계 */}
+      <section className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+        <h3 className="text-sm font-bold text-white mb-2">📊 항해 통계</h3>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <Stat label="클리어" value={`${clearedCount}/${totalChapters}`} color="text-cyan-300" />
+          <Stat label="총 별" value={`${totalStars}/${totalChapters * 3}`} color="text-yellow-300" />
+          <Stat label="최고 콤보" value={`×${maxBestCombo}`} color="text-pink-300" />
+        </div>
+      </section>
 
       <div className="mt-6 space-y-3">
         {allChapters.map((id) => {
@@ -95,6 +111,15 @@ export function StoryRecap() {
       {playLines && (
         <StoryOverlay lines={playLines} onClose={() => setPlayLines(null)} />
       )}
+    </div>
+  )
+}
+
+function Stat({ label, value, color }: { label: string; value: string; color: string }) {
+  return (
+    <div className="p-2 rounded-lg bg-black/30">
+      <div className="text-[10px] text-white/50 uppercase">{label}</div>
+      <div className={`text-lg font-bold ${color}`}>{value}</div>
     </div>
   )
 }

@@ -14,7 +14,7 @@ import { LevelBadge } from '@/components/LevelBadge'
 import { DialogueBox } from '@/components/DialogueBox'
 import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
-import { judge } from '@/lib/judge'
+import { judge, correctAnswerFor } from '@/lib/judge'
 import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
@@ -186,7 +186,15 @@ export function Chapter7() {
               setTimerPaused(true)
               setTimeout(() => setTimerPaused(false), 10000)
             }}
-            onUseMagnet={() => {/* 힌트만 표시 — 추후 구현 */}}
+            onUseMagnet={() => {
+              // 자석: 정답 자동 + 여왕 데미지 (XP 절반)
+              setStudentAnswer(correctAnswerFor(problem))
+              const dmg = 30
+              setHp((h) => Math.max(0, h - dmg))
+              pushDamage(dmg, 'normal')
+              sfx.hit()
+              run.store.addXp(15)
+            }}
             shieldActive={shieldActive}
           />
         </div>

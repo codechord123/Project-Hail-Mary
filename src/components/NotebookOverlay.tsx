@@ -88,12 +88,21 @@ export function NotebookOverlay({ open, onClose }: Props) {
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
-        className="w-full max-w-3xl h-[80vh] rounded-2xl bg-amber-50 border-4 border-amber-700 flex flex-col overflow-hidden shadow-2xl"
+        className="relative w-full max-w-3xl h-[85vh] sm:h-[80vh] rounded-2xl bg-amber-50 border-4 border-amber-700 flex flex-col overflow-hidden shadow-2xl"
       >
-        {/* 툴바 */}
-        <div className="flex items-center gap-2 p-2 bg-amber-100 border-b border-amber-700/40">
-          <span className="text-amber-900 font-bold text-sm">📝 풀이 노트</span>
-          <div className="flex gap-1 ml-3">
+        {/* 항상 보이는 닫기 버튼 (우상단 고정) */}
+        <button
+          onClick={onClose}
+          aria-label="닫기"
+          className="absolute top-2 right-2 z-10 w-10 h-10 rounded-full bg-amber-700 text-white text-xl font-bold shadow-lg hover:bg-amber-800 active:scale-95"
+        >
+          ✕
+        </button>
+
+        {/* 툴바 — 모바일에서 wrap 허용 */}
+        <div className="flex flex-wrap items-center gap-1.5 p-2 pr-14 bg-amber-100 border-b border-amber-700/40">
+          <span className="text-amber-900 font-bold text-sm">📝</span>
+          <div className="flex gap-1">
             {COLORS.map((c) => (
               <button
                 key={c}
@@ -106,13 +115,13 @@ export function NotebookOverlay({ open, onClose }: Props) {
               />
             ))}
           </div>
-          <div className="flex gap-1 ml-2 items-center">
-            <span className="text-xs text-amber-900">굵기</span>
+          <div className="flex gap-1 items-center">
             <input
               type="range" min={1} max={10} step={1}
               value={size}
               onChange={(e) => setSize(parseInt(e.target.value, 10))}
-              className="w-20"
+              className="w-16 sm:w-20"
+              aria-label="굵기"
             />
           </div>
           <button
@@ -121,20 +130,13 @@ export function NotebookOverlay({ open, onClose }: Props) {
               erase ? 'bg-amber-700 text-white' : 'bg-white text-amber-900 border border-amber-700/40'
             }`}
           >
-            🩹 지우개
+            🩹
           </button>
           <button
             onClick={clear}
             className="px-2 py-1 rounded text-xs bg-white text-amber-900 border border-amber-700/40"
           >
-            🗑 전체 비우기
-          </button>
-          <div className="flex-1" />
-          <button
-            onClick={onClose}
-            className="px-3 py-1 rounded bg-amber-700 text-white text-sm font-bold"
-          >
-            ✕ 닫기
+            🗑
           </button>
         </div>
 

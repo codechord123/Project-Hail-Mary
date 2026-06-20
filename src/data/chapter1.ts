@@ -131,12 +131,18 @@ export const CHAPTER1_APPLICATION_POOL: ApplicationProblem[] = [
     story: '로키가 작은 퀴즈를 냈다.',
     problem: {
       id: 'c1-app-4',
-      kind: 'mcq', difficulty: 1,
-      scenario: '아래 등식들이 모두 올바르게 계산됐는지 검토해.',
-      prompt: '계산이 올바른 식을 모두 골라.',
-      hint: '분자끼리 더한 결과가 우변과 같은지 확인.',
-      choices: ['2/7 + 3/7 = 5/7', '1/5 + 3/5 = 4/5', '4/9 + 1/9 = 5/9', '2/6 + 2/6 = 4/6', '1/4 + 1/4 = 2/4'],
-      correctIndexes: [0, 1, 2, 3, 4], multiple: true,
+      kind: 'mcq', difficulty: 2,
+      scenario: '아래 등식 중 잘못 계산된 게 섞여 있어. 올바른 식만 골라.',
+      prompt: '올바른 식을 모두 골라.',
+      hint: '분자끼리 더한 결과가 우변과 같은지 차근차근 확인해봐.',
+      choices: [
+        '2/7 + 3/7 = 5/7', // ✓
+        '1/5 + 3/5 = 5/5', // ✗ (4/5)
+        '4/9 + 1/9 = 5/9', // ✓
+        '2/6 + 3/6 = 4/6', // ✗ (5/6)
+        '1/4 + 1/4 = 2/4', // ✓
+      ],
+      correctIndexes: [0, 2, 4], multiple: true,
     },
   },
   {

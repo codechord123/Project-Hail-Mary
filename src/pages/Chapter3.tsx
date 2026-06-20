@@ -21,7 +21,7 @@ import { NotebookOverlay } from '@/components/NotebookOverlay'
 import { StoryOverlay } from '@/components/StoryOverlay'
 import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
-import { judge } from '@/lib/judge'
+import { judge, correctAnswerFor } from '@/lib/judge'
 import { computeRank } from '@/lib/judge'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
@@ -262,7 +262,16 @@ export function Chapter3() {
               setTimerPaused(true)
               setTimeout(() => setTimerPaused(false), 10000)
             }}
-            onUseMagnet={() => setShowHint(true)}
+            onUseMagnet={() => {
+              // 자석: 정답 처리 + 보스 데미지 (XP 절반)
+              setStudentAnswer(correctAnswerFor(problem))
+              const dmg = 20
+              setBossHp((hp) => Math.max(0, hp - dmg))
+              pushDamage(dmg, 'normal')
+              sfx.hit()
+              store.addXp(10)
+              setShowHint(true)
+            }}
             shieldActive={shieldActive}
           />
         </div>
