@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { sfx } from '@/lib/sfx'
 
@@ -12,6 +12,9 @@ interface Props {
 /** 캡콤식 라운드 인트로: READY → FIGHT! */
 export function RoundIntro({ show, title = 'STAGE START', subtitle = '준비!', onFinished }: Props) {
   const [phase, setPhase] = useState<'ready' | 'fight' | 'done'>('ready')
+  // onFinished 가 매 렌더 새 ref 라서 effect 가 재발화 되는 것을 막는다.
+  const onFinishedRef = useRef(onFinished)
+  onFinishedRef.current = onFinished
 
   useEffect(() => {
     if (!show) {
@@ -26,13 +29,13 @@ export function RoundIntro({ show, title = 'STAGE START', subtitle = '준비!', 
     }, 900)
     const t2 = setTimeout(() => {
       setPhase('done')
-      onFinished?.()
+      onFinishedRef.current?.()
     }, 1700)
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
     }
-  }, [show, onFinished])
+  }, [show])
 
   if (!show || phase === 'done') return null
 

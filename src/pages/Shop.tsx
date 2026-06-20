@@ -8,12 +8,13 @@ interface ShopEntry {
 }
 
 const SHOP_LIST: ShopEntry[] = [
-  { id: 'oxygen-pack', costEnergy: 5 },
-  { id: 'time-freeze', costEnergy: 8 },
-  { id: 'simplify-aid', costEnergy: 6 },
-  { id: 'shield', costEnergy: 7 },
-  { id: 'magnet', costEnergy: 10 },
-  { id: 'bomb', costEnergy: 12 },
+  // 가격 ↑↑ — 문제를 풀게 만들기 위해 아이템 의존도 ↓
+  { id: 'oxygen-pack', costEnergy: 15 },
+  { id: 'time-freeze', costEnergy: 25 },
+  { id: 'simplify-aid', costEnergy: 35 },
+  { id: 'shield', costEnergy: 20 },
+  { id: 'magnet', costEnergy: 40 },
+  { id: 'bomb', costEnergy: 50 },
 ]
 
 export function Shop() {
