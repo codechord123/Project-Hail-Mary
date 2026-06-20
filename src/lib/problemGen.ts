@@ -154,8 +154,9 @@ import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd]
 
 export const genRandom = (difficulty: number): Problem => {
-  // 일정 확률로 사전 응용 문제 풀에서 픽 (난이도 ↑)
-  if (difficulty >= 1 && Math.random() < 0.3) {
+  // 학생 수준 ↑: 응용 풀 비율 50%, 난이도 2+ 도달 시 60%
+  const advRate = difficulty >= 2 ? 0.6 : 0.5
+  if (difficulty >= 0 && Math.random() < advRate) {
     const adv = ADVANCED_PROBLEMS[Math.floor(Math.random() * ADVANCED_PROBLEMS.length)]
     return { ...adv, id: `${adv.id}-${nextId()}` }
   }

@@ -16,6 +16,9 @@ import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { judge, correctAnswerFor } from '@/lib/judge'
 import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
+import { GradeFlash, gradeFor, type Grade } from '@/components/arcade/GradeFlash'
+import { RoundIntro } from '@/components/arcade/RoundIntro'
+import { SuperGauge } from '@/components/arcade/SuperGauge'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import { sfx } from '@/lib/sfx'
@@ -41,6 +44,9 @@ export function Chapter7() {
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
   const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
+  const [grade, setGrade] = useState<Grade>(null)
+  const [showRoundIntro, setShowRoundIntro] = useState(true)
+  const [sp, setSp] = useState(0)
   const [shake, setShake] = useState(0)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
@@ -121,6 +127,11 @@ export function Chapter7() {
     else sfx.hit()
     if (isCrit) setShake((s) => s + 1)
     setFeedback('correct')
+    // 캡콤 등급 표시
+    const g = gradeFor(run.combo + 1, isCrit)
+    setGrade(g)
+    setTimeout(() => setGrade(null), 800)
+    setSp((s) => Math.min(100, s + (isCrit ? 30 : 15 + (run.combo + 1) * 2)))
 
     if (newHp <= 0) {
       setBossDead(true)
@@ -171,6 +182,24 @@ export function Chapter7() {
           combo={run.combo}
           score={run.score}
         />
+        <div className="mt-2">
+          <SuperGauge
+            value={sp}
+            onTrigger={() => {
+              // 메가 SP: 여왕 HP 120 깎기
+              const dmg = 120
+              setHp((h) => Math.max(0, h - dmg))
+              pushDamage(dmg, 'crit')
+              setBossHit(true)
+              setShake((s) => s + 1)
+              setGrade('PERFECT')
+              setTimeout(() => setBossHit(false), 350)
+              setTimeout(() => setGrade(null), 900)
+              sfx.bossLaugh()
+              setSp(0)
+            }}
+          />
+        </div>
         <div className="mt-2">
           <InventoryQuickSlot
             onUseOxygen={() => {}}
@@ -296,6 +325,8 @@ export function Chapter7() {
         />
       )}
       <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      <GradeFlash grade={grade} combo={run.combo} />
+      <RoundIntro show={showRoundIntro} title="FINAL STAGE 7 — 귀환 미션" subtitle="아스트로파지 여왕 등장" onFinished={() => setShowRoundIntro(false)} />
       {showIntro && <StoryOverlay lines={STORY[7].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )

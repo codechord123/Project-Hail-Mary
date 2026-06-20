@@ -17,6 +17,8 @@ import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
+import { GradeFlash, gradeFor, type Grade } from '@/components/arcade/GradeFlash'
+import { RoundIntro } from '@/components/arcade/RoundIntro'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
@@ -111,6 +113,9 @@ export function Chapter2() {
       setShake((s) => s + 1)
       const crit = run.combo >= 2
       run.onCorrect({ xpBase: 30, scoreGain: 400, crit, difficulty: 1 })
+      const g = gradeFor(run.combo + 1, crit)
+      setGrade(g)
+      setTimeout(() => setGrade(null), 700)
       setTimeout(() => nextOrFinish(), 900)
     }, 350)
   }, [answer, expectedAns, exploded, wave, run])
@@ -119,6 +124,8 @@ export function Chapter2() {
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
+  const [grade, setGrade] = useState<Grade>(null)
+  const [showRoundIntro, setShowRoundIntro] = useState(true)
   const freezeUntilRef = useRef(0)
   const nextOrFinish = useCallback(() => {
     if (isLast) {
@@ -316,6 +323,8 @@ export function Chapter2() {
       )}
       <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
       {showIntro && <StoryOverlay lines={STORY[2].intro} onClose={() => setShowIntro(false)} />}
+      <GradeFlash grade={grade} combo={run.combo} />
+      <RoundIntro show={showRoundIntro} title="STAGE 2 — 식량 점검" subtitle="식량 도둑 출현" onFinished={() => setShowRoundIntro(false)} />
     </div>
   )
 }

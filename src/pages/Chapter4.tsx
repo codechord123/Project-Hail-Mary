@@ -17,6 +17,8 @@ import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
+import { GradeFlash, gradeFor, type Grade } from '@/components/arcade/GradeFlash'
+import { RoundIntro } from '@/components/arcade/RoundIntro'
 import type { Fraction } from '@/types/fraction'
 
 interface ActiveLane {
@@ -87,6 +89,8 @@ export function Chapter4() {
   const [showBonus, setShowBonus] = useState(false)
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [grade, setGrade] = useState<Grade>(null)
+  const [showRoundIntro, setShowRoundIntro] = useState(true)
   // 클리어 체크
   useEffect(() => {
     if (killed >= KILLS_TO_CLEAR) {
@@ -125,6 +129,9 @@ export function Chapter4() {
     setTimeout(() => setKillAnim(null), 600)
     const crit = run.combo >= 3
     run.onCorrect({ xpBase: 28, scoreGain: 350, crit, difficulty: 2 })
+    const g = gradeFor(run.combo + 1, crit)
+    setGrade(g)
+    setTimeout(() => setGrade(null), 700)
     setKilled((k) => k + 1)
     setLanes((cur) => cur.map((c, j) => (j === laneIdx ? spawnLane(laneIdx, queueRef) : c)))
     setTargetIdx(null)
@@ -270,6 +277,8 @@ export function Chapter4() {
       )}
       <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
       {showIntro && <StoryOverlay lines={STORY[4].intro} onClose={() => setShowIntro(false)} />}
+      <GradeFlash grade={grade} combo={run.combo} />
+      <RoundIntro show={showRoundIntro} title="STAGE 4 — 첫 만남" subtitle="외계 함대 접근 중" onFinished={() => setShowRoundIntro(false)} />
     </div>
   )
 }

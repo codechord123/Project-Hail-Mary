@@ -16,6 +16,9 @@ import { CrisisOverlay } from '@/components/CrisisOverlay'
 import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { useGameStore } from '@/store/gameStore'
 import { useShortcuts } from '@/hooks/useShortcuts'
+import { GradeFlash, gradeFor, type Grade } from '@/components/arcade/GradeFlash'
+import { RoundIntro } from '@/components/arcade/RoundIntro'
+import { SuperGauge } from '@/components/arcade/SuperGauge'
 import { sfx } from '@/lib/sfx'
 import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
@@ -60,6 +63,9 @@ export function Chapter3() {
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
   const [magnetSeed, setMagnetSeed] = useState<{ id: number; answer: StudentAnswer } | null>(null)
+  const [grade, setGrade] = useState<Grade>(null)
+  const [showRoundIntro, setShowRoundIntro] = useState(true)
+  const [sp, setSp] = useState(0)
   const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
@@ -173,6 +179,12 @@ export function Chapter3() {
     setConfetti(true)
     setTimeout(() => setConfetti(false), 700)
     if (isCrit) setShakeKey((k) => k + 1)
+    // 캡콤식 등급 표시
+    const g = gradeFor(newCombo, isCrit)
+    setGrade(g)
+    setTimeout(() => setGrade(null), 800)
+    // SP 게이지 충전 (콤보·크리티컬에 비례)
+    setSp((s) => Math.min(100, s + (isCrit ? 25 : 12 + newCombo * 2)))
   }, [problem, studentAnswer, combo, store, shieldActive])
 
   const next = useCallback(() => {
@@ -256,6 +268,24 @@ export function Chapter3() {
           score={score}
         />
 
+        <div className="mt-2">
+          <SuperGauge
+            value={sp}
+            onTrigger={() => {
+              // SP 풀충전 발동: 거대한 데미지 + 화면 흔들림 + 보스 비명
+              const dmg = 80
+              setBossHp((hp) => Math.max(0, hp - dmg))
+              pushDamage(dmg, 'crit')
+              setBossHit(true)
+              setShakeKey((k) => k + 1)
+              setGrade('PERFECT')
+              setTimeout(() => setBossHit(false), 350)
+              setTimeout(() => setGrade(null), 900)
+              sfx.bossLaugh()
+              setSp(0)
+            }}
+          />
+        </div>
         <div className="mt-2">
           <InventoryQuickSlot
             onUseOxygen={() => {}}
@@ -427,6 +457,8 @@ export function Chapter3() {
         />
       )}
       <NotebookOverlay open={showNotebook} onClose={() => setShowNotebook(false)} />
+      <GradeFlash grade={grade} combo={combo} />
+      <RoundIntro show={showRoundIntro} title="STAGE 3 — 미지의 신호" subtitle="아스트로파지 정찰병 등장" onFinished={() => setShowRoundIntro(false)} />
       {showIntro && <StoryOverlay lines={STORY[3].intro} onClose={() => setShowIntro(false)} />}
     </div>
   )
