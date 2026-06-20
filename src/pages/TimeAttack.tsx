@@ -18,8 +18,8 @@ import { addWrongNote } from '@/lib/wrongNotes'
 import { unlock as unlockAch } from '@/lib/achievements'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
-const TIME_LIMIT = 60 // 초
-const TIME_BONUS = 3 // 정답 시 시간 보너스
+const TIME_LIMIT = 100 // 초 — 응용 독해 시간 확보
+const TIME_BONUS = 6 // 정답 시 시간 보너스
 const TIME_PENALTY = 2 // 오답 시 시간 감소
 const FEVER_COMBO = 10 // 피버 진입 콤보
 const FEVER_DURATION_MS = 5000 // 피버 지속 시간
@@ -181,7 +181,7 @@ export function TimeAttack() {
 
         <StageHeader
           stage={`TIME ATTACK · ${solved} solved`}
-          subtitle={`BEST ${hi.toLocaleString()} · 60초 안에 최대 점수!`}
+          subtitle={`BEST ${hi.toLocaleString()} · ${TIME_LIMIT}초 안에 최대 점수!`}
           combo={combo}
           score={score}
         />
@@ -276,7 +276,7 @@ export function TimeAttack() {
       </ScreenShake>
 
       <GradeFlash grade={grade} combo={combo} />
-      <RoundIntro show={showIntro} title="TIME ATTACK 60s" subtitle="시간이 갈수록 어려워진다!" onFinished={() => setShowIntro(false)} />
+      <RoundIntro show={showIntro} title={`TIME ATTACK ${TIME_LIMIT}s`} subtitle="시간이 갈수록 어려워진다!" onFinished={() => setShowIntro(false)} />
     </div>
   )
 }

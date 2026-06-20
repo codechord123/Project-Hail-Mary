@@ -51,7 +51,7 @@ export function Endless() {
   const [shake, setShake] = useState(0)
 
   const difficulty = useMemo(() => Math.floor(solved / 5), [solved])
-  const timer = Math.max(8, 25 - Math.floor(solved / 4))
+  const timer = Math.max(20, 50 - Math.floor(solved / 4)) // 발문 독해 시간 확보
 
   const startEndless = useCallback(() => {
     setProblem(genRandom(0))

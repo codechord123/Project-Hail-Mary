@@ -18,7 +18,7 @@ import { addWrongNote } from '@/lib/wrongNotes'
 import { unlock as unlockAch } from '@/lib/achievements'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
-const TIME_LIMIT = 90
+const TIME_LIMIT = 150 // 발문 독해 시간 확보
 const TIME_PENALTY = 3
 
 type Boss = {
@@ -327,7 +327,7 @@ export function BossRush() {
       </ScreenShake>
 
       <GradeFlash grade={grade} combo={combo} />
-      <RoundIntro show={showIntro} title="BOSS RUSH" subtitle="5체의 보스를 90초 안에!" onFinished={() => setShowIntro(false)} />
+      <RoundIntro show={showIntro} title="BOSS RUSH" subtitle={`5체의 보스를 ${TIME_LIMIT}초 안에!`} onFinished={() => setShowIntro(false)} />
     </div>
   )
 }

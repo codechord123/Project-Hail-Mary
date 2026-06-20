@@ -35,7 +35,7 @@ export function DailyChallenge() {
 
   const problem = challenge.problems[idx]
   const isLast = idx === challenge.problems.length - 1
-  const timer = 30
+  const timer = 60 // 발문 독해 시간 확보
 
   useEffect(() => {
     if (finished) {

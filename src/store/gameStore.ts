@@ -119,7 +119,7 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       ...INITIAL,
       maxOxygen: () => 100 + get().stats.lung * 10,
-      baseTimePerProblem: () => 30 + get().stats.reflex * 3,
+      baseTimePerProblem: () => 50 + get().stats.reflex * 4,
       addOxygen: (delta) =>
         set((s) => ({
           oxygen: Math.max(0, Math.min(s.maxOxygen(), s.oxygen + delta)),

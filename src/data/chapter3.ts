@@ -12,7 +12,7 @@ export const chapter3Problems: Problem[] = [
     scenario:
       '로키의 산소가 5/12 통, 우리 산소가 3/8 통이야. 두 통을 합치면 (기약)?',
     prompt: '기약분수로 답해',
-    hint: '공통분모 24. 10/24 + 9/24 = 19/24.',
+    hint: '공통분모 24. 10/24 + 9/24.',
     difficulty: 2,
     answer: { numerator: 19, denominator: 24 },
     requireSimplified: true,
@@ -23,7 +23,7 @@ export const chapter3Problems: Problem[] = [
     scenario:
       '로키의 계측기는 0.36 을 가리키고 있어. 같은 값을 기약분수로 적어줘.',
     prompt: '같은 값을 기약분수로',
-    hint: '0.36 = 36/100 → ÷4 = 9/25.',
+    hint: '0.36 = 36/100 → ÷4.',
     difficulty: 2,
     answer: { numerator: 9, denominator: 25 },
     requireSimplified: true,
@@ -34,7 +34,7 @@ export const chapter3Problems: Problem[] = [
     scenario:
       '연료 11/12 통에서 5/8 통을 사용했어. 남은 양 (기약)?',
     prompt: '기약분수로 답해',
-    hint: '공통분모 24. 22/24 − 15/24 = 7/24.',
+    hint: '공통분모 24. 22/24 − 15/24.',
     difficulty: 3,
     answer: { numerator: 7, denominator: 24 },
     requireSimplified: true,
@@ -45,9 +45,9 @@ export const chapter3Problems: Problem[] = [
     scenario:
       '항법 모듈 잠금: 어떤 분수의 분자에 4를 더하고 결과를 6으로 약분했더니 3/4가 됐어. 원래 분수를 기약분수로!',
     prompt: '풀이 + 기약 답',
-    hint: '6으로 약분해서 3/4 → 약분 전 18/24. 분자 −4 = 14 → 14/24 → ÷2 = 7/12.',
+    hint: '6으로 약분해서 3/4 → 약분 전 18/24. 분자 −4 = 14 → 14/24 → ÷2.',
     difficulty: 3,
-    workspacePlaceholder: '예: 3/4 = 18/24, 18-4=14 → 14/24 = 7/12',
+    workspacePlaceholder: '여기에 풀이 과정을 적어 보세요 (선택)',
     finalAnswer: { numerator: 7, denominator: 12 },
     requireSimplified: true,
   },
@@ -80,8 +80,8 @@ export const chapter3Problems: Problem[] = [
     kind: 'numeric',
     scenario:
       '0.4 보다 크고 7/10 보다 작은 분수 중에서, 분모가 20인 진분수는 모두 몇 개일까?',
-    prompt: '개수',
-    hint: '0.4 = 8/20, 7/10 = 14/20. 분자 9, 10, 11, 12, 13 → 5개.',
+    prompt: '식: 0.4 < □/20 < 7/10 — 자연수 □ 의 개수',
+    hint: '0.4 = 8/20, 7/10 = 14/20.',
     difficulty: 3,
     answer: 5,
     unit: '개',
@@ -92,7 +92,7 @@ export const chapter3Problems: Problem[] = [
     scenario:
       '귀환 좌표 — 신호 0.25 와 5/12 를 합한 값을 기약분수로!',
     prompt: '기약분수로 답해',
-    hint: '0.25 = 1/4 = 3/12. 3/12 + 5/12 = 8/12 → 2/3.',
+    hint: '0.25 = 1/4 = 3/12. 3/12 + 5/12.',
     difficulty: 3,
     answer: { numerator: 2, denominator: 3 },
     requireSimplified: true,

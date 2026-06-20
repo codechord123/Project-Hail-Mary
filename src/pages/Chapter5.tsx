@@ -24,7 +24,7 @@ import type { Fraction } from '@/types/fraction'
 
 type Step = 'commonDenom' | 'calc' | 'simplify'
 
-const STEP_TIME = 18 // 초당 산소 누출 + 단계당 제한시간
+const STEP_TIME = 30 // 발문 독해 시간 확보 — 단계당 제한시간
 
 export function Chapter5() {
   const [idx, setIdx] = useState(0)

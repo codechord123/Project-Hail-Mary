@@ -16,7 +16,7 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕의 정찰선이 0.36 광년 거리에 머무르고 있어. 통신을 잠그려면 같은 값을 기약분수로 변환해야 해. 0.36 을 분모 25 형태의 기약분수로!',
         prompt: '같은 값을 기약분수로',
-        hint: '0.36 = 36/100 → ÷4 = 9/25.',
+        hint: '0.36 = 36/100 → ÷4.',
         answer: { numerator: 9, denominator: 25 }, requireSimplified: true,
       },
       {
@@ -33,8 +33,8 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         id: 'c7-3', kind: 'numeric', difficulty: 3,
         scenario:
           '여왕 함대의 안전 회피 범위는 1/3 광년 ~ 4/5 광년 사이. 우리 분모 15 의 항로 후보 중 이 범위에 들어가는 분자 □ 는 몇 개일까?',
-        prompt: '가능한 자연수 □ 의 개수',
-        hint: '1/3 = 5/15, 4/5 = 12/15. □ ∈ {6,7,8,9,10,11} → 6개.',
+        prompt: '식: 1/3 < □/15 < 4/5 — 자연수 □ 의 개수',
+        hint: '1/3 = 5/15, 4/5 = 12/15.',
         answer: 6, unit: '개',
       },
     ],
@@ -49,7 +49,7 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕의 광역 공격! 회피하려면 0.6 광년 워프 + 1/4 광년 슬립 점프를 연속 해야 해. 두 거리의 합을 기약분수로 계산해!',
         prompt: '기약분수로 답해',
-        hint: '0.6 = 3/5. 3/5 + 1/4 = 12/20 + 5/20 = 17/20.',
+        hint: '0.6 = 3/5. 3/5 + 1/4 = 12/20 + 5/20.',
         answer: { numerator: 17, denominator: 20 }, requireSimplified: true,
       },
       {
@@ -67,7 +67,7 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕의 환영이 0.84 광년 거리에 떠 있어. 봉인 마법을 풀려면 분모 25 의 기약분수로 환영의 거리를 입력해야 해.',
         prompt: '같은 값을 기약분수로',
-        hint: '0.84 = 84/100 → ÷4 = 21/25.',
+        hint: '0.84 = 84/100 → ÷4.',
         answer: { numerator: 21, denominator: 25 }, requireSimplified: true,
       },
     ],
@@ -82,8 +82,8 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕의 결계 — 결계 코드는 어떤 분수의 분자에 5 를 더하고 분모를 2 배로 했을 때 7/12 가 되는 그 분수야. 원래 분수를 기약으로!',
         prompt: '풀이 + 기약 답',
-        hint: '(X분자+5)/(X분모×2) = 7/12. X분모×2 = 12 → 6. X분자+5 = 7 → 2. 원래 2/6 → 1/3.',
-        workspacePlaceholder: '예: (분자+5)/(분모×2) = 7/12 → 분모 6, 분자 2 → 2/6 = 1/3',
+        hint: '(X분자+5)/(X분모×2) = 7/12. X분모×2 = 12 → 6. X분자+5 = 7 → 2. 원래 2/6',
+        workspacePlaceholder: '여기에 풀이 과정을 적어 보세요 (선택)',
         finalAnswer: { numerator: 1, denominator: 3 }, requireSimplified: true,
       },
       {
@@ -92,7 +92,7 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕을 봉인하려면 항해사와 동맹의 마력을 합쳐야 해. 항해사 마력은 1¾, 동맹 마력은 2⅔. 둘의 합을 가분수 기약으로!',
         prompt: '기약 가분수로 답해',
-        hint: '7/4 + 8/3 = 21/12 + 32/12 = 53/12.',
+        hint: '7/4 + 8/3 = 21/12 + 32/12.',
         answer: { numerator: 53, denominator: 12 }, requireSimplified: true,
       },
       {
@@ -101,7 +101,7 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         scenario:
           '여왕의 잔여 체력은 3⅖ 인데, 마지막 일격으로 1¾ 만큼을 깎아낼 수 있어. 봉인 후 남는 체력을 가분수 기약으로!',
         prompt: '기약 가분수로 답해',
-        hint: '17/5 - 7/4 = 68/20 - 35/20 = 33/20.',
+        hint: '17/5 - 7/4 = 68/20 - 35/20.',
         answer: { numerator: 33, denominator: 20 }, requireSimplified: true,
       },
     ],
