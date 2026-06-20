@@ -459,7 +459,7 @@ export function Chapter1() {
           <>
             <button
               onClick={submit}
-              disabled={!answer}
+              disabled={manipProblem ? !answer : false}
               className="flex-1 px-4 py-3 rounded-xl bg-space-accent text-space-900 font-bold disabled:opacity-40"
             >
               제출

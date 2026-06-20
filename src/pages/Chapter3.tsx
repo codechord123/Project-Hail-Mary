@@ -58,6 +58,7 @@ export function Chapter3() {
   const [showIntro, setShowIntro] = useState(true)
   const [shieldActive, setShieldActive] = useState(false)
   const [timerPaused, setTimerPaused] = useState(false)
+  const [magnetAnswer, setMagnetAnswer] = useState<string | null>(null)
   const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
@@ -205,6 +206,7 @@ export function Chapter3() {
     setIdx((i) => i + 1)
     setFeedback({ kind: 'idle' })
     setShowHint(false)
+    setMagnetAnswer(null)
     setStudentAnswer({ kind: 'fraction', value: null })
   }, [bossHp, isLast, score, maxCombo, store, navigate])
 
@@ -263,14 +265,22 @@ export function Chapter3() {
               setTimeout(() => setTimerPaused(false), 10000)
             }}
             onUseMagnet={() => {
-              // 자석: 정답 처리 + 보스 데미지 (XP 절반)
-              setStudentAnswer(correctAnswerFor(problem))
+              // 자석: 정답 텍스트로 노출 (학생이 보고 입력) + 보스에 소량 데미지 + XP 절반
+              const ans = correctAnswerFor(problem)
+              let text = ''
+              switch (ans.kind) {
+                case 'fraction': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
+                case 'numeric': text = String(ans.value); break
+                case 'mcq': text = ans.values.map((i) => `${['①','②','③','④','⑤'][i]}`).join(' '); break
+                case 'compare': text = ans.op!; break
+                case 'multi': text = `${ans.value!.numerator}/${ans.value!.denominator}`; break
+              }
+              setMagnetAnswer(text)
               const dmg = 20
               setBossHp((hp) => Math.max(0, hp - dmg))
               pushDamage(dmg, 'normal')
               sfx.hit()
               store.addXp(10)
-              setShowHint(true)
             }}
             shieldActive={shieldActive}
           />
@@ -314,6 +324,12 @@ export function Chapter3() {
         </div>
 
         <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+          {magnetAnswer && (
+            <div className="mb-3 p-2 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-center text-sm">
+              🧲 자석이 알려주는 정답: <b>{magnetAnswer}</b>
+              <div className="text-xs text-white/60 mt-0.5">직접 입력하고 제출하면 정답 처리돼!</div>
+            </div>
+          )}
           <ProblemPanel
             problem={problem}
             onAnswerChange={handleAnswerChange}

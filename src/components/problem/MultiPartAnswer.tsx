@@ -31,7 +31,7 @@ export function MultiPartAnswer({ placeholder, onChange, resetKey, disabled }: P
         className="w-full p-3 rounded-lg bg-white/95 text-space-900 text-sm focus:outline-none focus:ring-2 focus:ring-space-accent"
       />
       <div className="text-xs text-white/60">최종 답</div>
-      <FractionInput onChange={setValue} disabled={disabled} />
+      <FractionInput key={resetKey} onChange={setValue} disabled={disabled} />
     </div>
   )
 }
