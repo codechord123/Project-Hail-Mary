@@ -7,26 +7,79 @@ export interface ReactorBreach {
   b: Fraction
   /** 누출 위치 */
   location: '냉각 펌프' | '연료 라인' | '추진 노즐' | '생명 유지'
+  /** 응용 독해 시나리오 — 단순 계산이 아닌 문맥 문제 */
+  story: string
 }
 
+/**
+ * 챕터 5 — 모든 누출의 계산 결과가 NOT 기약 → 반드시 약분해야 클리어.
+ * (이전: 결과가 이미 기약인 경우가 많아 simplify 단계가 중복됐던 버그 수정)
+ */
 export const chapter5Breaches: ReactorBreach[] = [
-  // 이분모 뺄셈 8건 — 분모 다양 / 약분 또는 큰 LCM
-  // 5/6 - 3/8 = 20/24 - 9/24 = 11/24 (C 공통인수)
-  { id: 'c5-1', a: { numerator: 5, denominator: 6 }, b: { numerator: 3, denominator: 8 }, location: '냉각 펌프' },
-  // 7/10 - 3/8 = 28/40 - 15/40 = 13/40 (C 공통인수)
-  { id: 'c5-2', a: { numerator: 7, denominator: 10 }, b: { numerator: 3, denominator: 8 }, location: '연료 라인' },
-  // 7/12 - 1/8 = 14/24 - 3/24 = 11/24 (C 공통인수)
-  { id: 'c5-3', a: { numerator: 7, denominator: 12 }, b: { numerator: 1, denominator: 8 }, location: '추진 노즐' },
-  // 4/5 - 1/3 = 12/15 - 5/15 = 7/15 (A 서로소)
-  { id: 'c5-4', a: { numerator: 4, denominator: 5 }, b: { numerator: 1, denominator: 3 }, location: '생명 유지' },
-  // 11/12 - 5/8 = 22/24 - 15/24 = 7/24 (C 공통인수)
-  { id: 'c5-5', a: { numerator: 11, denominator: 12 }, b: { numerator: 5, denominator: 8 }, location: '냉각 펌프' },
-  // 9/10 - 2/5 = 9/10 - 4/10 = 5/10 = 1/2 (B 배수, 약분 필요)
-  { id: 'c5-6', a: { numerator: 9, denominator: 10 }, b: { numerator: 2, denominator: 5 }, location: '연료 라인' },
-  // 11/15 - 1/6 = 22/30 - 5/30 = 17/30 (C 공통인수)
-  { id: 'c5-7', a: { numerator: 11, denominator: 15 }, b: { numerator: 1, denominator: 6 }, location: '추진 노즐' },
-  // 5/6 - 1/4 = 10/12 - 3/12 = 7/12 (C 공통인수)
-  { id: 'c5-8', a: { numerator: 5, denominator: 6 }, b: { numerator: 1, denominator: 4 }, location: '생명 유지' },
+  {
+    // 5/6 - 1/2 → 2/6 → 1/3
+    id: 'c5-1',
+    a: { numerator: 5, denominator: 6 }, b: { numerator: 1, denominator: 2 },
+    location: '냉각 펌프',
+    story:
+      '냉각 펌프의 액체가 5/6 통 채워져 있었는데, 1/2 통 분량이 균열로 빠져나갔어. 통분 후 기약분수로 잔량을 계산해 누출을 막자.',
+  },
+  {
+    // 11/12 - 1/4 → 8/12 → 2/3
+    id: 'c5-2',
+    a: { numerator: 11, denominator: 12 }, b: { numerator: 1, denominator: 4 },
+    location: '연료 라인',
+    story:
+      '연료 라인이 11/12 만큼 충전됐는데, 응급 추진 명령으로 1/4 통이 소모됐어. 남은 연료를 기약분수로 적어 라인 압력을 안정시키자.',
+  },
+  {
+    // 9/10 - 2/5 → 5/10 → 1/2
+    id: 'c5-3',
+    a: { numerator: 9, denominator: 10 }, b: { numerator: 2, denominator: 5 },
+    location: '추진 노즐',
+    story:
+      '추진 노즐의 가스 압력은 9/10 단계까지 차 있었어. 점화 시퀀스가 2/5 단계만큼 빠르게 소비했지. 남은 압력을 기약분수로!',
+  },
+  {
+    // 17/20 - 1/4 → 12/20 → 3/5
+    id: 'c5-4',
+    a: { numerator: 17, denominator: 20 }, b: { numerator: 1, denominator: 4 },
+    location: '생명 유지',
+    story:
+      '생명유지 산소 농도가 17/20 으로 유지되고 있었는데, 1/4 만큼 누출이 시작됐어. 통분해서 빼고 약분해 잔여 농도를 알려줘.',
+  },
+  {
+    // 5/6 - 7/12 → 3/12 → 1/4
+    id: 'c5-5',
+    a: { numerator: 5, denominator: 6 }, b: { numerator: 7, denominator: 12 },
+    location: '냉각 펌프',
+    story:
+      '냉각 펌프 백업 라인이 5/6 채워져 있었지만 메인 라인 정비로 7/12 만큼 흘려보냈어. 백업 잔량을 기약분수로!',
+  },
+  {
+    // 11/15 - 1/3 → 6/15 → 2/5
+    id: 'c5-6',
+    a: { numerator: 11, denominator: 15 }, b: { numerator: 1, denominator: 3 },
+    location: '연료 라인',
+    story:
+      '예비 연료 11/15 통 중 1/3 통을 비상 발전기로 옮겼어. 라인에 남아 있는 양을 기약분수로 적어 라인 봉인을 풀자.',
+  },
+  {
+    // 13/18 - 1/2 → 4/18 → 2/9
+    id: 'c5-7',
+    a: { numerator: 13, denominator: 18 }, b: { numerator: 1, denominator: 2 },
+    location: '추진 노즐',
+    story:
+      '노즐 1번이 13/18 만큼 가열됐고, 1/2 의 열을 방열판으로 흘려보냈어. 노즐에 남은 열량을 기약분수로!',
+  },
+  {
+    // 7/12 - 1/4 → 4/12 → 1/3
+    id: 'c5-8',
+    a: { numerator: 7, denominator: 12 }, b: { numerator: 1, denominator: 4 },
+    location: '생명 유지',
+    story:
+      '생명유지 모듈의 정수 필터 1통 중 7/12 가 깨끗했어. 사용 중 1/4 통이 오염됐다. 아직 깨끗한 정수의 비율을 기약분수로!',
+  },
 ]
 
 export interface BreachSolution {
@@ -39,11 +92,13 @@ export const solveBreach = (b: ReactorBreach): BreachSolution => {
   const commonDenom = lcm(b.a.denominator, b.b.denominator)
   const raw = subtractFractions(b.a, b.b) // already gives lcm denom by current impl
   const r = { numerator: raw.numerator, denominator: raw.denominator }
-  // 약분
-  let g = 1
-  for (let i = 2; i <= Math.abs(r.numerator) && i <= r.denominator; i++) {
-    if (r.numerator % i === 0 && r.denominator % i === 0) g = i
+  // 약분 — gcd 사용
+  const gcd = (x: number, y: number): number => {
+    x = Math.abs(x); y = Math.abs(y)
+    while (y !== 0) { [x, y] = [y, x % y] }
+    return x || 1
   }
+  const g = gcd(r.numerator, r.denominator)
   return {
     commonDenom,
     result: { numerator: r.numerator, denominator: r.denominator },

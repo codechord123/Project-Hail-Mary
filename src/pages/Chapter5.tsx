@@ -178,16 +178,16 @@ export function Chapter5() {
         </div>
         <ResourceBar />
 
-        {/* 누출 위치 + 파이프 다이어그램 */}
+        {/* 누출 위치 + 응용 시나리오 + 파이프 다이어그램 */}
         <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-400/40">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex-1">
               <div className="text-xs text-red-300 font-mono">⚠ {breach.location} 누출</div>
-              <div className="text-white mt-1">
-                초기 에너지 비율에서 누출된 양을 빼서 잔량을 계산해야 해.
+              <div className="text-white mt-1 text-sm leading-relaxed">
+                {breach.story}
               </div>
             </div>
-            <div className="text-4xl">⚡</div>
+            <div className="text-4xl ml-2">⚡</div>
           </div>
           <div className="mt-2 text-center">
             <BlockMath

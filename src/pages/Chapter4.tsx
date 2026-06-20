@@ -246,6 +246,11 @@ export function Chapter4() {
               ? '레인 선택 → 정답 카드 탭'
               : `LANE ${targetIdx + 1} — 합한 분수를 골라`}
           </div>
+          {targetIdx !== null && lanes[targetIdx]?.target.story && (
+            <div className="mb-3 p-2 rounded-lg bg-amber-400/10 border border-amber-300/30 text-sm text-amber-100 leading-relaxed">
+              📖 {lanes[targetIdx]!.target.story}
+            </div>
+          )}
           {targetIdx !== null && lanes[targetIdx] && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {(laneChoices[lanes[targetIdx]!.target.id] ?? []).map((c, i) => (
