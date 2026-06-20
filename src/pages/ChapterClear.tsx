@@ -115,6 +115,23 @@ export function ChapterClear() {
       {showOutro && (
         <StoryOverlay lines={outroLines} onClose={() => setShowOutro(false)} />
       )}
+
+      {outroLines.length > 0 && !showOutro && (
+        <div className="fixed bottom-3 right-3 flex flex-col gap-2">
+          <button
+            onClick={() => setShowOutro(true)}
+            className="px-3 py-2 rounded-lg bg-purple-500/20 text-purple-200 border border-purple-300/40 text-xs"
+          >
+            📖 스토리 다시 보기
+          </button>
+          <Link
+            to="/story"
+            className="px-3 py-2 rounded-lg bg-cyan-400/20 text-cyan-200 border border-cyan-300/40 text-xs text-center"
+          >
+            📚 항해 일지
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

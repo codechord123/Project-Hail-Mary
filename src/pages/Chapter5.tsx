@@ -14,6 +14,7 @@ import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { valueEquals, isSimplified } from '@/lib/fractionMath'
 import { sfx } from '@/lib/sfx'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
 import { StoryOverlay } from '@/components/StoryOverlay'
 import { STORY } from '@/data/story'
@@ -37,6 +38,8 @@ export function Chapter5() {
   const [showBonus, setShowBonus] = useState(false)
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [shieldActive, setShieldActive] = useState(false)
+  const [timerPaused, setTimerPaused] = useState(false)
   const run = useChapterRun({ chapterId: 5, maxScore: chapter5Breaches.length * 900 })
   const bonus = useMemo(() => pickBonusProblem(5), [])
 
@@ -69,6 +72,7 @@ export function Chapter5() {
   const submitStep = useCallback(() => {
     if (step === 'commonDenom') {
       if (commonDenomAns !== sol.commonDenom) {
+        if (shieldActive) { setShieldActive(false); setFeedback('wrong'); return }
         run.onWrong(8)
         setFeedback('wrong')
         setShake((s) => s + 1)
@@ -148,6 +152,30 @@ export function Chapter5() {
           combo={run.combo}
           score={run.score}
         />
+        <div className="mt-2">
+          <InventoryQuickSlot
+            onUseOxygen={() => {}}
+            onUseShield={() => setShieldActive(true)}
+            onUseTimeFreeze={() => {
+              setTimerPaused(true)
+              setTimeout(() => setTimerPaused(false), 10000)
+            }}
+            onUseMagnet={() => {
+              if (step === 'commonDenom') setCommonDenomAns(sol.commonDenom)
+              else if (step === 'calc') setCalcAns(sol.result)
+              else setSimplifyAns(sol.simplified)
+            }}
+            onUseBomb={() => {
+              // 즉시 전체 누출 차단
+              run.onCorrect({ xpBase: 20, scoreGain: 300, difficulty: 2 })
+              if (isLast) { setShowBonus(true); return }
+              setIdx((i) => i + 1)
+              setStep('commonDenom')
+              setCommonDenomAns(null); setCalcAns(null); setSimplifyAns(null)
+            }}
+            shieldActive={shieldActive}
+          />
+        </div>
         <ResourceBar />
 
         {/* 누출 위치 + 파이프 다이어그램 */}
@@ -183,7 +211,7 @@ export function Chapter5() {
         <div className="mt-2">
           <CountdownTimer
             durationSec={STEP_TIME}
-            paused={feedback !== 'idle'}
+            paused={feedback !== 'idle' || timerPaused}
             onTimeout={handleStepTimeout}
             resetKey={`${idx}-${step}`}
             crisis={crisis}

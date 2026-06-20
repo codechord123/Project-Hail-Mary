@@ -15,6 +15,7 @@ import { DialogueBox } from '@/components/DialogueBox'
 import { RockyAvatar } from '@/components/RockyAvatar'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { judge } from '@/lib/judge'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import { sfx } from '@/lib/sfx'
@@ -37,6 +38,8 @@ export function Chapter7() {
   const [showBonus, setShowBonus] = useState(false)
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [shieldActive, setShieldActive] = useState(false)
+  const [timerPaused, setTimerPaused] = useState(false)
   const [shake, setShake] = useState(0)
   const [damageNumbers, setDamageNumbers] = useState<DamageNumber[]>([])
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null)
@@ -91,6 +94,7 @@ export function Chapter7() {
   const submit = useCallback(() => {
     const j = judge(problem, studentAnswer)
     if (j.kind === 'wrong') {
+      if (shieldActive) { setShieldActive(false); setFeedback('wrong'); return }
       run.onWrong(crisis ? 14 : 10)
       pushDamage(0, 'miss')
       setShake((s) => s + 1)
@@ -165,6 +169,27 @@ export function Chapter7() {
           combo={run.combo}
           score={run.score}
         />
+        <div className="mt-2">
+          <InventoryQuickSlot
+            onUseOxygen={() => {}}
+            onUseShield={() => setShieldActive(true)}
+            onUseBomb={() => {
+              const dmg = 75
+              setHp((h) => Math.max(0, h - dmg))
+              pushDamage(dmg, 'crit')
+              setBossHit(true)
+              setTimeout(() => setBossHit(false), 350)
+              sfx.crit()
+              setShake((s) => s + 1)
+            }}
+            onUseTimeFreeze={() => {
+              setTimerPaused(true)
+              setTimeout(() => setTimerPaused(false), 10000)
+            }}
+            onUseMagnet={() => {/* 힌트만 표시 — 추후 구현 */}}
+            shieldActive={shieldActive}
+          />
+        </div>
         <ResourceBar />
 
         <div className="relative mt-3">
@@ -175,7 +200,7 @@ export function Chapter7() {
         <div className="mt-3">
           <CountdownTimer
             durationSec={timer}
-            paused={feedback !== 'idle' || bossDead || !!phaseBanner}
+            paused={feedback !== 'idle' || bossDead || !!phaseBanner || timerPaused}
             onTimeout={handleTimeout}
             resetKey={`${phaseIdx}-${problemIdx}`}
             crisis={crisis}

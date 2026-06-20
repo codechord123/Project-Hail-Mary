@@ -10,6 +10,7 @@ import { ScreenShake } from '@/components/arcade/ScreenShake'
 import { CountdownTimer } from '@/components/CountdownTimer'
 import { useChapterRun } from '@/hooks/useChapterRun'
 import { sfx } from '@/lib/sfx'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
 import { StoryOverlay } from '@/components/StoryOverlay'
 import { STORY } from '@/data/story'
@@ -29,6 +30,8 @@ export function Chapter6() {
   const bonus = useMemo(() => pickBonusProblem(6), [])
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [shieldActive, setShieldActive] = useState(false)
+  const [timerPaused, setTimerPaused] = useState(false)
 
   const allMatched = matched.length === deck.length
 
@@ -76,6 +79,11 @@ export function Chapter6() {
           // 미스
           setTimeout(() => {
             setFlipped([])
+            if (shieldActive) {
+              setShieldActive(false)
+              setFeedback('idle')
+              return
+            }
             run.onWrong(6)
             setShake((s) => s + 1)
             setFeedback('wrong')
@@ -84,7 +92,7 @@ export function Chapter6() {
         }
       }
     },
-    [flipped, matched, deck, run],
+    [flipped, matched, deck, run, shieldActive],
   )
 
   const handleTimeout = () => {
@@ -118,6 +126,39 @@ export function Chapter6() {
           combo={run.combo}
           score={run.score}
         />
+        <div className="mt-2">
+          <InventoryQuickSlot
+            onUseOxygen={() => {}}
+            onUseShield={() => setShieldActive(true)}
+            onUseTimeFreeze={() => {
+              setTimerPaused(true)
+              setTimeout(() => setTimerPaused(false), 10000)
+            }}
+            onUseMagnet={() => {
+              // 매치 안된 첫 쌍을 자동 매치
+              const remaining = deck.filter((c) => !matched.includes(c.id))
+              if (remaining.length < 2) return
+              const first = remaining[0]
+              const partner = remaining.find((c) => c.id !== first.id && c.improperKey === first.improperKey)
+              if (partner) {
+                setMatched((m) => [...m, first.id, partner.id])
+                sfx.crit()
+              }
+            }}
+            onUseBomb={() => {
+              // 매치되지 않은 쌍 하나 강제 매치 (자석과 동일하지만 즉발)
+              const remaining = deck.filter((c) => !matched.includes(c.id))
+              if (remaining.length < 2) return
+              const first = remaining[0]
+              const partner = remaining.find((c) => c.id !== first.id && c.improperKey === first.improperKey)
+              if (partner) {
+                setMatched((m) => [...m, first.id, partner.id])
+                sfx.crit()
+              }
+            }}
+            shieldActive={shieldActive}
+          />
+        </div>
         <ResourceBar />
 
         <div className="mt-2 text-xs text-white/60 text-center">
@@ -127,7 +168,7 @@ export function Chapter6() {
         <div className="mt-3">
           <CountdownTimer
             durationSec={120}
-            paused={allMatched}
+            paused={allMatched || timerPaused}
             onTimeout={handleTimeout}
             resetKey={resetFlag}
           />

@@ -16,6 +16,7 @@ import { StoryOverlay } from '@/components/StoryOverlay'
 import { STORY } from '@/data/story'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { BonusProblemOverlay } from '@/components/BonusProblemOverlay'
 import { pickBonusProblem } from '@/data/bonusProblems'
 import type { Fraction } from '@/types/fraction'
@@ -50,6 +51,7 @@ export function Chapter2() {
     setMissile(null)
     setFeedback('idle')
     const id = setInterval(() => {
+      if (Date.now() < freezeUntilRef.current) return // 시간 정지 중
       const elapsed = (Date.now() - startRef.current) / 1000
       const t = Math.min(1, elapsed / wave.speedSec)
       setEnemyY(t)
@@ -84,6 +86,11 @@ export function Chapter2() {
   const fire = useCallback(() => {
     if (!answer || exploded) return
     if (!valueEquals(answer, expectedAns)) {
+      if (shieldActive) {
+        setShieldActive(false)
+        setFeedback('wrong')
+        return
+      }
       run.onWrong(8)
       setFeedback('wrong')
       setShake((s) => s + 1)
@@ -111,6 +118,8 @@ export function Chapter2() {
   const [showBonus, setShowBonus] = useState(false)
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [shieldActive, setShieldActive] = useState(false)
+  const freezeUntilRef = useRef(0)
   const nextOrFinish = useCallback(() => {
     if (isLast) {
       setShowBonus(true)
@@ -139,6 +148,23 @@ export function Chapter2() {
           combo={run.combo}
           score={run.score}
         />
+        <div className="mt-2">
+          <InventoryQuickSlot
+            onUseOxygen={() => {}}
+            onUseShield={() => setShieldActive(true)}
+            onUseMagnet={() => setAnswer(expectedAns)}
+            onUseTimeFreeze={() => { freezeUntilRef.current = Date.now() + 10000 }}
+            onUseBomb={() => {
+              // 즉시 격추
+              setExploded(true)
+              sfx.crit()
+              setShake((s) => s + 1)
+              run.onCorrect({ xpBase: 15, scoreGain: 200, difficulty: 1 })
+              setTimeout(() => nextOrFinish(), 800)
+            }}
+            shieldActive={shieldActive}
+          />
+        </div>
         <ResourceBar />
 
         {wave.story && (

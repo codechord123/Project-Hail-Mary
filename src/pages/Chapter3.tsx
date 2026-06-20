@@ -16,6 +16,7 @@ import { CrisisOverlay } from '@/components/CrisisOverlay'
 import { ConfettiBurst } from '@/components/ConfettiBurst'
 import { useGameStore } from '@/store/gameStore'
 import { sfx } from '@/lib/sfx'
+import { InventoryQuickSlot } from '@/components/InventoryQuickSlot'
 import { NotebookOverlay } from '@/components/NotebookOverlay'
 import { StoryOverlay } from '@/components/StoryOverlay'
 import { STORY } from '@/data/story'
@@ -55,6 +56,8 @@ export function Chapter3() {
   const [pendingClear, setPendingClear] = useState<null | (() => void)>(null)
   const [showNotebook, setShowNotebook] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [shieldActive, setShieldActive] = useState(false)
+  const [timerPaused, setTimerPaused] = useState(false)
   const bonus = useMemo(() => pickBonusProblem(3), [])
   const damageIdRef = useRef(0)
   const store = useGameStore()
@@ -116,6 +119,11 @@ export function Chapter3() {
   const submit = useCallback(() => {
     const result = judge(problem, studentAnswer)
     if (result.kind === 'wrong') {
+      if (shieldActive) {
+        setShieldActive(false)
+        setFeedback({ kind: 'wrong', reason: '🛡 보호막 발동' })
+        return
+      }
       store.addOxygen(-10)
       setCombo(0)
       setFeedback({ kind: 'wrong', reason: result.reason })
@@ -163,7 +171,7 @@ export function Chapter3() {
     setConfetti(true)
     setTimeout(() => setConfetti(false), 700)
     if (isCrit) setShakeKey((k) => k + 1)
-  }, [problem, studentAnswer, combo, store])
+  }, [problem, studentAnswer, combo, store, shieldActive])
 
   const next = useCallback(() => {
     const newBossHp = bossHp
@@ -238,6 +246,27 @@ export function Chapter3() {
           score={score}
         />
 
+        <div className="mt-2">
+          <InventoryQuickSlot
+            onUseOxygen={() => {}}
+            onUseShield={() => setShieldActive(true)}
+            onUseBomb={() => {
+              const dmg = 50
+              setBossHp((hp) => Math.max(0, hp - dmg))
+              pushDamage(dmg, 'crit')
+              setBossHit(true)
+              setTimeout(() => setBossHit(false), 350)
+              sfx.crit()
+            }}
+            onUseTimeFreeze={() => {
+              setTimerPaused(true)
+              setTimeout(() => setTimerPaused(false), 10000)
+            }}
+            onUseMagnet={() => setShowHint(true)}
+            shieldActive={shieldActive}
+          />
+        </div>
+
         <ResourceBar />
 
         {/* 보스 + 데미지 플로터 */}
@@ -255,7 +284,7 @@ export function Chapter3() {
         <div className="mt-4">
           <CountdownTimer
             durationSec={timerSeconds}
-            paused={feedback.kind !== 'idle' || showHint || bossDead}
+            paused={feedback.kind !== 'idle' || showHint || bossDead || timerPaused}
             onTimeout={handleTimeout}
             resetKey={`${idx}-${timerSeconds}`}
             crisis={crisis}

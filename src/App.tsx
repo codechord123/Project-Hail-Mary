@@ -21,6 +21,7 @@ const Chapter6 = lazy(() => import('@/pages/Chapter6').then((m) => ({ default: m
 const Chapter7 = lazy(() => import('@/pages/Chapter7').then((m) => ({ default: m.Chapter7 })))
 const Endless = lazy(() => import('@/pages/Endless').then((m) => ({ default: m.Endless })))
 const DailyChallenge = lazy(() => import('@/pages/DailyChallenge').then((m) => ({ default: m.DailyChallenge })))
+const StoryRecap = lazy(() => import('@/pages/StoryRecap').then((m) => ({ default: m.StoryRecap })))
 
 function Loading() {
   return (
@@ -78,6 +79,7 @@ export default function App() {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/endless" element={<Endless />} />
             <Route path="/daily" element={<DailyChallenge />} />
+            <Route path="/story" element={<StoryRecap />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
         </Suspense>

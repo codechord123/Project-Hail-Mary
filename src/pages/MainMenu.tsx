@@ -98,6 +98,12 @@ export function MainMenu() {
         >
           🏆 학급 리더보드
         </Link>
+        <Link
+          to="/story"
+          className="px-6 py-2 rounded-xl bg-purple-400/10 text-purple-200 border border-purple-300/30 text-sm hover:bg-purple-400/20 transition"
+        >
+          📚 항해 일지 (스토리 회상)
+        </Link>
         <button
           onClick={() => {
             toggleMute()
