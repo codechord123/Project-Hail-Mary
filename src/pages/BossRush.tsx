@@ -20,6 +20,7 @@ import {
 import { judge, answerToText, problemAnswerText } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
 import { addWrongNote } from '@/lib/wrongNotes'
+import { unlock as unlockAch } from '@/lib/achievements'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
 const TIME_LIMIT = 90
@@ -140,6 +141,8 @@ export function BossRush() {
             setHiState(score)
           }
           setOver('win')
+          unlockAch('boss-rush-clear')
+          if (timeMs > 45000) unlockAch('boss-rush-s')
           sfx.clear()
         } else {
           setBossIdx(next)

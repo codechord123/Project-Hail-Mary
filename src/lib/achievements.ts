@@ -38,6 +38,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'daily-done', name: '오늘의 도전', description: '오늘의 챌린지 완료', icon: '🌞', category: 'challenge', hidden: true },
   { id: 'endless-50', name: '인내', description: '엔들리스 50문제 연속', icon: '♾', category: 'challenge', hidden: true },
   { id: 'notebook-cleared', name: '오답 정복자', description: '미해결 오답 0 달성', icon: '✅', category: 'challenge', hidden: true },
+  { id: 'time-attack-1k', name: '시간의 지배자', description: '타임 어택 1,000점 돌파', icon: '⏱', category: 'challenge', hidden: true },
+  { id: 'boss-rush-clear', name: '챔피언', description: 'Boss Rush 클리어', icon: '👑', category: 'challenge', hidden: true },
+  { id: 'boss-rush-s', name: 'S랭크 챔피언', description: 'Boss Rush S랭크 달성', icon: '🏅', category: 'challenge', hidden: true },
+  { id: 'fever-time', name: '피버 진입', description: '타임 어택 10콤보 피버', icon: '🔥', category: 'challenge', hidden: true },
 ]
 
 interface State {

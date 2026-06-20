@@ -15,6 +15,7 @@ import { judge, answerToText, problemAnswerText } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
 import { comboBonusXp } from '@/lib/scoring'
 import { addWrongNote } from '@/lib/wrongNotes'
+import { unlock as unlockAch } from '@/lib/achievements'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
 const TIME_LIMIT = 60 // 초
@@ -64,6 +65,7 @@ export function TimeAttack() {
         writeHi(score)
         setHiState(score)
       }
+      if (score >= 1000) unlockAch('time-attack-1k')
       sfx.bossDie()
     }
   }, [timeMs, over, score, hi])
@@ -125,6 +127,7 @@ export function TimeAttack() {
     if (newCombo === FEVER_COMBO) {
       setFeverUntil(Date.now() + FEVER_DURATION_MS)
       sfx.crit()
+      unlockAch('fever-time')
     }
     setTimeout(() => next(), 500)
   }, [over, problem, studentAnswer, combo, store, next, feverUntil, pushFloater])
