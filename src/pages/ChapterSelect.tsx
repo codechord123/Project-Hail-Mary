@@ -4,8 +4,8 @@ import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { LevelBadge } from '@/components/LevelBadge'
 
 const CHAPTERS = [
-  { id: 1, title: '깨어남', topic: '같은 분모 덧셈', available: true, badge: '🤲 조작' },
-  { id: 2, title: '식량 점검', topic: '같은 분모 뺄셈', available: true, badge: '🚀 슈팅' },
+  { id: 1, title: '깨어남', topic: '통분(이분모) 덧셈', available: true, badge: '🤲 조작' },
+  { id: 2, title: '식량 점검', topic: '통분(이분모) 뺄셈', available: true, badge: '🚀 슈팅' },
   { id: 3, title: '미지의 신호', topic: '약분과 통분', available: true, badge: '🕹 보스' },
   { id: 4, title: '첫 만남', topic: '다른 분모 덧셈', available: true, badge: '🛡 디펜스' },
   { id: 5, title: '위기의 동력실', topic: '다른 분모 뺄셈', available: true, badge: '⚡ 리액터' },

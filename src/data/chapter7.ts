@@ -7,11 +7,11 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
     subtitle: '대분수 기초 점검',
     problems: [
       {
-        id: 'c7-1', kind: 'fraction', difficulty: 1,
-        scenario: '여왕이 첫 번째 시험을 던졌어. 같은 분모로 빠르게 답해.',
-        prompt: '7/9 + 4/9 (기약분수)',
-        hint: '11/9는 가분수. 그대로 입력 OK (기약).',
-        answer: { numerator: 11, denominator: 9 }, requireSimplified: true,
+        id: 'c7-1', kind: 'fraction', difficulty: 2,
+        scenario: '여왕이 첫 번째 시험을 던졌어. 통분해서 빠르게 답해.',
+        prompt: '5/6 + 3/4 (기약 가분수)',
+        hint: '공통분모 12. 10/12 + 9/12 = 19/12.',
+        answer: { numerator: 19, denominator: 12 }, requireSimplified: true,
       },
       {
         id: 'c7-2', kind: 'compare', difficulty: 1,

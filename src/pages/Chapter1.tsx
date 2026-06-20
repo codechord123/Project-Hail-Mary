@@ -471,7 +471,7 @@ export function Chapter1() {
             >
               💡 힌트
             </button>
-            {manipProblem && (
+            {manipProblem && manipProblem.a.denominator === manipProblem.b.denominator && (
               <button
                 onClick={() => setShowVisual((v) => !v)}
                 className="px-3 py-3 rounded-xl bg-cyan-400/15 text-cyan-200 border border-cyan-400/30"

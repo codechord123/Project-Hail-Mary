@@ -6,30 +6,55 @@ const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min
 let idSeq = 0
 const nextId = () => `g-${++idSeq}`
 
+/** 작은 분모 풀에서 서로 다른 두 분모를 뽑는다 (통분 연습용) */
+const EASY_DENOMS = [2, 3, 4, 5, 6, 8, 10, 12]
+const pickTwoDenoms = (difficulty: number): [number, number] => {
+  const pool = EASY_DENOMS.slice(0, Math.min(EASY_DENOMS.length, 4 + difficulty))
+  const d1 = pool[rand(0, pool.length - 1)]
+  let d2 = pool[rand(0, pool.length - 1)]
+  let guard = 0
+  while (d2 === d1 && guard++ < 20) d2 = pool[rand(0, pool.length - 1)]
+  if (d2 === d1) d2 = d1 === 2 ? 3 : 2
+  return [d1, d2]
+}
+
+// genSameDenAdd / genSameDenSub 는 이름을 유지하되 통분(이분모) 문제를 생성한다.
 export const genSameDenAdd = (difficulty: number): Problem => {
-  const denom = rand(3, 4 + difficulty)
-  const aN = rand(1, denom - 2)
-  const bN = rand(1, denom - aN - 1)
-  const ans = simplify(addFractions({ numerator: aN, denominator: denom }, { numerator: bN, denominator: denom }))
+  const [d1, d2] = pickTwoDenoms(difficulty)
+  const a = { numerator: rand(1, d1 - 1), denominator: d1 }
+  const b = { numerator: rand(1, d2 - 1), denominator: d2 }
+  const ans = simplify(addFractions(a, b))
   return {
-    id: nextId(), kind: 'fraction', difficulty: 1,
-    scenario: `같은 분모 덧셈: ${aN}/${denom} + ${bN}/${denom} = ?`,
-    prompt: '기약분수로 답해',
-    hint: '분자끼리 더해.',
+    id: nextId(), kind: 'fraction', difficulty: 2,
+    scenario: `통분 덧셈: ${a.numerator}/${a.denominator} + ${b.numerator}/${b.denominator} = ?`,
+    prompt: '통분 후 기약분수로 답해',
+    hint: `공통분모를 찾아 통분한 뒤 더해.`,
     answer: ans, requireSimplified: true,
   }
 }
 
 export const genSameDenSub = (difficulty: number): Problem => {
-  const denom = rand(4, 5 + difficulty)
-  const aN = rand(2, denom - 1)
-  const bN = rand(1, aN - 1)
-  const ans = simplify(subtractFractions({ numerator: aN, denominator: denom }, { numerator: bN, denominator: denom }))
+  let a = { numerator: 0, denominator: 1 }
+  let b = { numerator: 0, denominator: 1 }
+  let sub = { numerator: -1, denominator: 1 }
+  let guard = 0
+  do {
+    const [d1, d2] = pickTwoDenoms(difficulty)
+    a = { numerator: rand(1, d1 - 1), denominator: d1 }
+    b = { numerator: rand(1, d2 - 1), denominator: d2 }
+    sub = subtractFractions(a, b)
+  } while (sub.numerator <= 0 && guard++ < 20)
+  if (sub.numerator <= 0) {
+    a = { numerator: 2, denominator: 3 }
+    b = { numerator: 1, denominator: 4 }
+    sub = subtractFractions(a, b)
+  }
+  const ans = simplify(sub)
   return {
-    id: nextId(), kind: 'fraction', difficulty: 1,
-    scenario: `같은 분모 뺄셈: ${aN}/${denom} − ${bN}/${denom} = ?`,
-    prompt: '기약분수로 답해',
-    hint: '분자끼리 빼.',
+    id: nextId(), kind: 'fraction', difficulty: 2,
+    scenario: `통분 뺄셈: ${a.numerator}/${a.denominator} − ${b.numerator}/${b.denominator} = ?`,
+    prompt: '통분 후 기약분수로 답해',
+    hint: `공통분모로 통분한 뒤 빼.`,
     answer: ans, requireSimplified: true,
   }
 }

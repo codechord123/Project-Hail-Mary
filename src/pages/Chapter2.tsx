@@ -144,7 +144,7 @@ export function Chapter2() {
 
         <StageHeader
           stage={`STAGE 2-${waveIdx + 1}`}
-          subtitle="식량 점검 — 같은 분모 뺄셈 슈터"
+          subtitle="식량 점검 — 통분 뺄셈 슈터"
           combo={run.combo}
           score={run.score}
         />

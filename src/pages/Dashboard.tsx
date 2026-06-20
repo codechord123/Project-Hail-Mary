@@ -8,8 +8,8 @@ import {
 } from '@/lib/profileSwitch'
 
 const CHAPTERS = [
-  { id: 1, title: '깨어남', topic: '같은 분모 +', genre: '🤲 조작' },
-  { id: 2, title: '식량 점검', topic: '같은 분모 −', genre: '🚀 슈팅' },
+  { id: 1, title: '깨어남', topic: '통분 덧셈', genre: '🤲 조작' },
+  { id: 2, title: '식량 점검', topic: '통분 뺄셈', genre: '🚀 슈팅' },
   { id: 3, title: '미지의 신호', topic: '약분 통분', genre: '🕹 보스' },
   { id: 4, title: '첫 만남', topic: '다른 분모 +', genre: '🛡 디펜스' },
   { id: 5, title: '동력실', topic: '다른 분모 −', genre: '⚡ 리액터' },
