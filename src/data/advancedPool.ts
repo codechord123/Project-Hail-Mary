@@ -675,6 +675,168 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     hint: '0.2 = 8/40, 7/10 = 28/40. □ ∈ {9...27} → 19개.',
     answer: 19, unit: '개',
   },
+
+  // === 신규 분수 다양화 — 분모 11/13/14/16/21/22/27/30/33/35/45 도입 ===
+  {
+    // 4/11 + 1/3 = 12/33 + 11/33 = 23/33 (A 서로소)
+    id: 'adv-div-1', kind: 'fraction', difficulty: 3,
+    scenario: '실험실 1번 배양조에 한 통의 4/11 만큼 시료가 있어. 거기에 2번 배양조의 시료 1/3 통을 옮겨 담아야 해. 합친 후 시료의 총량을 기약분수로 적어 분석실에 보고해줘.',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 33. 12/33 + 11/33 = 23/33.',
+    answer: { numerator: 23, denominator: 33 }, requireSimplified: true,
+  },
+  {
+    // 5/13 + 2/3 = 15/39 + 26/39 = 41/39 (A, 가분수)
+    id: 'adv-div-2', kind: 'fraction', difficulty: 3,
+    scenario: '우주선 비상 배터리 A 는 한 통의 5/13 만큼 충전돼 있고, 배터리 B 는 2/3 만큼 충전돼 있어. 두 배터리를 하나로 합쳤을 때의 총 충전량을 기약 가분수로 알려줘. (1통을 넘을 수 있어.)',
+    prompt: '합을 기약 가분수로',
+    hint: '공통분모 39. 15/39 + 26/39 = 41/39.',
+    answer: { numerator: 41, denominator: 39 }, requireSimplified: true,
+  },
+  {
+    // 9/14 - 3/7 = 9/14 - 6/14 = 3/14 (B 배수)
+    id: 'adv-div-3', kind: 'fraction', difficulty: 3,
+    scenario: '항해 일지에 따르면 어제까지 임무의 9/14 가 완료된 상태였어. 그런데 시스템 오류로 3/7 만큼의 진행 기록이 손실됐대. 손실 후 실제 인정되는 완료 비율을 기약분수로 정확히 다시 적어줘.',
+    prompt: '차를 기약분수로',
+    hint: '공통분모 14. 9/14 − 6/14 = 3/14.',
+    answer: { numerator: 3, denominator: 14 }, requireSimplified: true,
+  },
+  {
+    // 5/16 + 3/8 = 5/16 + 6/16 = 11/16 (B 배수)
+    id: 'adv-div-4', kind: 'fraction', difficulty: 3,
+    scenario: '백신 실험에서 약품 A 5/16 통과 약품 B 3/8 통을 같은 비커에 부어 섞으려고 해. 섞은 후 비커에 담긴 총 부피를 정확히 알아야 다음 가열 단계를 진행할 수 있어. 통분해서 더한 뒤 기약분수로!',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 16. 5/16 + 6/16 = 11/16.',
+    answer: { numerator: 11, denominator: 16 }, requireSimplified: true,
+  },
+  {
+    // 11/21 - 2/7 = 11/21 - 6/21 = 5/21 (B 배수)
+    id: 'adv-div-5', kind: 'fraction', difficulty: 3,
+    scenario: '함선 통신 안테나 출력이 한 통의 11/21 까지 도달했었어. 그런데 노이즈 간섭으로 2/7 만큼의 출력이 손실됐다고 해. 현재 안테나에 남아 있는 실제 출력을 통분해서 빼고 기약분수로 알려줘.',
+    prompt: '차를 기약분수로',
+    hint: '공통분모 21. 11/21 − 6/21 = 5/21.',
+    answer: { numerator: 5, denominator: 21 }, requireSimplified: true,
+  },
+  {
+    // 7/22 + 1/11 = 7/22 + 2/22 = 9/22 (B 배수)
+    id: 'adv-div-6', kind: 'fraction', difficulty: 3,
+    scenario: '의무실 약품 캐비닛에는 두 가지 진통제가 들어 있어. 1번 진통제는 한 통의 7/22, 2번 진통제는 1/11 만큼 남아 있어. 두 진통제를 합치면 총 얼마인지 알아야 다음 처방을 정할 수 있어. 통분해서 더한 뒤 기약분수로!',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 22. 7/22 + 2/22 = 9/22.',
+    answer: { numerator: 9, denominator: 22 }, requireSimplified: true,
+  },
+  {
+    // 7/27 + 1/9 = 7/27 + 3/27 = 10/27 (B 배수)
+    id: 'adv-div-7', kind: 'fraction', difficulty: 3,
+    scenario: '외계 행성 표본을 두 개의 시험관에 나누어 담아 가져왔어. 시험관 1에는 한 통의 7/27, 시험관 2에는 1/9 만큼 표본이 들어 있어. 두 표본을 합쳤을 때의 총량을 기약분수로 정확히 기록해줘.',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 27. 7/27 + 3/27 = 10/27.',
+    answer: { numerator: 10, denominator: 27 }, requireSimplified: true,
+  },
+  {
+    // 17/30 - 1/5 = 17/30 - 6/30 = 11/30 (B 배수)
+    id: 'adv-div-8', kind: 'fraction', difficulty: 3,
+    scenario: '항해 자료에 따르면 산소 잔량이 한 통의 17/30 까지 차 있었어. 비행 중 추가 호흡 작업으로 1/5 만큼이 소모됐대. 현재 남아 있는 산소 비율을 기약분수로 정확히 알려줘.',
+    prompt: '차를 기약분수로',
+    hint: '공통분모 30. 17/30 − 6/30 = 11/30.',
+    answer: { numerator: 11, denominator: 30 }, requireSimplified: true,
+  },
+  {
+    // 13/33 + 2/11 = 13/33 + 6/33 = 19/33 (B 배수)
+    id: 'adv-div-9', kind: 'fraction', difficulty: 3,
+    scenario: '냉동실에 보관된 두 종류의 보존제 — 첫 번째 보존제는 한 통의 13/33, 두 번째 보존제는 2/11 만큼 남았어. 둘을 합치면 다음 보존 작업에 충분한지 결정할 수 있어. 통분해서 더하고 기약분수로!',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 33. 13/33 + 6/33 = 19/33.',
+    answer: { numerator: 19, denominator: 33 }, requireSimplified: true,
+  },
+  {
+    // 13/35 + 2/7 = 13/35 + 10/35 = 23/35 (B 배수)
+    id: 'adv-div-10', kind: 'fraction', difficulty: 3,
+    scenario: '실험실 비커에 한 통의 13/35 만큼 시약이 들어 있었어. 거기에 보충 시약 2/7 통을 부어 농도를 조절하려 해. 부은 뒤 비커에 담긴 시약 총량을 기약분수로 적어 보고서에 기록!',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 35. 13/35 + 10/35 = 23/35.',
+    answer: { numerator: 23, denominator: 35 }, requireSimplified: true,
+  },
+  {
+    // 19/45 + 1/9 = 19/45 + 5/45 = 24/45 = 8/15 (B 배수, 약분)
+    id: 'adv-div-11', kind: 'fraction', difficulty: 3,
+    scenario: '대형 화물선 적재 칸이 두 구역으로 나뉘어 있어. 1구역에는 한 통의 19/45, 2구역에는 1/9 만큼의 자원이 들어 있어. 두 구역의 자원을 모두 합쳤을 때의 총 적재량을 기약분수로 줄여 알려줘.',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 45. 19/45 + 5/45 = 24/45 → ÷3 = 8/15.',
+    answer: { numerator: 8, denominator: 15 }, requireSimplified: true,
+  },
+  {
+    // 3/11 + 5/8 = 24/88 + 55/88 = 79/88 (A 서로소, LCM=88)
+    id: 'adv-div-12', kind: 'fraction', difficulty: 3,
+    scenario: '두 명의 항해사가 별도 시뮬레이터에서 임무를 풀고 있어. 한 명은 자기 시뮬레이터의 3/11 를, 다른 한 명은 5/8 를 끝냈어. 두 사람이 합쳐서 끝낸 비율을 알아야 다음 작전 계획을 세울 수 있어. 통분해서 더하고 기약분수로!',
+    prompt: '합을 기약분수로',
+    hint: '공통분모 88. 24/88 + 55/88 = 79/88.',
+    answer: { numerator: 79, denominator: 88 }, requireSimplified: true,
+  },
+  {
+    // 7/12 + 5/9 = 21/36 + 20/36 = 41/36 (C 공통인수, 가분수)
+    id: 'adv-div-13', kind: 'fraction', difficulty: 3,
+    scenario: '의무실 산소통 A 는 한 통의 7/12, 산소통 B 는 5/9 만큼 충전된 상태야. 비상시 두 산소통을 합쳐 한 사람에게 공급하려면 총량이 얼마인지 알아야 안전한 공급 시간을 정할 수 있어. 통분해서 더하고 기약 가분수로!',
+    prompt: '합을 기약 가분수로',
+    hint: '공통분모 36. 21/36 + 20/36 = 41/36.',
+    answer: { numerator: 41, denominator: 36 }, requireSimplified: true,
+  },
+  {
+    // 11/18 - 1/4 = 22/36 - 9/36 = 13/36 (C 공통인수)
+    id: 'adv-div-14', kind: 'fraction', difficulty: 3,
+    scenario: '엔진 점검 일지에 따르면 윤활유가 한 통의 11/18 까지 들어 있었어. 점검 도중 1/4 통 분량의 윤활유가 외부로 흘러나갔지. 엔진을 다시 가동하기 전에 통 안에 남은 윤활유의 비율을 기약분수로 정확히 알려줘.',
+    prompt: '차를 기약분수로',
+    hint: '공통분모 36. 22/36 − 9/36 = 13/36.',
+    answer: { numerator: 13, denominator: 36 }, requireSimplified: true,
+  },
+  {
+    // 0.48 = 12/25 — 소수 변환 응용 (새로운 소수)
+    id: 'adv-div-15', kind: 'fraction', difficulty: 3,
+    scenario: '함선 외부 압력 센서가 0.48 단위라는 값을 계속 보내오고 있어. 메인 컴퓨터는 분수 단위로만 데이터를 저장할 수 있어서, 이 값을 분모 25 형태의 기약분수로 변환해 입력해야 해. 어떤 분수가 될까?',
+    prompt: '같은 값을 기약분수로',
+    hint: '48/100 → ÷4 = 12/25.',
+    answer: { numerator: 12, denominator: 25 }, requireSimplified: true,
+  },
+  {
+    // 0.72 = 18/25 — 새 소수
+    id: 'adv-div-16', kind: 'fraction', difficulty: 3,
+    scenario: '구조선 도착 거리 표시판이 0.72 광년이라고 가리켜. 우리의 항법 모듈은 분수만 받아들이기 때문에 같은 거리를 분모 25 의 기약분수로 변환해 입력해야 해. 변환 결과를 적어줘.',
+    prompt: '같은 값을 기약분수로',
+    hint: '72/100 → ÷4 = 18/25.',
+    answer: { numerator: 18, denominator: 25 }, requireSimplified: true,
+  },
+  {
+    // 0.28 = 7/25
+    id: 'adv-div-17', kind: 'fraction', difficulty: 3,
+    scenario: '실험실 가스 농도 측정기가 0.28 을 가리키고 있어. 환기 시스템은 분수 입력만 받기 때문에 같은 농도를 분모 25 의 기약분수로 변환해 입력해야 해. 어떤 분수일까?',
+    prompt: '같은 값을 기약분수로',
+    hint: '28/100 → ÷4 = 7/25.',
+    answer: { numerator: 7, denominator: 25 }, requireSimplified: true,
+  },
+  {
+    // 분수 vs 소수 — 새 분수 9/22
+    id: 'adv-div-18', kind: 'compare', difficulty: 3,
+    scenario: '두 우주선이 같은 화물칸 적재량을 보고하고 있어. 우리 우주선의 적재율은 9/22 라고 표시되고, 동맹 우주선의 적재율은 0.4 라고 표시돼. 어느 쪽이 더 많이 적재했는지 알아야 보급 분배를 결정할 수 있어. 둘을 비교해줘.',
+    prompt: '더 큰 쪽 (= 이면 등호) 선택',
+    hint: '9/22 ≈ 0.409.',
+    left: { numerator: 9, denominator: 22 }, right: { decimal: 0.4 }, correctOp: '>',
+  },
+  {
+    // 분수 vs 분수 — 새 조합 11/27 vs 5/12
+    id: 'adv-div-19', kind: 'compare', difficulty: 3,
+    scenario: '두 행성 사이의 신호 강도를 비교하는 중이야. 행성 A 의 신호는 11/27, 행성 B 의 신호는 5/12 로 측정됐어. 더 강한 신호를 보내고 있는 쪽이 진짜 발신지일 가능성이 커. 어느 쪽이 더 큰가?',
+    prompt: '더 큰 쪽 (= 이면 등호) 선택',
+    hint: '공통분모 108. 11/27 = 44/108, 5/12 = 45/108.',
+    left: { numerator: 11, denominator: 27 }, right: { numerator: 5, denominator: 12 }, correctOp: '<',
+  },
+  {
+    // 이분모 범위 — 새 분모 60
+    id: 'adv-div-20', kind: 'numeric', difficulty: 3,
+    scenario: '비상 출력 안전 범위는 한 통의 3/20 단계보다 높고 7/12 단계보다 낮아야 안전해. 우리 계측기는 분모 60 의 자연수 출력만 표시할 수 있는데, 이 범위 안에 들어가는 자연수 출력값은 모두 몇 개일까?',
+    prompt: '가능한 자연수 □ 의 개수',
+    hint: '3/20 = 9/60, 7/12 = 35/60. □ ∈ {10...34} → 25개.',
+    answer: 25, unit: '개',
+  },
 ]
 
 /** 풀에서 N개 랜덤 픽 */

@@ -29,6 +29,7 @@ const WrongNotes = lazy(() => import('@/pages/WrongNotes').then((m) => ({ defaul
 const Achievements = lazy(() => import('@/pages/Achievements').then((m) => ({ default: m.Achievements })))
 const TimeAttack = lazy(() => import('@/pages/TimeAttack').then((m) => ({ default: m.TimeAttack })))
 const BossRush = lazy(() => import('@/pages/BossRush').then((m) => ({ default: m.BossRush })))
+const BasicPractice = lazy(() => import('@/pages/BasicPractice').then((m) => ({ default: m.BasicPractice })))
 
 function Loading() {
   return (
@@ -102,6 +103,7 @@ export default function App() {
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/timeattack" element={<TimeAttack />} />
             <Route path="/bossrush" element={<BossRush />} />
+            <Route path="/basic" element={<BasicPractice />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
         </Suspense>

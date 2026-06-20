@@ -45,6 +45,69 @@ export const genDecimalToFraction = (difficulty: number): Problem => {
   }
 }
 
+/**
+ * 기초연습 모드용 — 통분 LCM 이 99 미만인 모든 이분모 쌍에서 다양하게 픽.
+ * 분모 범위 2~30, 서로 다름, LCM < 99 조건.
+ */
+const BASIC_PAIRS: Array<[number, number]> = (() => {
+  const _gcd = (a: number, b: number): number => { while (b) { [a, b] = [b, a % b] } return a }
+  const pairs: Array<[number, number]> = []
+  for (let d1 = 2; d1 <= 30; d1++) {
+    for (let d2 = d1 + 1; d2 <= 30; d2++) {
+      const lcmVal = (d1 * d2) / _gcd(d1, d2)
+      if (lcmVal < 99) pairs.push([d1, d2])
+    }
+  }
+  return pairs
+})()
+
+export const genBasicPracticeAdd = (): Problem => {
+  const [d1, d2] = BASIC_PAIRS[Math.floor(Math.random() * BASIC_PAIRS.length)]
+  const n1 = rand(1, d1 - 1)
+  const n2 = rand(1, d2 - 1)
+  const a = { numerator: n1, denominator: d1 }
+  const b = { numerator: n2, denominator: d2 }
+  const ans = simplify(addFractions(a, b))
+  return {
+    id: nextId(), kind: 'fraction', difficulty: 1,
+    scenario: `${n1}/${d1} + ${n2}/${d2} 을(를) 계산해서 기약분수로 답해.`,
+    prompt: '합을 기약분수로',
+    hint: `공통분모는 ${(d1 * d2) / gcd(d1, d2)}.`,
+    answer: ans, requireSimplified: true,
+  }
+}
+
+export const genBasicPracticeSub = (): Problem => {
+  let a = { numerator: 0, denominator: 1 }
+  let b = { numerator: 0, denominator: 1 }
+  let result = { numerator: -1, denominator: 1 }
+  let guard = 0
+  do {
+    const [d1, d2] = BASIC_PAIRS[Math.floor(Math.random() * BASIC_PAIRS.length)]
+    a = { numerator: rand(1, d1 - 1), denominator: d1 }
+    b = { numerator: rand(1, d2 - 1), denominator: d2 }
+    result = subtractFractions(a, b)
+  } while (result.numerator <= 0 && guard++ < 30)
+  if (result.numerator <= 0) {
+    a = { numerator: 3, denominator: 4 }
+    b = { numerator: 1, denominator: 7 }
+    result = subtractFractions(a, b)
+  }
+  const ans = simplify(result)
+  return {
+    id: nextId(), kind: 'fraction', difficulty: 1,
+    scenario: `${a.numerator}/${a.denominator} − ${b.numerator}/${b.denominator} 을(를) 계산해서 기약분수로 답해.`,
+    prompt: '차를 기약분수로',
+    hint: `공통분모는 ${(a.denominator * b.denominator) / gcd(a.denominator, b.denominator)}.`,
+    answer: ans, requireSimplified: true,
+  }
+}
+
+/** 기초연습 — 합/차 무작위 */
+export const genBasicPractice = (): Problem => {
+  return Math.random() < 0.5 ? genBasicPracticeAdd() : genBasicPracticeSub()
+}
+
 /** 분수 vs 소수 크기 비교 */
 export const genCompareDecFrac = (_difficulty: number): Problem => {
   const FRAC_POOL = [

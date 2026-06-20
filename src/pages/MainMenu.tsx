@@ -101,6 +101,12 @@ export function MainMenu() {
           >
             👑 BOSS RUSH · 5보스 격파
           </Link>
+          <Link
+            to="/basic"
+            className="p-3 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-600 to-teal-700 text-white font-bold border border-cyan-300/40 text-center text-sm"
+          >
+            🧮 기초연습 · 통분 단순 계산 훈련
+          </Link>
         </div>
 
         {/* 학습 도구 */}
