@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ProblemPanel } from '@/components/problem/ProblemPanel'
@@ -20,6 +20,8 @@ import type { Problem, StudentAnswer } from '@/types/problem'
 const TIME_LIMIT = 60 // 초
 const TIME_BONUS = 3 // 정답 시 시간 보너스
 const TIME_PENALTY = 2 // 오답 시 시간 감소
+const FEVER_COMBO = 10 // 피버 진입 콤보
+const FEVER_DURATION_MS = 5000 // 피버 지속 시간
 
 const HI_KEY = 'hailmary-timeattack-hi'
 const readHi = (): number => {
@@ -42,12 +44,9 @@ export function TimeAttack() {
   const [grade, setGrade] = useState<Grade>(null)
   const [showIntro, setShowIntro] = useState(true)
   const [hi, setHiState] = useState(readHi())
-  const startedAt = useRef(Date.now())
-
-  useEffect(() => {
-    if (showIntro) return
-    startedAt.current = Date.now()
-  }, [showIntro])
+  const [feverUntil, setFeverUntil] = useState(0)
+  const [floaters, setFloaters] = useState<{ id: number; text: string; tone: 'plus' | 'minus' }[]>([])
+  const fever = Date.now() < feverUntil
 
   // 타이머
   useEffect(() => {
@@ -76,6 +75,12 @@ export function TimeAttack() {
     setFeedback('idle')
   }, [solved])
 
+  const pushFloater = useCallback((text: string, tone: 'plus' | 'minus') => {
+    const id = Date.now() + Math.random()
+    setFloaters((arr) => [...arr, { id, text, tone }])
+    setTimeout(() => setFloaters((arr) => arr.filter((f) => f.id !== id)), 900)
+  }, [])
+
   const submit = useCallback(() => {
     if (over) return
     const r = judge(problem, studentAnswer)
@@ -84,6 +89,7 @@ export function TimeAttack() {
       setFeedback('wrong')
       setShake((s) => s + 1)
       setTimeMs((t) => Math.max(0, t - TIME_PENALTY * 1000))
+      pushFloater(`-${TIME_PENALTY}s`, 'minus')
       sfx.wrong()
       addWrongNote({
         chapterId: 'endless' as any,
@@ -102,9 +108,12 @@ export function TimeAttack() {
     setMaxCombo((m) => Math.max(m, newCombo))
     setSolved((c) => c + 1)
     const crit = newCombo >= 5
-    const gain = (100 + (problem.difficulty ?? 1) * 30 + comboBonusXp(newCombo) * 12) * (crit ? 2 : 1)
+    const inFever = Date.now() < feverUntil
+    const feverMul = inFever ? 2 : 1
+    const gain = (100 + (problem.difficulty ?? 1) * 30 + comboBonusXp(newCombo) * 12) * (crit ? 2 : 1) * feverMul
     setScore((s) => s + gain)
     setTimeMs((t) => Math.min(TIME_LIMIT * 1000, t + TIME_BONUS * 1000))
+    pushFloater(`+${TIME_BONUS}s`, 'plus')
     store.addXp(15 + (problem.difficulty ?? 1) * 5)
     setFeedback('correct')
     const g = gradeFor(newCombo, crit)
@@ -112,8 +121,13 @@ export function TimeAttack() {
     setTimeout(() => setGrade(null), 700)
     if (crit) sfx.crit()
     else sfx.hit()
+    // 피버 진입 — 10콤보 정확히 도달 시
+    if (newCombo === FEVER_COMBO) {
+      setFeverUntil(Date.now() + FEVER_DURATION_MS)
+      sfx.crit()
+    }
     setTimeout(() => next(), 500)
-  }, [over, problem, studentAnswer, combo, store, next])
+  }, [over, problem, studentAnswer, combo, store, next, feverUntil, pushFloater])
 
   useShortcuts({ onSubmit: feedback === 'idle' && !over ? submit : undefined })
 
@@ -127,6 +141,8 @@ export function TimeAttack() {
     setTimeMs(TIME_LIMIT * 1000)
     setOver(false)
     setFeedback('idle')
+    setFeverUntil(0)
+    setFloaters([])
   }
 
   if (over) {
@@ -168,7 +184,7 @@ export function TimeAttack() {
         />
 
         {/* 거대 타이머 */}
-        <div className="mt-3">
+        <div className="mt-3 relative">
           <div className="flex justify-between text-xs font-mono">
             <span className={danger ? 'text-red-300 font-bold animate-pulse' : 'text-white/70'}>
               {danger ? '⚠ 시간 위급!' : '⏱ 남은 시간'}
@@ -181,10 +197,42 @@ export function TimeAttack() {
             <motion.div
               animate={{ width: `${timePct}%` }}
               transition={{ duration: 0.1 }}
-              className={`h-full ${danger ? 'bg-red-500 animate-pulse' : 'bg-gradient-to-r from-cyan-400 to-yellow-300'}`}
+              className={`h-full ${danger ? 'bg-red-500 animate-pulse' : fever ? 'bg-gradient-to-r from-pink-400 via-yellow-300 to-pink-400 animate-pulse' : 'bg-gradient-to-r from-cyan-400 to-yellow-300'}`}
             />
           </div>
+          {/* 시간 변동 플로터 */}
+          <div className="pointer-events-none absolute right-0 -top-1 h-8">
+            <AnimatePresence>
+              {floaters.map((f) => (
+                <motion.div
+                  key={f.id}
+                  initial={{ opacity: 0, y: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, y: -28, scale: 1.1 }}
+                  exit={{ opacity: 0, y: -40 }}
+                  transition={{ duration: 0.9 }}
+                  className={`absolute right-0 font-mono font-bold text-lg ${f.tone === 'plus' ? 'text-emerald-300' : 'text-red-300'}`}
+                  style={{ textShadow: '0 0 8px rgba(0,0,0,0.8)' }}
+                >
+                  {f.text}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
+
+        {/* 피버 배너 */}
+        <AnimatePresence>
+          {fever && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="mt-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-500 via-yellow-400 to-pink-500 text-space-900 font-extrabold text-center text-sm tracking-widest animate-pulse"
+            >
+              🔥 FEVER TIME! 점수 ×2 🔥
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="mt-3">
           <DialogueBox speaker="TIME ATTACK" tone="system" text={problem.scenario} />
