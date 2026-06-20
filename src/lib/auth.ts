@@ -112,3 +112,40 @@ export const deleteStudent = (name: string) => {
 }
 
 export const isLoggedIn = (): boolean => !!getSession()
+
+/** 교사 권한 — 학생 비밀번호 강제 재설정. */
+export const resetStudentPassword = async (name: string, newPassword: string): Promise<{ ok: true } | { ok: false; reason: string }> => {
+  const db = readAuthDb()
+  if (!db[name]) return { ok: false, reason: '등록된 학생이 아닙니다.' }
+  if (!newPassword || newPassword.length < 4) return { ok: false, reason: '비밀번호는 4자리 이상이어야 합니다.' }
+  db[name] = await hashPassword(newPassword, name)
+  writeAuthDb(db)
+  return { ok: true }
+}
+
+/** 일괄 등록 — 이미 존재하는 이름은 skip. 모두 동일 임시 비번. */
+export const bulkRegister = async (
+  names: string[],
+  defaultPassword: string,
+): Promise<{ created: string[]; skipped: string[]; failed: { name: string; reason: string }[] }> => {
+  const created: string[] = []
+  const skipped: string[] = []
+  const failed: { name: string; reason: string }[] = []
+  const db = readAuthDb()
+  for (const raw of names) {
+    const n = raw.trim()
+    if (!n) continue
+    if (n.length > 20) {
+      failed.push({ name: n, reason: '이름 20자 초과' })
+      continue
+    }
+    if (db[n]) {
+      skipped.push(n)
+      continue
+    }
+    db[n] = await hashPassword(defaultPassword, n)
+    created.push(n)
+  }
+  writeAuthDb(db)
+  return { created, skipped, failed }
+}

@@ -154,6 +154,13 @@ export function Login() {
         <br />
         같은 단말의 다른 학생도 로그인하면 자기 기록을 볼 수 있어.
       </p>
+
+      <button
+        onClick={() => navigate('/teacher')}
+        className="mt-3 text-xs text-white/30 hover:text-white/70 underline"
+      >
+        👩‍🏫 선생님 메뉴
+      </button>
     </div>
   )
 }

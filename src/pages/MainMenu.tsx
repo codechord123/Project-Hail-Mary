@@ -178,6 +178,12 @@ export function MainMenu() {
       >
         ❓ 게임 가이드 다시 보기
       </button>
+      <button
+        onClick={() => navigate('/teacher')}
+        className="mt-1 text-white/30 hover:text-white/60 text-xs underline"
+      >
+        👩‍🏫 선생님 메뉴
+      </button>
       <p className="mt-4 text-white/30 text-xs">© Project Hail Mary 영감 · 학급 교육용</p>
       <Tutorial forceShow={showTutorial} onClose={() => setShowTutorial(false)} />
       {/* 최초 1회 자동 노출 */}
