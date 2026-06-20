@@ -74,7 +74,7 @@ export function MainMenu() {
         </Link>
 
         {/* 도전 모드 */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <Link
             to="/daily"
             className="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white font-bold border border-yellow-200/50 text-center text-sm"
@@ -86,6 +86,12 @@ export function MainMenu() {
             className="p-3 rounded-xl bg-gradient-to-br from-purple-600 to-pink-500 text-white font-bold border border-yellow-300/40 text-center text-sm"
           >
             🎮<br />끝없는 항해
+          </Link>
+          <Link
+            to="/timeattack"
+            className="p-3 rounded-xl bg-gradient-to-br from-red-500 to-rose-700 text-white font-bold border border-yellow-300/40 text-center text-sm"
+          >
+            ⏱<br />타임 어택
           </Link>
         </div>
 

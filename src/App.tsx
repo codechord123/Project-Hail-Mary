@@ -27,6 +27,7 @@ const StoryRecap = lazy(() => import('@/pages/StoryRecap').then((m) => ({ defaul
 const Shop = lazy(() => import('@/pages/Shop').then((m) => ({ default: m.Shop })))
 const WrongNotes = lazy(() => import('@/pages/WrongNotes').then((m) => ({ default: m.WrongNotes })))
 const Achievements = lazy(() => import('@/pages/Achievements').then((m) => ({ default: m.Achievements })))
+const TimeAttack = lazy(() => import('@/pages/TimeAttack').then((m) => ({ default: m.TimeAttack })))
 
 function Loading() {
   return (
@@ -98,6 +99,7 @@ export default function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/wrong-notes" element={<WrongNotes />} />
             <Route path="/achievements" element={<Achievements />} />
+            <Route path="/timeattack" element={<TimeAttack />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
         </Suspense>
