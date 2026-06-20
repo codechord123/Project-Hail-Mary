@@ -4,7 +4,7 @@ import type { Problem } from '@/types/problem'
 export const chapter7Phases: { name: string; subtitle: string; problems: Problem[] }[] = [
   {
     name: 'PHASE 1 · 정탐',
-    subtitle: '대분수 기초 점검',
+    subtitle: '이분모 덧셈/비교 기초 점검',
     problems: [
       {
         id: 'c7-1', kind: 'fraction', difficulty: 2,
@@ -14,11 +14,11 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
         answer: { numerator: 19, denominator: 12 }, requireSimplified: true,
       },
       {
-        id: 'c7-2', kind: 'compare', difficulty: 1,
+        id: 'c7-2', kind: 'compare', difficulty: 2,
         scenario: '두 통신 신호의 강도를 비교해.',
-        prompt: '5/6 와 3/4 비교',
-        hint: '통분: 5/6=10/12, 3/4=9/12.',
-        left: { numerator: 5, denominator: 6 }, right: { numerator: 3, denominator: 4 }, correctOp: '>',
+        prompt: '5/8 vs 7/12',
+        hint: '공통분모 24. 15/24 vs 14/24.',
+        left: { numerator: 5, denominator: 8 }, right: { numerator: 7, denominator: 12 }, correctOp: '>',
       },
       {
         id: 'c7-3', kind: 'numeric', difficulty: 2,
@@ -31,29 +31,28 @@ export const chapter7Phases: { name: string; subtitle: string; problems: Problem
   },
   {
     name: 'PHASE 2 · 광폭화',
-    subtitle: '여왕이 분노한다! 다른 분모 종합',
+    subtitle: '여왕이 분노한다! 소수↔분수 변환 + 이분모',
     problems: [
       {
         id: 'c7-4', kind: 'fraction', difficulty: 2,
-        scenario: '여왕의 첫 공격! 다른 분모 덧셈을 빠르게.',
-        prompt: '3/8 + 1/6 (기약)',
-        hint: '공통분모 24.',
-        answer: { numerator: 13, denominator: 24 }, requireSimplified: true,
-      },
-      {
-        id: 'c7-5', kind: 'fraction', difficulty: 2,
-        scenario: '연속 공격! 빼기로 응수.',
-        prompt: '7/10 − 1/4 (기약)',
-        hint: '공통분모 20.',
+        scenario: '여왕의 첫 공격! 0.45 를 기약분수로 변환해 방패에 쓸 수 있어.',
+        prompt: '0.45 = ? (기약)',
+        hint: '0.45 = 45/100 → ÷5 = 9/20.',
         answer: { numerator: 9, denominator: 20 }, requireSimplified: true,
       },
       {
-        id: 'c7-6', kind: 'mcq', difficulty: 2,
-        scenario: '동치 분수 선별 — 여왕의 환영을 가려내라.',
-        prompt: '3/5와 크기가 같은 분수를 모두 골라.',
-        hint: '분자·분모에 같은 수 곱하기.',
-        choices: ['6/10', '9/15', '7/12', '12/20', '15/24'],
-        correctIndexes: [0, 1, 3], multiple: true,
+        id: 'c7-5', kind: 'fraction', difficulty: 3,
+        scenario: '연속 공격! 소수 + 분수 혼합 — 0.6 + 1/4 를 기약분수로 응수!',
+        prompt: '0.6 + 1/4 (기약)',
+        hint: '0.6 = 3/5. 3/5 + 1/4 = 12/20 + 5/20 = 17/20.',
+        answer: { numerator: 17, denominator: 20 }, requireSimplified: true,
+      },
+      {
+        id: 'c7-6', kind: 'compare', difficulty: 3,
+        scenario: '환영 비교 — 분수와 소수 중 어느 쪽이 큰가?',
+        prompt: '3/8 vs 0.4',
+        hint: '3/8 = 0.375.',
+        left: { numerator: 3, denominator: 8 }, right: { decimal: 0.4 }, correctOp: '<',
       },
     ],
   },

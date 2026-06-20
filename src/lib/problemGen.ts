@@ -1,6 +1,72 @@
 import type { Problem } from '@/types/problem'
 import { addFractions, subtractFractions, gcd, simplify } from './fractionMath'
 
+/** 소수 둘째자리 → 기약분수 변환 문제 생성 */
+export const genDecimalToFraction = (difficulty: number): Problem => {
+  // 분모 4, 5, 20, 25 류로 떨어지는 깔끔한 소수 둘째자리 후보
+  const POOL: Array<{ dec: string; num: number; den: number }> = [
+    { dec: '0.25', num: 1, den: 4 },
+    { dec: '0.75', num: 3, den: 4 },
+    { dec: '0.20', num: 1, den: 5 },
+    { dec: '0.40', num: 2, den: 5 },
+    { dec: '0.60', num: 3, den: 5 },
+    { dec: '0.80', num: 4, den: 5 },
+    { dec: '0.05', num: 1, den: 20 },
+    { dec: '0.15', num: 3, den: 20 },
+    { dec: '0.35', num: 7, den: 20 },
+    { dec: '0.45', num: 9, den: 20 },
+    { dec: '0.55', num: 11, den: 20 },
+    { dec: '0.65', num: 13, den: 20 },
+    { dec: '0.85', num: 17, den: 20 },
+    { dec: '0.95', num: 19, den: 20 },
+    { dec: '0.04', num: 1, den: 25 },
+    { dec: '0.08', num: 2, den: 25 },
+    { dec: '0.12', num: 3, den: 25 },
+    { dec: '0.16', num: 4, den: 25 },
+    { dec: '0.24', num: 6, den: 25 },
+    { dec: '0.36', num: 9, den: 25 },
+    { dec: '0.44', num: 11, den: 25 },
+    { dec: '0.56', num: 14, den: 25 },
+    { dec: '0.64', num: 16, den: 25 },
+    { dec: '0.76', num: 19, den: 25 },
+    { dec: '0.84', num: 21, den: 25 },
+    { dec: '0.96', num: 24, den: 25 },
+    { dec: '0.50', num: 1, den: 2 },
+  ]
+  // 난이도 ↑ 시 분모 20·25 비중 ↑
+  const filtered = difficulty >= 2 ? POOL.filter((p) => p.den >= 20 || p.den === 5) : POOL
+  const pick = filtered[Math.floor(Math.random() * filtered.length)]
+  return {
+    id: nextId(), kind: 'fraction', difficulty: 2,
+    scenario: `${pick.dec} 을(를) 기약분수로 바꿔.`,
+    prompt: `${pick.dec} = ? (기약)`,
+    hint: `${pick.dec} = ${Math.round(parseFloat(pick.dec) * 100)}/100 → 약분.`,
+    answer: { numerator: pick.num, denominator: pick.den }, requireSimplified: true,
+  }
+}
+
+/** 분수 vs 소수 크기 비교 */
+export const genCompareDecFrac = (_difficulty: number): Problem => {
+  const FRAC_POOL = [
+    { n: 3, d: 4 }, { n: 5, d: 8 }, { n: 3, d: 5 }, { n: 7, d: 10 },
+    { n: 9, d: 20 }, { n: 3, d: 8 }, { n: 7, d: 20 }, { n: 11, d: 25 },
+  ]
+  const f = FRAC_POOL[Math.floor(Math.random() * FRAC_POOL.length)]
+  const fVal = f.n / f.d
+  // 차이가 0.05 이상 나도록 소수 선택
+  const candidates = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8]
+    .filter((d) => Math.abs(d - fVal) >= 0.05)
+  const dec = candidates[Math.floor(Math.random() * candidates.length)]
+  const op: '>' | '<' = fVal > dec ? '>' : '<'
+  return {
+    id: nextId(), kind: 'compare', difficulty: 2,
+    scenario: '두 측정값 비교 — 분수 vs 소수.',
+    prompt: `${f.n}/${f.d} ?? ${dec}`,
+    hint: `${f.n}/${f.d} ≈ ${fVal.toFixed(3)}.`,
+    left: { numerator: f.n, denominator: f.d }, right: { decimal: dec }, correctOp: op,
+  }
+}
+
 const rand = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
 let idSeq = 0
@@ -151,7 +217,7 @@ export const genNumericNatCount = (_difficulty: number): Problem => {
 
 import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 
-const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd]
+const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd, genDecimalToFraction, genCompareDecFrac]
 
 export const genRandom = (difficulty: number): Problem => {
   // 학생 수준 ↑: 응용 풀 비율 50%, 난이도 2+ 도달 시 60%
