@@ -10,7 +10,9 @@ import { LevelBadge } from '@/components/LevelBadge'
 import { DialogueBox } from '@/components/DialogueBox'
 import { useGameStore } from '@/store/gameStore'
 import { genRandom } from '@/lib/problemGen'
-import { judge } from '@/lib/judge'
+import { judge, answerToText, problemAnswerText } from '@/lib/judge'
+import { addWrongNote } from '@/lib/wrongNotes'
+import { unlock } from '@/lib/achievements'
 import { sfx } from '@/lib/sfx'
 import { playBgm, stop as stopBgm } from '@/lib/bgm'
 import { recordEndlessDailyBest, getDailyCombinedScore } from '@/lib/dailyChallenge'
@@ -92,6 +94,16 @@ export function Endless() {
       setFeedback('wrong')
       setShake((s) => s + 1)
       sfx.wrong()
+      addWrongNote({
+        chapterId: 'endless',
+        problemId: problem.id,
+        problemKind: problem.kind,
+        scenario: problem.scenario,
+        prompt: problem.prompt,
+        studentAnswerText: answerToText(studentAnswer),
+        correctAnswerText: problemAnswerText(problem),
+        hint: problem.hint,
+      })
       return
     }
     if (j.kind === 'need-simplify') {
@@ -105,7 +117,11 @@ export function Endless() {
     const crit = newCombo >= 5
     const gain = (100 + difficulty * 30 + comboBonusXp(newCombo) * 10) * (crit ? 2 : 1)
     setScore((s) => s + gain)
-    setSolved((c) => c + 1)
+    setSolved((c) => {
+      const next = c + 1
+      if (next >= 50) unlock('endless-50')
+      return next
+    })
     setOxygen((o) => Math.min(100, o + 3)) // 정답 시 산소 약간 회복
     store.addXp(15 + difficulty * 5 + comboBonusXp(newCombo))
     store.addEnergy(1)

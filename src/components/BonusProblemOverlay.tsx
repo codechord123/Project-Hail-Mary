@@ -2,8 +2,10 @@ import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { ProblemPanel } from '@/components/problem/ProblemPanel'
 import { DialogueBox } from '@/components/DialogueBox'
-import { judge } from '@/lib/judge'
+import { judge, answerToText, problemAnswerText } from '@/lib/judge'
 import { sfx } from '@/lib/sfx'
+import { addWrongNote } from '@/lib/wrongNotes'
+import { trackCorrectDiffDen } from '@/lib/achievements'
 import type { Problem, StudentAnswer } from '@/types/problem'
 
 interface Props {
@@ -12,9 +14,11 @@ interface Props {
   onPass: () => void
   /** 오답 시 외부 페널티 (산소 감소 등) */
   onFail?: (reason: string) => void
+  /** 오답 노트에 챕터 표기 */
+  chapterId?: number | 'daily' | 'endless'
 }
 
-export function BonusProblemOverlay({ problem, onPass, onFail }: Props) {
+export function BonusProblemOverlay({ problem, onPass, onFail, chapterId }: Props) {
   const [answer, setAnswer] = useState<StudentAnswer>({ kind: 'fraction', value: null })
   const [feedback, setFeedback] = useState<'idle' | 'wrong' | 'simplify' | 'correct'>('idle')
   const [reason, setReason] = useState('')
@@ -26,6 +30,18 @@ export function BonusProblemOverlay({ problem, onPass, onFail }: Props) {
       setReason(r.reason)
       onFail?.(r.reason)
       sfx.wrong()
+      if (chapterId != null) {
+        addWrongNote({
+          chapterId,
+          problemId: problem.id,
+          problemKind: problem.kind,
+          scenario: problem.scenario,
+          prompt: problem.prompt,
+          studentAnswerText: answerToText(answer),
+          correctAnswerText: problemAnswerText(problem),
+          hint: problem.hint,
+        })
+      }
       return
     }
     if (r.kind === 'need-simplify') {
@@ -36,8 +52,9 @@ export function BonusProblemOverlay({ problem, onPass, onFail }: Props) {
     }
     sfx.crit()
     setFeedback('correct')
+    trackCorrectDiffDen()
     setTimeout(() => onPass(), 900)
-  }, [problem, answer, onPass, onFail])
+  }, [problem, answer, onPass, onFail, chapterId])
 
   return (
     <motion.div

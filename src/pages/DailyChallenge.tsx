@@ -11,7 +11,9 @@ import { useGameStore } from '@/store/gameStore'
 import {
   getDailyChallenge, getDailyBest, recordDailyBest, dailyDateLabel, todayDateKey,
 } from '@/lib/dailyChallenge'
-import { judge } from '@/lib/judge'
+import { judge, answerToText, problemAnswerText } from '@/lib/judge'
+import { addWrongNote } from '@/lib/wrongNotes'
+import { unlock } from '@/lib/achievements'
 import { sfx } from '@/lib/sfx'
 import { comboBonusXp } from '@/lib/scoring'
 import type { StudentAnswer } from '@/types/problem'
@@ -37,6 +39,7 @@ export function DailyChallenge() {
   useEffect(() => {
     if (finished) {
       recordDailyBest(score, correctCount, today)
+      unlock('daily-done')
       sfx.clear()
     }
   }, [finished, score, correctCount, today])
@@ -58,6 +61,16 @@ export function DailyChallenge() {
       setFeedback('wrong')
       setShake((s) => s + 1)
       sfx.wrong()
+      addWrongNote({
+        chapterId: 'daily',
+        problemId: problem.id,
+        problemKind: problem.kind,
+        scenario: problem.scenario,
+        prompt: problem.prompt,
+        studentAnswerText: answerToText(studentAnswer),
+        correctAnswerText: problemAnswerText(problem),
+        hint: problem.hint,
+      })
       return
     }
     if (r.kind === 'need-simplify') {

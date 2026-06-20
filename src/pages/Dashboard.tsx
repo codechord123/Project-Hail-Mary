@@ -48,9 +48,11 @@ export function Dashboard() {
     }
   }
 
+  const [warn, setWarn] = useState<string | null>(null)
   const handleDeleteProfile = (name: string) => {
     if (name === store.studentName) {
-      window.alert('현재 사용 중인 프로파일은 삭제할 수 없어요. 먼저 다른 학생으로 전환하세요.')
+      setWarn('현재 사용 중인 프로파일은 삭제할 수 없어요. 먼저 다른 학생으로 전환하세요.')
+      setTimeout(() => setWarn(null), 3000)
       return
     }
     if (window.confirm(`정말 ${name} 학생 프로파일을 삭제할까요? 되돌릴 수 없어요.`)) {
@@ -68,6 +70,9 @@ export function Dashboard() {
         ← 메인으로
       </Link>
       <h2 className="mt-3 text-3xl font-bold text-white">📊 항해 진도판</h2>
+      {warn && (
+        <div className="mt-2 p-2 rounded bg-red-500/20 border border-red-400/40 text-red-200 text-xs">{warn}</div>
+      )}
       <p className="text-white/60 text-sm mt-1">선생님 / 보호자가 학습 진행을 한눈에 확인할 수 있어요.</p>
 
       {/* 학생 정보 */}

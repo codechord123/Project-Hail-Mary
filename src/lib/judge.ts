@@ -73,6 +73,40 @@ export const computeRank = (score: number, maxScore: number): Rank => {
   return 'C'
 }
 
+/** 학생 답안을 사람이 읽기 좋은 텍스트로 변환 */
+export const answerToText = (a: StudentAnswer): string => {
+  switch (a.kind) {
+    case 'fraction':
+      return a.value ? `${a.value.numerator}/${a.value.denominator}` : '(미입력)'
+    case 'numeric':
+      return a.value != null ? String(a.value) : '(미입력)'
+    case 'mcq':
+      return a.values.length === 0
+        ? '(미선택)'
+        : a.values.map((i) => ['①','②','③','④','⑤'][i] ?? `${i + 1}`).join(' ')
+    case 'compare':
+      return a.op ?? '(미선택)'
+    case 'multi':
+      return a.value ? `${a.value.numerator}/${a.value.denominator}` : '(미입력)'
+  }
+}
+
+/** 문제의 정답을 사람이 읽기 좋은 텍스트로 */
+export const problemAnswerText = (p: Problem): string => {
+  switch (p.kind) {
+    case 'fraction':
+      return `${p.answer.numerator}/${p.answer.denominator}`
+    case 'numeric':
+      return `${p.answer}${p.unit ?? ''}`
+    case 'mcq':
+      return p.correctIndexes.map((i) => ['①','②','③','④','⑤'][i] ?? `${i + 1}`).join(' ')
+    case 'compare':
+      return p.correctOp
+    case 'multi':
+      return `${p.finalAnswer.numerator}/${p.finalAnswer.denominator}`
+  }
+}
+
 /** 자석 아이템: 문제의 정답을 그대로 학생 답안 형태로 변환 */
 export const correctAnswerFor = (p: Problem): StudentAnswer => {
   switch (p.kind) {

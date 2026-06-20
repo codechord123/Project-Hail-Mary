@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo} from 'react' /* useMemo 보강 다음 줄 */
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapter3Problems, CHAPTER3_BOSS } from '@/data/chapter3'
@@ -413,7 +413,7 @@ export function Chapter3() {
       </ScreenShake>
 
       {showBonus && (
-        <BonusProblemOverlay
+        <BonusProblemOverlay chapterId={3}
           problem={bonus}
           onPass={() => pendingClear?.()}
           onFail={() => store.addOxygen(-5)}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo} from 'react' /* useMemo 보강 다음 줄 */
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapter7Phases, QUEEN } from '@/data/chapter7'
@@ -289,7 +289,7 @@ export function Chapter7() {
       </AnimatePresence>
 
       {showBonus && (
-        <BonusProblemOverlay
+        <BonusProblemOverlay chapterId={7}
           problem={bonus}
           onPass={() => run.finish({ bossDefeated: true })}
           onFail={() => run.store.addOxygen(-5)}

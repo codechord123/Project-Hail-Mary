@@ -10,6 +10,8 @@ import { useGameStore } from '@/store/gameStore'
 import { setMuted } from '@/lib/sfx'
 import { setBgmMuted, setBgmVolume, stop as stopBgm } from '@/lib/bgm'
 import { saveCurrentSlot } from '@/lib/profileSwitch'
+import { unlock as unlockAchievement } from '@/lib/achievements'
+import { AchievementToast } from '@/components/AchievementToast'
 
 const Chapter1 = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1 })))
 const Chapter1Clear = lazy(() => import('@/pages/Chapter1').then((m) => ({ default: m.Chapter1Clear })))
@@ -23,6 +25,8 @@ const Endless = lazy(() => import('@/pages/Endless').then((m) => ({ default: m.E
 const DailyChallenge = lazy(() => import('@/pages/DailyChallenge').then((m) => ({ default: m.DailyChallenge })))
 const StoryRecap = lazy(() => import('@/pages/StoryRecap').then((m) => ({ default: m.StoryRecap })))
 const Shop = lazy(() => import('@/pages/Shop').then((m) => ({ default: m.Shop })))
+const WrongNotes = lazy(() => import('@/pages/WrongNotes').then((m) => ({ default: m.WrongNotes })))
+const Achievements = lazy(() => import('@/pages/Achievements').then((m) => ({ default: m.Achievements })))
 
 function Loading() {
   return (
@@ -55,6 +59,16 @@ export default function App() {
     if (studentName.trim()) saveCurrentSlot()
   }, [studentName, totalXp, clearedChapters, chapterRecords])
 
+  // 첫 진입 + 챕터/레벨 기반 업적 자동 해금
+  useEffect(() => {
+    unlockAchievement('first-launch')
+  }, [])
+  useEffect(() => {
+    if (clearedChapters.includes(1)) unlockAchievement('chapter1')
+    if (clearedChapters.includes(3)) unlockAchievement('chapter3')
+    if (clearedChapters.length >= 7) unlockAchievement('all-chapters')
+  }, [clearedChapters])
+
   return (
     <BrowserRouter>
       <div
@@ -82,9 +96,12 @@ export default function App() {
             <Route path="/daily" element={<DailyChallenge />} />
             <Route path="/story" element={<StoryRecap />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/wrong-notes" element={<WrongNotes />} />
+            <Route path="/achievements" element={<Achievements />} />
             <Route path="*" element={<MainMenu />} />
           </Routes>
         </Suspense>
+        <AchievementToast />
       </div>
     </BrowserRouter>
   )

@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CharacterAvatar } from '@/components/CharacterAvatar'
 import { LevelBadge } from '@/components/LevelBadge'
+import { Tutorial } from '@/components/Tutorial'
 import { unlockAudio, setMuted } from '@/lib/sfx'
 import { useGameStore } from '@/store/gameStore'
 
@@ -13,6 +15,7 @@ export function MainMenu() {
   const bgmVolume = useGameStore((s) => s.bgmVolume)
   const toggleBgmEnabled = useGameStore((s) => s.toggleBgmEnabled)
   const setBgmVolume = useGameStore((s) => s.setBgmVolume)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   const start = () => {
     unlockAudio()
@@ -110,6 +113,18 @@ export function MainMenu() {
         >
           🏪 우주 상점
         </Link>
+        <Link
+          to="/wrong-notes"
+          className="px-6 py-2 rounded-xl bg-rose-400/10 text-rose-200 border border-rose-300/30 text-sm hover:bg-rose-400/20 transition"
+        >
+          📝 오답 노트
+        </Link>
+        <Link
+          to="/achievements"
+          className="px-6 py-2 rounded-xl bg-amber-400/10 text-amber-200 border border-amber-300/30 text-sm hover:bg-amber-400/20 transition"
+        >
+          🏅 업적
+        </Link>
         <button
           onClick={() => {
             toggleMute()
@@ -121,7 +136,16 @@ export function MainMenu() {
         </button>
       </div>
 
-      <p className="mt-10 text-white/30 text-xs">© Project Hail Mary 영감 · 학급 교육용</p>
+      <button
+        onClick={() => setShowTutorial(true)}
+        className="mt-4 text-white/40 hover:text-white/70 text-xs underline"
+      >
+        ❓ 게임 가이드 다시 보기
+      </button>
+      <p className="mt-4 text-white/30 text-xs">© Project Hail Mary 영감 · 학급 교육용</p>
+      <Tutorial forceShow={showTutorial} onClose={() => setShowTutorial(false)} />
+      {/* 최초 1회 자동 노출 */}
+      <Tutorial />
     </div>
   )
 }

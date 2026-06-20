@@ -308,7 +308,7 @@ export function Chapter2() {
       </AnimatePresence>
 
       {showBonus && (
-        <BonusProblemOverlay
+        <BonusProblemOverlay chapterId={2}
           problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}

@@ -231,7 +231,7 @@ export function Chapter6() {
       </ScreenShake>
 
       {showBonus && (
-        <BonusProblemOverlay
+        <BonusProblemOverlay chapterId={6}
           problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}

@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import type { ItemId } from '@/data/items'
 import { SUITS, HELMETS } from '@/data/cosmetics'
 import { computeLevelInfo, STAT_POINTS_PER_LEVEL } from '@/lib/leveling'
+import { unlock as unlockAchievement } from '@/lib/achievements'
 
 export interface Stats {
   lung: number // 폐활량 (산소 최대치 +10 / point)
@@ -131,6 +132,8 @@ export const useGameStore = create<GameState>()(
         const before = computeLevelInfo(get().totalXp).level
         set((s) => ({ totalXp: s.totalXp + amount }))
         const after = computeLevelInfo(get().totalXp).level
+        if (after >= 5) unlockAchievement('level-5')
+        if (after >= 10) unlockAchievement('level-10')
         if (after > before) {
           const gained = (after - before) * STAT_POINTS_PER_LEVEL
           set((s) => ({ statPoints: s.statPoints + gained }))

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo} from 'react' /* useMemo 보강 다음 줄 */
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlockMath } from 'react-katex'
@@ -262,7 +262,7 @@ export function Chapter4() {
       </ScreenShake>
 
       {showBonus && (
-        <BonusProblemOverlay
+        <BonusProblemOverlay chapterId={4}
           problem={bonus}
           onPass={() => run.finish()}
           onFail={() => run.store.addOxygen(-5)}

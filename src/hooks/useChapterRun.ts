@@ -5,6 +5,7 @@ import { comboBonusXp, computeStars } from '@/lib/scoring'
 import { computeRank } from '@/lib/judge'
 import { CHAPTER_REWARD_POOL, type ItemId } from '@/data/items'
 import { sfx } from '@/lib/sfx'
+import { unlock, trackCorrectSimplified } from '@/lib/achievements'
 
 interface Options {
   chapterId: number
@@ -41,6 +42,10 @@ export function useChapterRun({ chapterId, maxScore }: Options) {
       const result = store.addXp(xpBase + comboBonusXp(newCombo) + luckBonus + (opts.difficulty ?? 0) * 5)
       store.addEnergy(2)
       store.addBond(1)
+      if (newCombo === 3) unlock('first-combo')
+      if (newCombo === 10) unlock('combo-10')
+      // 정답 1회 당 기약/통분 카운터는 약식: 챕터1~7 본 게임은 기약 + 다른 분모 위주이므로 합산
+      trackCorrectSimplified()
       if (result.leveledUp) {
         setLevelUpBanner(result.newLevel)
         sfx.levelUp()
@@ -95,6 +100,8 @@ export function useChapterRun({ chapterId, maxScore }: Options) {
       store.clearChapter(chapterId)
       const reward: ItemId = CHAPTER_REWARD_POOL[Math.floor(Math.random() * CHAPTER_REWARD_POOL.length)]
       store.giveItem(reward)
+      unlock('first-item')
+      if (wrongCount === 0 && timeoutCount === 0) unlock('no-wrong-clear')
       sfx.clear()
       navigate(`/chapter/${chapterId}/clear`, {
         state: {
