@@ -220,12 +220,16 @@ import { ADVANCED_PROBLEMS } from '@/data/advancedPool'
 const ALL_GENS = [genSameDenAdd, genSameDenSub, genDiffDenAdd, genDiffDenSub, genCompare, genNumericNatCount, genThreeAdd, genDecimalToFraction, genCompareDecFrac]
 
 export const genRandom = (difficulty: number): Problem => {
-  // 학생 수준 ↑: 응용 풀 비율 50%, 난이도 2+ 도달 시 60%
-  const advRate = difficulty >= 2 ? 0.6 : 0.5
-  if (difficulty >= 0 && Math.random() < advRate) {
-    const adv = ADVANCED_PROBLEMS[Math.floor(Math.random() * ADVANCED_PROBLEMS.length)]
+  // 학생 수준 ↑↑: 응용 풀 비율 70% — 난이도 2+ 면 80%, 난이도 3+ 면 90%.
+  const advRate = difficulty >= 3 ? 0.9 : difficulty >= 2 ? 0.8 : 0.7
+  if (Math.random() < advRate) {
+    // 난이도 2+ 면 난이도 2 이상 응용 위주로 선별
+    const pool = difficulty >= 2
+      ? ADVANCED_PROBLEMS.filter((p) => (p.difficulty ?? 1) >= 2)
+      : ADVANCED_PROBLEMS
+    const adv = pool[Math.floor(Math.random() * pool.length)]
     return { ...adv, id: `${adv.id}-${nextId()}` }
   }
   const g = ALL_GENS[Math.floor(Math.random() * ALL_GENS.length)]
-  return g(difficulty)
+  return g(Math.max(difficulty, 2)) // generator 자체도 더 어려운 분모 풀 사용
 }

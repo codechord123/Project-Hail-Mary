@@ -535,6 +535,66 @@ export const ADVANCED_PROBLEMS: Problem[] = [
     hint: '3/4 = 0.75 = 75/100. 0.4 = 40/100. 차 = 35/100.',
     answer: 35, unit: '',
   },
+
+  // === 최상급 난이도 — 3-step 응용 ===
+  {
+    id: 'adv-hard-1', kind: 'fraction', difficulty: 3,
+    scenario: '연료 1통 중 어제 1/4, 오늘 5/12 를 사용했어. 남은 연료 (기약)?',
+    prompt: '1 − 1/4 − 5/12 (기약)',
+    hint: '공통분모 12. 12/12 − 3/12 − 5/12 = 4/12 = 1/3.',
+    answer: { numerator: 1, denominator: 3 }, requireSimplified: true,
+  },
+  {
+    id: 'adv-hard-2', kind: 'fraction', difficulty: 3,
+    scenario: '귀환선이 0.8 광년을 가야 해. 이미 3/8 광년을 갔고, 어제 1/6 광년을 더 갔어. 남은 거리 (기약)?',
+    prompt: '0.8 − 3/8 − 1/6 (기약)',
+    hint: '0.8 = 4/5. 공통분모 120. 96/120 − 45/120 − 20/120 = 31/120.',
+    answer: { numerator: 31, denominator: 120 }, requireSimplified: true,
+  },
+  {
+    id: 'adv-hard-3', kind: 'compare', difficulty: 3,
+    scenario: '두 항로 비교 — 항로 P: 3/8 + 1/4 광년, 항로 Q: 0.6 광년. 어느 쪽이 더 짧을까?',
+    prompt: '3/8 + 1/4 vs 0.6',
+    hint: '3/8 + 1/4 = 3/8 + 2/8 = 5/8 = 0.625.',
+    left: { numerator: 5, denominator: 8 }, right: { decimal: 0.6 }, correctOp: '>',
+  },
+  {
+    id: 'adv-hard-4', kind: 'fraction', difficulty: 3,
+    scenario: '식량 5/6 통 중 3/8 통은 우주식, 나머지는 비상식. 비상식의 양 (기약)?',
+    prompt: '5/6 − 3/8 (기약)',
+    hint: '공통분모 24. 20/24 − 9/24 = 11/24.',
+    answer: { numerator: 11, denominator: 24 }, requireSimplified: true,
+  },
+  {
+    id: 'adv-hard-5', kind: 'multi', difficulty: 3,
+    scenario: '항법 해제: 어떤 분수에 0.25 를 더했더니 3/4 이 됐어. 원래 분수를 기약으로!',
+    prompt: '풀이 + 기약 답',
+    hint: '0.25 = 1/4. 3/4 − 1/4 = 2/4 = 1/2.',
+    workspacePlaceholder: '예: 0.25 = 1/4. 3/4 − 1/4 = 2/4 = 1/2',
+    finalAnswer: { numerator: 1, denominator: 2 }, requireSimplified: true,
+  },
+  {
+    id: 'adv-hard-6', kind: 'multi', difficulty: 3,
+    scenario: '귀환 코드: 어떤 분수의 분자에 5 를 더하고 분모를 2 배 했더니 7/12 이 됐어. 원래 분수를 기약으로!',
+    prompt: '풀이 + 기약 답',
+    hint: '(X분자 + 5) / (X분모 × 2) = 7/12. X분모 × 2 = 12 → X분모 = 6. X분자 + 5 = 7 → X분자 = 2. 2/6 → 약분 1/3.',
+    workspacePlaceholder: '예: (X분자+5)/(X분모×2) = 7/12 → 분모 6, 분자 2 → 2/6 = 1/3',
+    finalAnswer: { numerator: 1, denominator: 3 }, requireSimplified: true,
+  },
+  {
+    id: 'adv-hard-7', kind: 'numeric', difficulty: 3,
+    scenario: '3/8 광년 보다 멀고 5/8 광년 보다 가까운 분수 중 분모가 24 인 진분수는 모두 몇 개?',
+    prompt: '개수',
+    hint: '3/8 = 9/24, 5/8 = 15/24. 분자 10, 11, 12, 13, 14 → 5개.',
+    answer: 5, unit: '개',
+  },
+  {
+    id: 'adv-hard-8', kind: 'fraction', difficulty: 3,
+    scenario: '항해 일지 — 3일간 5/12, 1/3, 7/24 광년씩 이동. 총 거리 (기약, 가분수 OK)?',
+    prompt: '5/12 + 1/3 + 7/24 (기약)',
+    hint: '공통분모 24. 10/24 + 8/24 + 7/24 = 25/24.',
+    answer: { numerator: 25, denominator: 24 }, requireSimplified: true,
+  },
 ]
 
 /** 풀에서 N개 랜덤 픽 */
